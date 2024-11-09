@@ -1,0 +1,38 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  android-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [ '22', '23' ]
+        distribution: [ 'temurin' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: ${{ matrix.distribution }}
+
+      # Automatic gradle caching using `actions/cache@v4`
+      # https://github.com/gradle/actions/tree/main/setup-gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Linter
+        run: ./gradlew lintKotlin --parallel --daemon
+
+      - name: Run test
+        run: ./gradlew testDebugUnitTest --parallel --daemon
+
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug --parallel --daemon
