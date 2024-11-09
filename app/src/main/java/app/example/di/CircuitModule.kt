@@ -9,14 +9,26 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
 
+/**
+ * Dagger module that provides dependencies for the Circuit framework.
+ */
 @ContributesTo(AppScope::class)
 @Module
 interface CircuitModule {
+    /**
+     * Dagger multi-binding method that provides a set of Presenter.Factory instances.
+     */
     @Multibinds fun presenterFactories(): Set<Presenter.Factory>
 
+    /**
+     * Dagger multi-binding method that provides a set of Ui.Factory instances.
+     */
     @Multibinds fun viewFactories(): Set<Ui.Factory>
 
     companion object {
+        /**
+         * Provides a singleton instance of Circuit with presenter and ui configured.
+         */
         @SingleIn(AppScope::class)
         @Provides
         fun provideCircuit(
