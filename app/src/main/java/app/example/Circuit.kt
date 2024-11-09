@@ -1,4 +1,4 @@
-package dev.hossain.timeline
+package app.example
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,7 +40,7 @@ import com.slack.circuit.runtime.screen.Screen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dev.hossain.timeline.di.AppScope
+import app.example.di.AppScope
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

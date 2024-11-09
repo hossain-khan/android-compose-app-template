@@ -1,4 +1,4 @@
-package dev.hossain.timeline
+package app.example
 
 import android.app.Activity
 import android.os.Bundle
@@ -17,9 +17,9 @@ import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 import com.squareup.anvil.annotations.ContributesMultibinding
-import dev.hossain.timeline.di.ActivityKey
-import dev.hossain.timeline.di.AppScope
-import dev.hossain.timeline.ui.theme.TimelineTheme
+import app.example.di.ActivityKey
+import app.example.di.AppScope
+import app.example.ui.theme.TimelineTheme
 import javax.inject.Inject
 
 @ContributesMultibinding(AppScope::class, boundType = Activity::class)

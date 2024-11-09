@@ -1,7 +1,7 @@
-package dev.hossain.timeline
+package app.example
 
 import android.app.Application
-import dev.hossain.timeline.di.AppComponent
+import app.example.di.AppComponent
 
 /**
  * Application class for the app with key initializations.

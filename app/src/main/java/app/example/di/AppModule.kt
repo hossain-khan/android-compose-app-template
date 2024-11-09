@@ -1,8 +1,8 @@
-package dev.hossain.timeline.di
+package app.example.di
 
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Provides
-import dev.hossain.timeline.EmailRepository
+import app.example.EmailRepository
 
 @ContributesTo(AppScope::class)
 @dagger.Module

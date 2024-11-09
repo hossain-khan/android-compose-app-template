@@ -1,4 +1,4 @@
-package dev.hossain.timeline.ui.theme
+package app.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
