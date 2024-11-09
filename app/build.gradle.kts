@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.hossain.timeline"
+    namespace = "app.example"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "dev.hossain.timeline"
+        applicationId = "app.example"
         minSdk = 30
         targetSdk = 35
         versionCode = 1
