@@ -1,11 +1,11 @@
-package app.example
+package app.example.circuit
 
 // -------------------------------------------------------------------------------------
 //
 // THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
 // Example content is taken from https://slackhq.github.io/circuit/tutorial/
 //
-// You should delete this file and create your own screens and presenters.
+// You should delete this file and create your own screens with presenters.
 //
 //  -------------------------------------------------------------------------------------
 
@@ -17,21 +17,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -40,6 +34,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.example.data.Email
 import app.example.data.ExampleEmailRepository
 import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -53,40 +48,106 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
 
+// See https://slackhq.github.io/circuit/screen/
 @Parcelize
-data object InboxScreen : Screen {
+data class DetailScreen(
+    val emailId: String,
+) : Screen {
     data class State(
-        val emails: List<Email>,
+        val email: Email,
         val eventSink: (Event) -> Unit,
     ) : CircuitUiState
 
     sealed class Event : CircuitUiEvent {
-        data class EmailClicked(
-            val emailId: String,
-        ) : Event()
+        data object BackClicked : Event()
     }
 }
 
-@CircuitInject(screen = InboxScreen::class, scope = AppScope::class)
-@OptIn(ExperimentalMaterial3Api::class)
+// See https://slackhq.github.io/circuit/presenter/
+class DetailPresenter
+    @AssistedInject
+    constructor(
+        @Assisted private val navigator: Navigator,
+        @Assisted private val screen: DetailScreen,
+        private val emailRepository: ExampleEmailRepository,
+    ) : Presenter<DetailScreen.State> {
+        @Composable
+        override fun present(): DetailScreen.State {
+            val email = emailRepository.getEmail(screen.emailId)
+            return DetailScreen.State(email) { event ->
+                when (event) {
+                    DetailScreen.Event.BackClicked -> navigator.pop()
+                }
+            }
+        }
+
+        @CircuitInject(DetailScreen::class, AppScope::class)
+        @AssistedFactory
+        fun interface Factory {
+            fun create(
+                navigator: Navigator,
+                screen: DetailScreen,
+            ): DetailPresenter
+        }
+    }
+
+@CircuitInject(DetailScreen::class, AppScope::class)
 @Composable
-fun Inbox(
-    state: InboxScreen.State,
+fun EmailDetailContent(
+    state: DetailScreen.State,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(modifier = modifier, topBar = { TopAppBar(title = { Text("Inbox") }) }) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding)) {
-            items(state.emails) { email ->
-                EmailItem(
-                    email = email,
-                    onClick = { state.eventSink(InboxScreen.Event.EmailClicked(email.id)) },
-                )
+    val email = state.email
+    Column(modifier.padding(16.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Image(
+                Icons.Default.Person,
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.Magenta)
+                        .padding(4.dp),
+                colorFilter = ColorFilter.tint(Color.White),
+                contentDescription = null,
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row {
+                    Text(
+                        text = email.sender,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = email.timestamp,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.alpha(0.5f),
+                    )
+                }
+                Text(text = email.subject, style = MaterialTheme.typography.labelMedium)
+                Row {
+                    Text("To: ", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = email.recipients.joinToString(","),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.alpha(0.5f),
+                    )
+                }
             }
+        }
+        @Suppress("DEPRECATION") // Deprecated in Android but not yet available in CM
+        (Divider(modifier = Modifier.padding(vertical = 16.dp)))
+        Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
+
+        Button(
+            onClick = { state.eventSink(DetailScreen.Event.BackClicked) },
+            modifier = Modifier.padding(top = 16.dp).align(Alignment.End),
+        ) {
+            Text("Go Back")
         }
     }
 }
-
-// Write one or use EmailItem from ui.kt
 
 /** A simple email item to show in a list. */
 @Composable
@@ -135,139 +196,5 @@ fun EmailItem(
                 modifier = Modifier.alpha(0.5f),
             )
         }
-    }
-}
-
-data class Email(
-    val id: String,
-    val subject: String,
-    val body: String,
-    val sender: String,
-    val timestamp: String,
-    val recipients: List<String>,
-)
-
-class InboxPresenter
-    @AssistedInject
-    constructor(
-        @Assisted private val navigator: Navigator,
-        private val emailRepository: ExampleEmailRepository,
-    ) : Presenter<InboxScreen.State> {
-        @Composable
-        override fun present(): InboxScreen.State {
-            val emails by produceState<List<Email>>(initialValue = emptyList()) {
-                value = emailRepository.getEmails()
-            }
-            // Or a flow!
-            // val emails by emailRepository.getEmailsFlow().collectAsState(initial = emptyList())
-            return InboxScreen.State(emails) { event ->
-                when (event) {
-                    // Navigate to the detail screen when an email is clicked
-                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
-                }
-            }
-        }
-
-        @CircuitInject(InboxScreen::class, AppScope::class)
-        @AssistedFactory
-        fun interface Factory {
-            fun create(navigator: Navigator): InboxPresenter
-        }
-    }
-
-@Parcelize
-data class DetailScreen(
-    val emailId: String,
-) : Screen {
-    data class State(
-        val email: Email,
-        val eventSink: (Event) -> Unit,
-    ) : CircuitUiState
-
-    sealed class Event : CircuitUiEvent {
-        data object BackClicked : Event()
-    }
-}
-
-class DetailPresenter
-    @AssistedInject
-    constructor(
-        @Assisted private val navigator: Navigator,
-        @Assisted private val screen: DetailScreen,
-        private val emailRepository: ExampleEmailRepository,
-    ) : Presenter<DetailScreen.State> {
-        @Composable
-        override fun present(): DetailScreen.State {
-            val email = emailRepository.getEmail(screen.emailId)
-            return DetailScreen.State(email) { event ->
-                when (event) {
-                    DetailScreen.Event.BackClicked -> navigator.pop()
-                }
-            }
-        }
-
-        @CircuitInject(DetailScreen::class, AppScope::class)
-        @AssistedFactory
-        fun interface Factory {
-            fun create(
-                navigator: Navigator,
-                screen: DetailScreen,
-            ): DetailPresenter
-        }
-    }
-
-@CircuitInject(DetailScreen::class, AppScope::class)
-@Composable
-fun EmailDetailContent(
-    state: DetailScreen.State,
-    modifier: Modifier = Modifier,
-) {
-    val email = state.email
-    Column(modifier.padding(16.dp)) {
-        // Add a button with text back here
-        Button(onClick = { state.eventSink(DetailScreen.Event.BackClicked) }) {
-            Text("Back")
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Image(
-                Icons.Default.Person,
-                modifier =
-                    Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Magenta)
-                        .padding(4.dp),
-                colorFilter = ColorFilter.tint(Color.White),
-                contentDescription = null,
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Row {
-                    Text(
-                        text = email.sender,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = email.timestamp,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.alpha(0.5f),
-                    )
-                }
-                Text(text = email.subject, style = MaterialTheme.typography.labelMedium)
-                Row {
-                    Text("To: ", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-                    Text(
-                        text = email.recipients.joinToString(","),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.alpha(0.5f),
-                    )
-                }
-            }
-        }
-        @Suppress("DEPRECATION") // Deprecated in Android but not yet available in CM
-        Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
     }
 }
