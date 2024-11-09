@@ -1,5 +1,14 @@
 package app.example
 
+// -------------------------------------------------------------------------------------
+//
+// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
+// Example content is taken from https://slackhq.github.io/circuit/tutorial/
+//
+// You should delete this file and create your own screens and presenters.
+//
+//  -------------------------------------------------------------------------------------
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +40,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.example.data.EmailRepository
 import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -164,22 +174,6 @@ class InboxPresenter
             fun create(navigator: Navigator): InboxPresenter
         }
     }
-
-class EmailRepository {
-    fun getEmails(): List<Email> =
-        listOf(
-            Email(
-                id = "1",
-                subject = "Meeting re-sched!",
-                body = "Hey, I'm going to be out of the office tomorrow. Can we reschedule?",
-                sender = "Ali Connors",
-                timestamp = "3:00 PM",
-                recipients = listOf("a@example.com"),
-            ),
-        )
-
-    fun getEmail(emailId: String): Email = getEmails().find { it.id == emailId } ?: throw IllegalArgumentException("Email not found")
-}
 
 @Parcelize
 data class DetailScreen(

@@ -1,12 +1,14 @@
 package app.example.di
 
-import app.example.EmailRepository
+import app.example.data.EmailRepository
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Provides
 
+// Example of a Dagger module that provides dependencies for the app.
+// You should delete this file and create your own modules.
 @ContributesTo(AppScope::class)
 @dagger.Module
-class AppModule {
+class ExampleAppModule {
     @Provides
     fun provideEmailRepository(): EmailRepository = EmailRepository()
 }
