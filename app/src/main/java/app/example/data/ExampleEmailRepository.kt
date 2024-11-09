@@ -5,7 +5,7 @@ import app.example.Email
 /**
  * This is example repository. It is used to demonstrate how to use Dagger in Anvil.
  */
-class EmailRepository {
+class ExampleEmailRepository {
     fun getEmails(): List<Email> =
         listOf(
             Email(

@@ -16,12 +16,12 @@ import dagger.multibindings.Multibinds
 @Module
 interface CircuitModule {
     /**
-     * Dagger multibinds method that provides a set of Presenter.Factory instances.
+     * Dagger multi-binding method that provides a set of Presenter.Factory instances.
      */
     @Multibinds fun presenterFactories(): Set<Presenter.Factory>
 
     /**
-     * Dagger multibinds method that provides a set of Ui.Factory instances.
+     * Dagger multi-binding method that provides a set of Ui.Factory instances.
      */
     @Multibinds fun viewFactories(): Set<Ui.Factory>
 

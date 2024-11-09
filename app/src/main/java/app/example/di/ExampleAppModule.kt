@@ -1,6 +1,6 @@
 package app.example.di
 
-import app.example.data.EmailRepository
+import app.example.data.ExampleEmailRepository
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Provides
 
@@ -10,5 +10,5 @@ import dagger.Provides
 @dagger.Module
 class ExampleAppModule {
     @Provides
-    fun provideEmailRepository(): EmailRepository = EmailRepository()
+    fun provideEmailRepository(): ExampleEmailRepository = ExampleEmailRepository()
 }
