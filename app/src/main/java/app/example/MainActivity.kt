@@ -35,7 +35,7 @@ class MainActivity
 
             setContent {
                 ComposeAppTheme {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                         // See https://slackhq.github.io/circuit/navigation/
                         val backStack = rememberSaveableBackStack(root = InboxScreen)
                         val navigator = rememberCircuitNavigator(backStack)
@@ -45,7 +45,7 @@ class MainActivity
                             NavigableCircuitContent(
                                 navigator = navigator,
                                 backStack = backStack,
-                                Modifier.padding(padding),
+                                Modifier.padding(innerPadding),
                                 decoration =
                                     GestureNavigationDecoration {
                                         navigator.pop()
