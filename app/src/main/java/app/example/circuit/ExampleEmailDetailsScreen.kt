@@ -16,6 +16,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -47,7 +48,6 @@ import kotlinx.parcelize.Parcelize
 //
 //  -------------------------------------------------------------------------------------
 
-
 @Parcelize
 data class DetailScreen(
     val emailId: String,
@@ -63,31 +63,31 @@ data class DetailScreen(
 }
 
 class DetailPresenter
-@AssistedInject
-constructor(
-    @Assisted private val navigator: Navigator,
-    @Assisted private val screen: DetailScreen,
-    private val emailRepository: ExampleEmailRepository,
-) : Presenter<DetailScreen.State> {
-    @Composable
-    override fun present(): DetailScreen.State {
-        val email = emailRepository.getEmail(screen.emailId)
-        return DetailScreen.State(email) { event ->
-            when (event) {
-                DetailScreen.Event.BackClicked -> navigator.pop()
+    @AssistedInject
+    constructor(
+        @Assisted private val navigator: Navigator,
+        @Assisted private val screen: DetailScreen,
+        private val emailRepository: ExampleEmailRepository,
+    ) : Presenter<DetailScreen.State> {
+        @Composable
+        override fun present(): DetailScreen.State {
+            val email = emailRepository.getEmail(screen.emailId)
+            return DetailScreen.State(email) { event ->
+                when (event) {
+                    DetailScreen.Event.BackClicked -> navigator.pop()
+                }
             }
         }
-    }
 
-    @CircuitInject(DetailScreen::class, AppScope::class)
-    @AssistedFactory
-    fun interface Factory {
-        fun create(
-            navigator: Navigator,
-            screen: DetailScreen,
-        ): DetailPresenter
+        @CircuitInject(DetailScreen::class, AppScope::class)
+        @AssistedFactory
+        fun interface Factory {
+            fun create(
+                navigator: Navigator,
+                screen: DetailScreen,
+            ): DetailPresenter
+        }
     }
-}
 
 @CircuitInject(DetailScreen::class, AppScope::class)
 @Composable
@@ -97,20 +97,15 @@ fun EmailDetailContent(
 ) {
     val email = state.email
     Column(modifier.padding(16.dp)) {
-        // Add a button with text back here
-        Button(onClick = { state.eventSink(DetailScreen.Event.BackClicked) }) {
-            Text("Back")
-        }
-
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Image(
                 Icons.Default.Person,
                 modifier =
-                Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(Color.Magenta)
-                    .padding(4.dp),
+                    Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.Magenta)
+                        .padding(4.dp),
                 colorFilter = ColorFilter.tint(Color.White),
                 contentDescription = null,
             )
@@ -142,9 +137,15 @@ fun EmailDetailContent(
         @Suppress("DEPRECATION") // Deprecated in Android but not yet available in CM
         (Divider(modifier = Modifier.padding(vertical = 16.dp)))
         Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
+
+        Button(
+            onClick = { state.eventSink(DetailScreen.Event.BackClicked) },
+            modifier = Modifier.padding(top = 16.dp).align(Alignment.End),
+        ) {
+            Text("Go Back")
+        }
     }
 }
-
 
 /** A simple email item to show in a list. */
 @Composable
@@ -160,11 +161,11 @@ fun EmailItem(
         Image(
             Icons.Default.Person,
             modifier =
-            Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color.Magenta)
-                .padding(4.dp),
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Magenta)
+                    .padding(4.dp),
             colorFilter = ColorFilter.tint(Color.White),
             contentDescription = null,
         )
