@@ -37,12 +37,11 @@ class MainActivity
             setContent {
                 ComposeAppTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
+                        // See https://slackhq.github.io/circuit/navigation/
                         val backStack = rememberSaveableBackStack(root = InboxScreen)
-                        val navigator =
-                            rememberCircuitNavigator(backStack) {
-                                // Do something when the root screen is popped, usually exiting the app
-                                Log.i("ComposeApp", "Root screen is popped.")
-                            }
+                        val navigator = rememberCircuitNavigator(backStack)
+
+                        // See https://slackhq.github.io/circuit/circuit-content/
                         CircuitCompositionLocals(circuit) {
                             NavigableCircuitContent(
                                 navigator = navigator,

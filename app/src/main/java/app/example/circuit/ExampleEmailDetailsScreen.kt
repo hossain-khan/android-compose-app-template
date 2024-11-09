@@ -1,5 +1,15 @@
 package app.example.circuit
 
+// -------------------------------------------------------------------------------------
+//
+// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
+// Example content is taken from https://slackhq.github.io/circuit/tutorial/
+//
+// You should delete this file and create your own screens with presenters.
+//
+//  -------------------------------------------------------------------------------------
+
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,15 +49,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
 
-// -------------------------------------------------------------------------------------
-//
-// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
-// Example content is taken from https://slackhq.github.io/circuit/tutorial/
-//
-// You should delete this file and create your own screens and presenters.
-//
-//  -------------------------------------------------------------------------------------
-
+// See https://slackhq.github.io/circuit/screen/
 @Parcelize
 data class DetailScreen(
     val emailId: String,
@@ -62,6 +64,7 @@ data class DetailScreen(
     }
 }
 
+// See https://slackhq.github.io/circuit/presenter/
 class DetailPresenter
     @AssistedInject
     constructor(

@@ -1,5 +1,15 @@
 package app.example.circuit
 
+// -------------------------------------------------------------------------------------
+//
+// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
+// Example content is taken from https://slackhq.github.io/circuit/tutorial/
+//
+// You should delete this file and create your own screens with presenters.
+//
+//  -------------------------------------------------------------------------------------
+
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,15 +35,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
 
-// -------------------------------------------------------------------------------------
-//
-// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
-// Example content is taken from https://slackhq.github.io/circuit/tutorial/
-//
-// You should delete this file and create your own screens and presenters.
-//
-//  -------------------------------------------------------------------------------------
-
+// See https://slackhq.github.io/circuit/screen/
 @Parcelize
 data object InboxScreen : Screen {
     data class State(
@@ -47,6 +49,36 @@ data object InboxScreen : Screen {
         ) : Event()
     }
 }
+
+
+// See https://slackhq.github.io/circuit/presenter/
+class InboxPresenter
+    @AssistedInject
+    constructor(
+        @Assisted private val navigator: Navigator,
+        private val emailRepository: ExampleEmailRepository,
+    ) : Presenter<InboxScreen.State> {
+        @Composable
+        override fun present(): InboxScreen.State {
+            val emails by produceState<List<Email>>(initialValue = emptyList()) {
+                value = emailRepository.getEmails()
+            }
+
+            return InboxScreen.State(emails) { event ->
+                when (event) {
+                    // Navigate to the detail screen when an email is clicked
+                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
+                }
+            }
+        }
+
+        @CircuitInject(InboxScreen::class, AppScope::class)
+        @AssistedFactory
+        fun interface Factory {
+            fun create(navigator: Navigator): InboxPresenter
+        }
+    }
+
 
 @CircuitInject(screen = InboxScreen::class, scope = AppScope::class)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,31 +98,3 @@ fun Inbox(
         }
     }
 }
-
-class InboxPresenter
-    @AssistedInject
-    constructor(
-        @Assisted private val navigator: Navigator,
-        private val emailRepository: ExampleEmailRepository,
-    ) : Presenter<InboxScreen.State> {
-        @Composable
-        override fun present(): InboxScreen.State {
-            val emails by produceState<List<Email>>(initialValue = emptyList()) {
-                value = emailRepository.getEmails()
-            }
-            // Or a flow!
-            // val emails by emailRepository.getEmailsFlow().collectAsState(initial = emptyList())
-            return InboxScreen.State(emails) { event ->
-                when (event) {
-                    // Navigate to the detail screen when an email is clicked
-                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
-                }
-            }
-        }
-
-        @CircuitInject(InboxScreen::class, AppScope::class)
-        @AssistedFactory
-        fun interface Factory {
-            fun create(navigator: Navigator): InboxPresenter
-        }
-    }
