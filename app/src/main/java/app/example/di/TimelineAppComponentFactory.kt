@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.annotation.Keep
 import androidx.core.app.AppComponentFactory
-import app.example.TimelineApp
+import app.example.ComposeApp
 import javax.inject.Provider
 
 /**
@@ -83,7 +83,7 @@ class TimelineAppComponentFactory : AppComponentFactory() {
     ): Application {
         val app = super.instantiateApplicationCompat(classLoader, className)
         // Retrieve the Dagger app component and the activity providers from it
-        activityProviders = (app as TimelineApp).appComponent().activityProviders
+        activityProviders = (app as ComposeApp).appComponent().activityProviders
         return app
     }
 
