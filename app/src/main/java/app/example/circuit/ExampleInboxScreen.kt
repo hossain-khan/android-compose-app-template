@@ -9,7 +9,6 @@ package app.example.circuit
 //
 //  -------------------------------------------------------------------------------------
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,7 +49,6 @@ data object InboxScreen : Screen {
     }
 }
 
-
 // See https://slackhq.github.io/circuit/presenter/
 class InboxPresenter
     @AssistedInject
@@ -78,7 +76,6 @@ class InboxPresenter
             fun create(navigator: Navigator): InboxPresenter
         }
     }
-
 
 @CircuitInject(screen = InboxScreen::class, scope = AppScope::class)
 @OptIn(ExperimentalMaterial3Api::class)
