@@ -11,6 +11,10 @@ An Android App template that is preconfigured with Circuit UDF architecture.
 * ✔️ Ktlint task in Gradle
 * ✔️ GitHub actions
 
+> [!WARNING]  
+> _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
+> _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the repository._
+
 ### Post-process after cloning 🧑‍🏭
 Unfortunately, you do have to do some manual work after using the template, namely:
 
