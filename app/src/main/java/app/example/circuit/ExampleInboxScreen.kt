@@ -34,7 +34,6 @@ import kotlinx.parcelize.Parcelize
 //
 //  -------------------------------------------------------------------------------------
 
-
 @Parcelize
 data object InboxScreen : Screen {
     data class State(
@@ -69,29 +68,29 @@ fun Inbox(
 }
 
 class InboxPresenter
-@AssistedInject
-constructor(
-    @Assisted private val navigator: Navigator,
-    private val emailRepository: ExampleEmailRepository,
-) : Presenter<InboxScreen.State> {
-    @Composable
-    override fun present(): InboxScreen.State {
-        val emails by produceState<List<Email>>(initialValue = emptyList()) {
-            value = emailRepository.getEmails()
-        }
-        // Or a flow!
-        // val emails by emailRepository.getEmailsFlow().collectAsState(initial = emptyList())
-        return InboxScreen.State(emails) { event ->
-            when (event) {
-                // Navigate to the detail screen when an email is clicked
-                is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
+    @AssistedInject
+    constructor(
+        @Assisted private val navigator: Navigator,
+        private val emailRepository: ExampleEmailRepository,
+    ) : Presenter<InboxScreen.State> {
+        @Composable
+        override fun present(): InboxScreen.State {
+            val emails by produceState<List<Email>>(initialValue = emptyList()) {
+                value = emailRepository.getEmails()
+            }
+            // Or a flow!
+            // val emails by emailRepository.getEmailsFlow().collectAsState(initial = emptyList())
+            return InboxScreen.State(emails) { event ->
+                when (event) {
+                    // Navigate to the detail screen when an email is clicked
+                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
+                }
             }
         }
-    }
 
-    @CircuitInject(InboxScreen::class, AppScope::class)
-    @AssistedFactory
-    fun interface Factory {
-        fun create(navigator: Navigator): InboxPresenter
+        @CircuitInject(InboxScreen::class, AppScope::class)
+        @AssistedFactory
+        fun interface Factory {
+            fun create(navigator: Navigator): InboxPresenter
+        }
     }
-}
