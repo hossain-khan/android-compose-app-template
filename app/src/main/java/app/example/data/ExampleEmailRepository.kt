@@ -1,6 +1,16 @@
 package app.example.data
 
-import app.example.Email
+/**
+ * Data class representing an email.
+ */
+data class Email(
+    val id: String,
+    val subject: String,
+    val body: String,
+    val sender: String,
+    val timestamp: String,
+    val recipients: List<String>,
+)
 
 /**
  * This is example repository. It is used to demonstrate how to use Dagger in Anvil.

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
 import app.example.di.AppScope
 import app.example.ui.theme.ComposeAppTheme
