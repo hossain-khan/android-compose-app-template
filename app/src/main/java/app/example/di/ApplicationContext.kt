@@ -1,4 +1,4 @@
-package dev.hossain.timeline.di
+package app.example.di
 
 import javax.inject.Qualifier
 

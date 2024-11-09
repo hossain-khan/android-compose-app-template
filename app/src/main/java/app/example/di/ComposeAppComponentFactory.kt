@@ -1,11 +1,11 @@
-package dev.hossain.timeline.di
+package app.example.di
 
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.annotation.Keep
 import androidx.core.app.AppComponentFactory
-import dev.hossain.timeline.TimelineApp
+import app.example.ComposeApp
 import javax.inject.Provider
 
 /**
@@ -21,12 +21,12 @@ import javax.inject.Provider
  *
  * ```xml
  * <application
- *     android:appComponentFactory=".di.TimelineAppComponentFactory"
+ *     android:appComponentFactory=".di.ComposeAppComponentFactory"
  *     ... />
  * ```
  */
 @Keep
-class TimelineAppComponentFactory : AppComponentFactory() {
+class ComposeAppComponentFactory : AppComponentFactory() {
     /**
      * Retrieves an instance of the specified class (typically an Activity) from the provided
      * Dagger providers map. If a provider exists for the class, it uses that provider to
@@ -83,7 +83,7 @@ class TimelineAppComponentFactory : AppComponentFactory() {
     ): Application {
         val app = super.instantiateApplicationCompat(classLoader, className)
         // Retrieve the Dagger app component and the activity providers from it
-        activityProviders = (app as TimelineApp).appComponent().activityProviders
+        activityProviders = (app as ComposeApp).appComponent().activityProviders
         return app
     }
 

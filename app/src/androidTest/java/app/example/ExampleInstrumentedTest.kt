@@ -1,4 +1,4 @@
-package dev.hossain.timeline
+package app.example
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("dev.hossain.timeline", appContext.packageName)
+        assertEquals("app.example", appContext.packageName)
     }
 }

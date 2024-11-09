@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Timeline 📍"
+rootProject.name = "Compose App"
 include(":app")

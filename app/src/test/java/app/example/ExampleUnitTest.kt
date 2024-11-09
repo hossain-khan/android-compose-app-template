@@ -1,4 +1,4 @@
-package dev.hossain.timeline
+package app.example
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
