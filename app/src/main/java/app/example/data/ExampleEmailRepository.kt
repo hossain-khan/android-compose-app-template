@@ -2,10 +2,9 @@ package app.example.data
 
 // -------------------------------------------------------------------------------------
 //
-// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
-// Example content is taken from https://slackhq.github.io/circuit/tutorial/
+// THIS IS AN EXAMPLE FILE WITH REPOSITORY THAT IS INJECTED IN CIRCUIT SCREEN
 //
-// You should delete this file and create your own screens with presenters.
+// You should create your own repository and delete this file.
 //
 //  -------------------------------------------------------------------------------------
 
