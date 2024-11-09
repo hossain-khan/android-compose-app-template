@@ -40,7 +40,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.example.data.EmailRepository
+import app.example.data.ExampleEmailRepository
 import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -151,7 +151,7 @@ class InboxPresenter
     @AssistedInject
     constructor(
         @Assisted private val navigator: Navigator,
-        private val emailRepository: EmailRepository,
+        private val emailRepository: ExampleEmailRepository,
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {
@@ -194,7 +194,7 @@ class DetailPresenter
     constructor(
         @Assisted private val navigator: Navigator,
         @Assisted private val screen: DetailScreen,
-        private val emailRepository: EmailRepository,
+        private val emailRepository: ExampleEmailRepository,
     ) : Presenter<DetailScreen.State> {
         @Composable
         override fun present(): DetailScreen.State {
