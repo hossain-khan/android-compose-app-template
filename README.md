@@ -1,7 +1,7 @@
 # Android - Circuit App Template
 An Android App template that is preconfigured with Circuit UDF architecture.
 
-> **Note:**
+> [!TIP]
 > Google has an official template available. Have you checked it out yet?
 > https://github.com/android/architecture-templates
 
