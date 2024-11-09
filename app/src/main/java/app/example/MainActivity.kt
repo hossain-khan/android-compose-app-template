@@ -12,7 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import app.example.di.ActivityKey
 import app.example.di.AppScope
-import app.example.ui.theme.TimelineTheme
+import app.example.ui.theme.ComposeAppTheme
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
@@ -34,13 +34,13 @@ class MainActivity
             enableEdgeToEdge()
 
             setContent {
-                TimelineTheme {
+                ComposeAppTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
                         val backStack = rememberSaveableBackStack(root = InboxScreen)
                         val navigator =
                             rememberCircuitNavigator(backStack) {
                                 // Do something when the root screen is popped, usually exiting the app
-                                Log.i("TimelineApp", "Root screen is popped.")
+                                Log.i("ComposeApp", "Root screen is popped.")
                             }
                         CircuitCompositionLocals(circuit) {
                             NavigableCircuitContent(

@@ -262,7 +262,7 @@ val unspecified_scheme =
     )
 
 @Composable
-fun TimelineTheme(
+fun ComposeAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
