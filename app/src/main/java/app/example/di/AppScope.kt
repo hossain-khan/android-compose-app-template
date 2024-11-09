@@ -1,4 +1,4 @@
-package dev.hossain.timeline.di
+package app.example.di
 
 /**
  * App scope for dependency injection.

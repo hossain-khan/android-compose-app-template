@@ -1,11 +1,11 @@
-package dev.hossain.timeline.di
+package app.example.di
 
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.annotation.Keep
 import androidx.core.app.AppComponentFactory
-import dev.hossain.timeline.TimelineApp
+import app.example.TimelineApp
 import javax.inject.Provider
 
 /**

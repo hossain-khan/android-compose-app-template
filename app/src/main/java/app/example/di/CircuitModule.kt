@@ -1,4 +1,4 @@
-package dev.hossain.timeline.di
+package app.example.di
 
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.runtime.presenter.Presenter
