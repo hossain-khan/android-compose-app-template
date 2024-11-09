@@ -1,5 +1,14 @@
 package app.example.data
 
+// -------------------------------------------------------------------------------------
+//
+// THIS IS AN EXAMPLE FILE WITH CIRCUIT SCREENS AND PRESENTERS
+// Example content is taken from https://slackhq.github.io/circuit/tutorial/
+//
+// You should delete this file and create your own screens with presenters.
+//
+//  -------------------------------------------------------------------------------------
+
 /**
  * Data class representing an email.
  */
@@ -25,6 +34,14 @@ class ExampleEmailRepository {
                 sender = "Ali Connors",
                 timestamp = "3:00 PM",
                 recipients = listOf("a@example.com"),
+            ),
+            Email(
+                id = "2",
+                subject = "Team retro",
+                body = "Don't forget about the team retrospective meeting tomorrow. Lunch will be provided. Please RSVP.",
+                sender = "John Doe",
+                timestamp = "4:00 PM",
+                recipients = listOf("b@example.com"),
             ),
         )
 
