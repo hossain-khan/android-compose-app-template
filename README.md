@@ -27,3 +27,9 @@ Unfortunately, you do have to do some manual work after using the template, name
 * [ ] Rename `ComposeApp***` to preferred file names
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for your app, or remove it.
+
+
+## Demo 📹
+Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) doc.
+
+https://github.com/user-attachments/assets/56d6f28b-5b46-4aac-a30e-80116986589e
