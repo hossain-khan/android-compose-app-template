@@ -26,3 +26,4 @@ Unfortunately, you do have to do some manual work after using the template, name
 * [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
 * [ ] Rename `ComposeApp***` to preferred file names
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
+* [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for your app, or remove it.
