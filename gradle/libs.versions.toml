@@ -87,5 +87,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 anvil = { id = "dev.zacsweers.anvil", version.ref = "anvil" }
 
 # https://github.com/jeremymailen/kotlinter-gradle
-#kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 
