@@ -6,7 +6,10 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.anvil)
-    alias(libs.plugins.kotlinter)
+    // Disabled until following is resolved:
+    // - https://github.com/jeremymailen/kotlinter-gradle/issues/414
+    // - https://github.com/pinterest/ktlint/issues/2882
+    //alias(libs.plugins.kotlinter)
 }
 
 android {
@@ -34,12 +37,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     buildFeatures {
