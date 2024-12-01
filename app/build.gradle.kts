@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.anvil)
-    alias(libs.plugins.kotlinter)
+    //alias(libs.plugins.kotlinter)
 }
 
 android {
