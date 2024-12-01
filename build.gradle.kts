@@ -31,5 +31,5 @@ plugins {
 
     // Applies the Kotlinter plugin for linting Kotlin code.
     // Project: https://github.com/jeremymailen/kotlinter-gradle
-    alias(libs.plugins.kotlinter) apply false
+//    alias(libs.plugins.kotlinter) apply false
 }
