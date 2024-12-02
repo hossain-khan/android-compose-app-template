@@ -24,9 +24,6 @@ anvil = "0.4.0"
 # https://dagger.dev/dev-guide/ksp
 dagger = "2.52"
 
-# https://github.com/jeremymailen/kotlinter-gradle
-kotlinter = "4.5.0"
-
 # https://developer.android.com/develop/ui/compose/text/fonts
 googleFonts = "1.7.5"
 
@@ -86,6 +83,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 # https://github.com/ZacSweers/anvil/blob/main/FORK.md
 anvil = { id = "dev.zacsweers.anvil", version.ref = "anvil" }
 
-# https://github.com/jeremymailen/kotlinter-gradle
-kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 
