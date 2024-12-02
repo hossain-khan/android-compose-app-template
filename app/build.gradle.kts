@@ -68,7 +68,8 @@ dependencies {
     ksp(libs.circuit.codegen)
 
     implementation(libs.dagger)
-    // ksp(libs.dagger.compiler) // Not working for some reason. Kapt worked.
+    // Dagger KSP support is in Alpha, not available yet. Using KAPT for now.
+    // https://dagger.dev/dev-guide/ksp.html
     kapt(libs.dagger.compiler)
 
     implementation(libs.anvil.annotations)
