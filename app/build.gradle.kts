@@ -6,10 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.anvil)
-    // Disabled until following is resolved:
-    // - https://github.com/jeremymailen/kotlinter-gradle/issues/414
-    // - https://github.com/pinterest/ktlint/issues/2882
-    //alias(libs.plugins.kotlinter)
 }
 
 android {

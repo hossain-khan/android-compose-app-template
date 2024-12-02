@@ -28,8 +28,4 @@ plugins {
     // Project: https://github.com/square/anvil
     // Also see: https://github.com/ZacSweers/anvil/blob/main/FORK.md
     alias(libs.plugins.anvil) apply false
-
-    // Applies the Kotlinter plugin for linting Kotlin code.
-    // Project: https://github.com/jeremymailen/kotlinter-gradle
-//    alias(libs.plugins.kotlinter) apply false
 }
