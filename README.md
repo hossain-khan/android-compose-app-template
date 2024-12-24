@@ -20,11 +20,12 @@ Unfortunately, you do have to do some manual work after using the template, name
 
 * [ ] Rename the package from **`app.example`** to your preferred app package name.
 * [ ] Update directory structure based on package name update
-* [ ] Update app name in XML and Gradle
+* [ ] Update app name and package id in XML and Gradle
 * [ ] Update your app theme colors (_use [Theme Builder](https://material-foundation.github.io/material-theme-builder/)_)
 * [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
 * [ ] Rename `ComposeApp***` to preferred file names
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
+* [ ] Update/remove repository license
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
 
 
