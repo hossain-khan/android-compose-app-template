@@ -10,6 +10,7 @@ An Android App template that is preconfigured with Circuit UDF architecture.
 * ✔️ Dependency Injection for all Circuit Screens & Presenter combo
 * ✔️ GitHub Actions for CI
 * ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
+* ✔️ `BuildConfig` turned on with example of reading config from `local.properties` file.
 
 > [!WARNING]  
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
