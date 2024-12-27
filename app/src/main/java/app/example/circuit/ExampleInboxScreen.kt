@@ -9,6 +9,7 @@ package app.example.circuit
 //
 //  -------------------------------------------------------------------------------------
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import app.example.data.Email
+import app.example.data.ExampleAppVersionService
 import app.example.data.ExampleEmailRepository
 import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -55,12 +57,16 @@ class InboxPresenter
     constructor(
         @Assisted private val navigator: Navigator,
         private val emailRepository: ExampleEmailRepository,
+        private val appVersionService: ExampleAppVersionService,
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {
             val emails by produceState<List<Email>>(initialValue = emptyList()) {
                 value = emailRepository.getEmails()
             }
+
+            // This is just example of how the DI injected service is used in this presenter
+            Log.d("InboxPresenter", "Application version: ${appVersionService.getApplicationVersion()}")
 
             return InboxScreen.State(emails) { event ->
                 when (event) {
