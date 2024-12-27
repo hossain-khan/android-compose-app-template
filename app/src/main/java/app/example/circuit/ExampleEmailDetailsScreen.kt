@@ -9,6 +9,7 @@ package app.example.circuit
 //
 //  -------------------------------------------------------------------------------------
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.example.data.Email
 import app.example.data.ExampleEmailRepository
+import app.example.data.ExampleEmailValidator
 import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -70,10 +72,16 @@ class DetailPresenter
         @Assisted private val navigator: Navigator,
         @Assisted private val screen: DetailScreen,
         private val emailRepository: ExampleEmailRepository,
+        private val exampleEmailValidator: ExampleEmailValidator,
     ) : Presenter<DetailScreen.State> {
         @Composable
         override fun present(): DetailScreen.State {
             val email = emailRepository.getEmail(screen.emailId)
+
+            // Example usage of the validator that is injected in this presenter
+            val allValidEmail = email.recipients.all { exampleEmailValidator.isValidEmail(it) }
+            Log.d("DetailPresenter", "Is ${email.recipients} valid: $allValidEmail")
+
             return DetailScreen.State(email) { event ->
                 when (event) {
                     DetailScreen.Event.BackClicked -> navigator.pop()
