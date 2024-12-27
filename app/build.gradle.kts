@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +20,13 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        // Read API key from local.properties
+        val apiKey: String =
+            project.rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use {
+                Properties().apply { load(it) }.getProperty("SERVICE_API_KEY")
+            } ?: "YOUR_SERVICE_API_KEY"
+        buildConfigField("String", "SERVICE_API_KEY", "\"$apiKey\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +52,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
