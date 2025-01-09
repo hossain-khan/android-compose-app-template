@@ -16,6 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -106,53 +108,59 @@ fun EmailDetailContent(
     modifier: Modifier = Modifier,
 ) {
     val email = state.email
-    Column(modifier.padding(16.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Image(
-                Icons.Default.Person,
-                modifier =
-                    Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Magenta)
-                        .padding(4.dp),
-                colorFilter = ColorFilter.tint(Color.White),
-                contentDescription = null,
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Row {
-                    Text(
-                        text = email.sender,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = email.timestamp,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.alpha(0.5f),
-                    )
-                }
-                Text(text = email.subject, style = MaterialTheme.typography.labelMedium)
-                Row {
-                    Text("To: ", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-                    Text(
-                        text = email.recipients.joinToString(","),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.alpha(0.5f),
-                    )
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(modifier.padding(innerPadding).padding(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Image(
+                    Icons.Default.Person,
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color.Magenta)
+                            .padding(4.dp),
+                    colorFilter = ColorFilter.tint(Color.White),
+                    contentDescription = null,
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row {
+                        Text(
+                            text = email.sender,
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = email.timestamp,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.alpha(0.5f),
+                        )
+                    }
+                    Text(text = email.subject, style = MaterialTheme.typography.labelMedium)
+                    Row {
+                        Text(
+                            "To: ",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = email.recipients.joinToString(","),
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.alpha(0.5f),
+                        )
+                    }
                 }
             }
-        }
-        @Suppress("DEPRECATION") // Deprecated in Android but not yet available in CM
-        (Divider(modifier = Modifier.padding(vertical = 16.dp)))
-        Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
+            @Suppress("DEPRECATION") // Deprecated in Android but not yet available in CM
+            (Divider(modifier = Modifier.padding(vertical = 16.dp)))
+            Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
 
-        Button(
-            onClick = { state.eventSink(DetailScreen.Event.BackClicked) },
-            modifier = Modifier.padding(top = 16.dp).align(Alignment.End),
-        ) {
-            Text("Go Back")
+            Button(
+                onClick = { state.eventSink(DetailScreen.Event.BackClicked) },
+                modifier = Modifier.padding(top = 16.dp).align(Alignment.End),
+            ) {
+                Text("Go Back")
+            }
         }
     }
 }

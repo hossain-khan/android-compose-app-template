@@ -5,10 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
 import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
 import app.example.di.AppScope
@@ -35,23 +31,20 @@ class MainActivity
 
             setContent {
                 ComposeAppTheme {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        // See https://slackhq.github.io/circuit/navigation/
-                        val backStack = rememberSaveableBackStack(root = InboxScreen)
-                        val navigator = rememberCircuitNavigator(backStack)
+                    // See https://slackhq.github.io/circuit/navigation/
+                    val backStack = rememberSaveableBackStack(root = InboxScreen)
+                    val navigator = rememberCircuitNavigator(backStack)
 
-                        // See https://slackhq.github.io/circuit/circuit-content/
-                        CircuitCompositionLocals(circuit) {
-                            NavigableCircuitContent(
-                                navigator = navigator,
-                                backStack = backStack,
-                                Modifier.padding(innerPadding),
-                                decoration =
-                                    GestureNavigationDecoration {
-                                        navigator.pop()
-                                    },
-                            )
-                        }
+                    // See https://slackhq.github.io/circuit/circuit-content/
+                    CircuitCompositionLocals(circuit) {
+                        NavigableCircuitContent(
+                            navigator = navigator,
+                            backStack = backStack,
+                            decoration =
+                                GestureNavigationDecoration {
+                                    navigator.pop()
+                                },
+                        )
                     }
                 }
             }
