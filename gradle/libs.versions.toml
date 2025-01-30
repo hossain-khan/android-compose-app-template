@@ -25,7 +25,7 @@ anvil = "0.4.1"
 dagger = "2.55"
 
 # https://developer.android.com/develop/ui/compose/text/fonts
-googleFonts = "1.7.6"
+googleFonts = "1.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
