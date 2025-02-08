@@ -10,7 +10,7 @@ activityCompose = "1.10.0"
 composeBom = "2025.01.01"
 
 # https://github.com/slackhq/circuit/releases
-circuit = "0.25.0"
+circuit = "0.26.0"
 
 # Kotlin Symbol Processing API
 # https://kotlinlang.org/docs/ksp-overview.html
