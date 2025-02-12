@@ -21,11 +21,12 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // Read API key from local.properties
-        val apiKey: String =
+        // Read key or other properties from local.properties
+        val localProperties =
             project.rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use {
-                Properties().apply { load(it) }.getProperty("SERVICE_API_KEY")
-            } ?: "YOUR_SERVICE_API_KEY"
+                Properties().apply { load(it) }
+            }
+        val apiKey = localProperties?.getProperty("SERVICE_API_KEY") ?: "MISSING-KEY"
         buildConfigField("String", "SERVICE_API_KEY", "\"$apiKey\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -57,7 +58,6 @@ android {
 }
 
 dependencies {
-    // App dependencies
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
@@ -86,13 +86,13 @@ dependencies {
     implementation(libs.anvil.annotations.optional)
 
     // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.androidx.ui.tooling)
+    testImplementation(libs.junit)
 }
 
 ksp {
