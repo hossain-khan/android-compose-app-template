@@ -24,7 +24,7 @@ Unfortunately, you **do** have to do some manual work after cloning the template
 * [ ] Update app name and package id in XML and Gradle
 * [ ] Update your app theme colors (_use [Theme Builder](https://material-foundation.github.io/material-theme-builder/)_)
 * [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
-* [ ] Rename `ComposeApp***` to preferred file names
+* [ ] Rename `CircuitApp***` to preferred file names
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
 * [ ] Update/remove repository license
 * [ ] Configure [renovate](https://github.com/apps/renovate) for depenency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
