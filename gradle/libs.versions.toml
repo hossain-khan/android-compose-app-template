@@ -1,31 +1,18 @@
 [versions]
+activityCompose = "1.10.0"
 agp = "8.8.0"
-kotlin = "2.1.10"
+anvil = "0.4.1"
+circuit = "0.26.0"
+composeBom = "2025.01.01"
 coreKtx = "1.15.0"
+dagger = "2.55"
+espressoCore = "3.6.1"
+googleFonts = "1.7.7"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.10.0"
-composeBom = "2025.01.01"
-
-# https://github.com/slackhq/circuit/releases
-circuit = "0.26.0"
-
-# Kotlin Symbol Processing API
-# https://kotlinlang.org/docs/ksp-overview.html
-# https://github.com/google/ksp/releases
+kotlin = "2.1.10"
 ksp = "2.1.10-1.0.29"
-
-# Forked Anvil
-# https://github.com/ZacSweers/anvil
-anvil = "0.4.1"
-
-# https://dagger.dev/dev-guide/ksp
-dagger = "2.55"
-
-# https://developer.android.com/develop/ui/compose/text/fonts
-googleFonts = "1.7.7"
+lifecycleRuntimeKtx = "2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +41,8 @@ circuitx-gestureNav = { group = "com.slack.circuit", name = "circuitx-gesture-na
 circuit-codegen-annotations = { group = "com.slack.circuit", name = "circuit-codegen-annotations", version.ref = "circuit" }
 circuit-codegen = { group = "com.slack.circuit", name = "circuit-codegen", version.ref = "circuit" }
 
+# https://dagger.dev/
+# https://dagger.dev/dev-guide/ksp
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 
@@ -62,7 +51,7 @@ dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 anvil-annotations = { group = "dev.zacsweers.anvil", name = "annotations", version.ref = "anvil"}
 anvil-annotations-optional = { group = "dev.zacsweers.anvil", name = "annotations-optional", version.ref = "anvil"}
 
-
+# # https://developer.android.com/develop/ui/compose/text/fonts
 # https://mvnrepository.com/artifact/androidx.compose.ui/ui-text-google-fonts
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
 
@@ -78,6 +67,9 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 # https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.parcelize
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
+# Kotlin Symbol Processing API
+# https://kotlinlang.org/docs/ksp-overview.html
+# https://github.com/google/ksp/releases
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 # https://github.com/ZacSweers/anvil/blob/main/FORK.md
