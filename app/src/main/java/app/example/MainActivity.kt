@@ -14,7 +14,6 @@ import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
-import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 import com.squareup.anvil.annotations.ContributesMultibinding
 import javax.inject.Inject
 
@@ -40,10 +39,6 @@ class MainActivity
                         NavigableCircuitContent(
                             navigator = navigator,
                             backStack = backStack,
-                            decoration =
-                                GestureNavigationDecoration {
-                                    navigator.pop()
-                                },
                         )
                     }
                 }
