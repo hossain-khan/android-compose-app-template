@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Circuit App"
+rootProject.name = "Circuit App Template"
 include(":app")
