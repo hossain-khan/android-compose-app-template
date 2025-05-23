@@ -2,6 +2,7 @@ package app.example.di
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import androidx.annotation.Keep
 import androidx.core.app.AppComponentFactory
@@ -96,5 +97,18 @@ class ComposeAppComponentFactory : AppComponentFactory() {
      */
     companion object {
         private lateinit var activityProviders: Map<Class<out Activity>, Provider<Activity>>
+
+        /**
+         * Creates an instance of AppComponent using the Dagger-generated implementation.
+         *
+         * @param context Application context to be bound in the component
+         * @return An implementation of the AppComponent interface
+         */
+        fun create(context: Context): AppComponent {
+            // Using generated Dagger implementation, but with proper name for newer Kotlin version
+            return DaggerAppComponent_Impl.builder()
+                .context(context)
+                .build()
+        }
     }
 }
