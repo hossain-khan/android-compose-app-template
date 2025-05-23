@@ -11,7 +11,8 @@ googleFonts = "1.8.2"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "2.1.10"
-ksp = "2.1.20-2.0.0"
+# The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.1.10 in this case)
+ksp = "2.1.10-1.0.31"
 lifecycleRuntimeKtx = "2.9.0"
 
 [libraries]
