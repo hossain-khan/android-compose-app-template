@@ -13,7 +13,7 @@ junitVersion = "1.2.1"
 kotlin = "2.1.10"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.1.10 in this case)
 ksp = "2.1.10-1.0.31"
-lifecycleRuntimeKtx = "2.9.0"
+lifecycleRuntimeKtx = "2.9.1"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
