@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.anvil)
 }
@@ -78,9 +77,9 @@ dependencies {
     ksp(libs.circuit.codegen)
 
     implementation(libs.dagger)
-    // Dagger KSP support is in Alpha, not available yet. Using KAPT for now.
+    // Using KSP for Dagger annotation processing
     // https://dagger.dev/dev-guide/ksp.html
-    kapt(libs.dagger.compiler)
+    ksp(libs.dagger.compiler)
 
     implementation(libs.anvil.annotations)
     implementation(libs.anvil.annotations.optional)
