@@ -63,6 +63,38 @@ class ExampleEmailRepositoryImpl
                     timestamp = "5:00 PM",
                     recipients = listOf("everyone@example.com"),
                 ),
+                Email(
+                    id = "4",
+                    subject = "Project Update",
+                    body = "Hi team, a quick update on the project status. We are on track to meet the deadline. Please keep up the great work!",
+                    sender = "Project Lead",
+                    timestamp = "9:00 AM",
+                    recipients = listOf("devteam@example.com"),
+                ),
+                Email(
+                    id = "5",
+                    subject = "Your Order has Shipped!",
+                    body = "Good news! Your recent order has been shipped and is on its way. You can track its progress using the link below.",
+                    sender = "OnlineStore",
+                    timestamp = "10:30 AM",
+                    recipients = listOf("customer@example.com"),
+                ),
+                Email(
+                    id = "6",
+                    subject = "Weekend Plans?",
+                    body = "Hey, any plans for the weekend? Let me know if you're free to catch up!",
+                    sender = "Alex Green",
+                    timestamp = "1:15 PM",
+                    recipients = listOf("friend@example.com"),
+                ),
+                Email(
+                    id = "7",
+                    subject = "New Blog Post: Mastering Kotlin Coroutines",
+                    body = "Check out our latest blog post on mastering Kotlin Coroutines. Learn how to write efficient and concurrent code.",
+                    sender = "Tech Blog",
+                    timestamp = "2:45 PM",
+                    recipients = listOf("subscriber@example.com"),
+                ),
             )
 
         override fun getEmail(emailId: String): Email =

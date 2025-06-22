@@ -1,19 +1,19 @@
 [versions]
 activityCompose = "1.10.1"
-agp = "8.10.0"
+agp = "8.10.1"
 anvil = "0.4.1"
-circuit = "0.28.0"
-composeBom = "2025.05.01"
+circuit = "0.28.1"
+composeBom = "2025.06.01"
 coreKtx = "1.16.0"
 dagger = "2.56.2"
 espressoCore = "3.6.1"
-googleFonts = "1.8.2"
+googleFonts = "1.8.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "2.1.10"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.1.10 in this case)
 ksp = "2.1.10-1.0.31"
-lifecycleRuntimeKtx = "2.9.0"
+lifecycleRuntimeKtx = "2.9.1"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
