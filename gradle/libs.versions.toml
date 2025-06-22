@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.10.1"
-agp = "8.7.1"
+agp = "8.3.0"
 anvil = "0.4.1"
 circuit = "0.28.1"
 composeBom = "2025.06.01"
