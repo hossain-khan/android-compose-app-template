@@ -10,7 +10,7 @@ espressoCore = "3.6.1"
 googleFonts = "1.8.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-kotlin = "2.1.10"
+kotlin = "2.2.0"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.1.10 in this case)
 ksp = "2.1.10-1.0.31"
 lifecycleRuntimeKtx = "2.9.1"
