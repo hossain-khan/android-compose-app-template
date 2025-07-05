@@ -2,7 +2,7 @@ package app.example.data
 
 import android.content.Context
 import app.example.di.ApplicationContext
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject // Changed import
 
 // Example service class that does not need DI module or binding
 class ExampleAppVersionService

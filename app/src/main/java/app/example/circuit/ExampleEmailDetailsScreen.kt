@@ -40,16 +40,16 @@ import androidx.compose.ui.unit.dp
 import app.example.data.Email
 import app.example.data.ExampleEmailRepository
 import app.example.data.ExampleEmailValidator
-import app.example.di.AppScope
+import dev.zacsweers.metro.AppScope // Changed import
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted // Changed import
+import dev.zacsweers.metro.AssistedFactory // Changed import
+import dev.zacsweers.metro.Inject // Changed import for AssistedInject
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -69,7 +69,7 @@ data class DetailScreen(
 
 // See https://slackhq.github.io/circuit/presenter/
 class DetailPresenter
-    @AssistedInject
+    @Inject // Changed from @AssistedInject
     constructor(
         @Assisted private val navigator: Navigator,
         @Assisted private val screen: DetailScreen,
@@ -91,7 +91,7 @@ class DetailPresenter
             }
         }
 
-        @CircuitInject(DetailScreen::class, AppScope::class)
+        @CircuitInject(DetailScreen::class, AppScope::class) // Scope already updated by import
         @AssistedFactory
         fun interface Factory {
             fun create(
@@ -101,7 +101,7 @@ class DetailPresenter
         }
     }
 
-@CircuitInject(DetailScreen::class, AppScope::class)
+@CircuitInject(DetailScreen::class, AppScope::class) // Scope already updated by import
 @Composable
 fun EmailDetailContent(
     state: DetailScreen.State,

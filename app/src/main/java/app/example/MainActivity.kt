@@ -9,7 +9,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.remember
 import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
-import app.example.di.AppScope
+import dev.zacsweers.metro.AppScope // Changed import
 import app.example.ui.theme.CircuitAppTheme
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit
@@ -19,10 +19,11 @@ import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
-import com.squareup.anvil.annotations.ContributesMultibinding
-import javax.inject.Inject
+import dev.zacsweers.metro.ContributesIntoMap // Changed import
+import dev.zacsweers.metro.Inject // Changed import
+import dev.zacsweers.metro.binding // Import for binding helper
 
-@ContributesMultibinding(AppScope::class, boundType = Activity::class)
+@ContributesIntoMap(AppScope::class, binding = binding<Activity>()) // Changed annotation
 @ActivityKey(MainActivity::class)
 class MainActivity
     @Inject

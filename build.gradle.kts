@@ -18,14 +18,14 @@ plugins {
 
     // Applies the Kotlin KAPT (Kotlin Annotation Processing Tool) plugin.
     // Project: https://kotlinlang.org/docs/kapt.html
-    alias(libs.plugins.kotlin.kapt) apply false
+    // Kapt plugin alias removed
 
     // Applies the Kotlin Symbol Processing (KSP) plugin.
     // Project: https://github.com/google/ksp
     alias(libs.plugins.ksp) apply false
 
-    // Applies the Anvil plugin for Dagger dependency injection.
-    // Project: https://github.com/square/anvil
-    // Also see: https://github.com/ZacSweers/anvil/blob/main/FORK.md
-    alias(libs.plugins.anvil) apply false
+    // Anvil plugin alias removed
+
+    // Metro plugin declaration
+    alias(libs.plugins.metro) apply false
 }
