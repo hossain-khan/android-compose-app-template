@@ -31,9 +31,7 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -52,10 +50,11 @@ data object InboxScreen : Screen {
 }
 
 // See https://slackhq.github.io/circuit/presenter/
+@CircuitInject(InboxScreen::class, AppScope::class)
 class InboxPresenter
     @Inject
     constructor(
-        @Assisted private val navigator: Navigator,
+        private val navigator: Navigator,
         private val emailRepository: ExampleEmailRepository,
         private val appVersionService: ExampleAppVersionService,
     ) : Presenter<InboxScreen.State> {
@@ -74,12 +73,6 @@ class InboxPresenter
                     is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
                 }
             }
-        }
-
-        @CircuitInject(InboxScreen::class, AppScope::class)
-        @AssistedFactory
-        fun interface Factory {
-            fun create(navigator: Navigator): InboxPresenter
         }
     }
 
