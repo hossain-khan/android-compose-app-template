@@ -5,9 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.anvil)
+    alias(libs.plugins.metro)
 }
 
 android {
@@ -77,13 +76,8 @@ dependencies {
     implementation(libs.circuitx.overlays)
     ksp(libs.circuit.codegen)
 
-    implementation(libs.dagger)
-    // Dagger KSP support is in Alpha, not available yet. Using KAPT for now.
-    // https://dagger.dev/dev-guide/ksp.html
-    kapt(libs.dagger.compiler)
-
-    implementation(libs.anvil.annotations)
-    implementation(libs.anvil.annotations.optional)
+    implementation(libs.metro.runtime)
+    ksp(libs.metro.runtime.ksp)
 
     // Testing
     androidTestImplementation(libs.androidx.espresso.core)
@@ -96,8 +90,6 @@ dependencies {
 }
 
 ksp {
-    // Anvil-KSP
-    arg("anvil-ksp-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
-    // kotlin-inject-anvil (requires 0.0.3+)
-    arg("kotlin-inject-anvil-contributing-annotations", "com.slack.circuit.codegen.annotations.CircuitInject")
+    // Circuit-KSP
+    arg("circuit-codegen-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
 }
