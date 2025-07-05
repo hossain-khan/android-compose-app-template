@@ -76,8 +76,7 @@ dependencies {
     implementation(libs.circuitx.overlays)
     ksp(libs.circuit.codegen)
 
-    implementation(libs.metro.runtime)
-    ksp(libs.metro.runtime.ksp)
+
 
     // Testing
     androidTestImplementation(libs.androidx.espresso.core)
