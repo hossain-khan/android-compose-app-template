@@ -91,4 +91,5 @@ dependencies {
 ksp {
     // Circuit-KSP
     arg("circuit-codegen-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
+    arg("circuit.codegen.mode", "metro")
 }
