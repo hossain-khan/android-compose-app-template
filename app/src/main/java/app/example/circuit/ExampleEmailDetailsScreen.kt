@@ -40,13 +40,14 @@ import androidx.compose.ui.unit.dp
 import app.example.data.Email
 import app.example.data.ExampleEmailRepository
 import app.example.data.ExampleEmailValidator
-import app.example.di.AppScope
+import app.example.di.ApplicationScope
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
+import com.squareup.anvil.annotations.ContributesTo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -91,8 +92,9 @@ class DetailPresenter
             }
         }
 
-        @CircuitInject(DetailScreen::class, AppScope::class)
+        @CircuitInject(DetailScreen::class, ApplicationScope::class)
         @AssistedFactory
+        @ContributesTo(ApplicationScope::class)
         fun interface Factory {
             fun create(
                 navigator: Navigator,
@@ -101,8 +103,9 @@ class DetailPresenter
         }
     }
 
-@CircuitInject(DetailScreen::class, AppScope::class)
+@CircuitInject(DetailScreen::class, ApplicationScope::class)
 @Composable
+@ContributesTo(ApplicationScope::class)
 fun EmailDetailContent(
     state: DetailScreen.State,
     modifier: Modifier = Modifier,

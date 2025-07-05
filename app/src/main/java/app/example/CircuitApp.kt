@@ -1,13 +1,11 @@
 package app.example
 
 import android.app.Application
-import app.example.di.AppComponent
+import app.example.di.AppGraph
 
 /**
  * Application class for the app with key initializations.
  */
 class CircuitApp : Application() {
-    private val appComponent: AppComponent by lazy { AppComponent.create(this) }
-
-    fun appComponent(): AppComponent = appComponent
+    val graph: AppGraph by lazy { AppGraph::class.create(this) }
 }

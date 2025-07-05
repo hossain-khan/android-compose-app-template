@@ -1,6 +1,6 @@
 package app.example.data
 
-import app.example.di.AppScope
+import app.example.di.ApplicationScope
 import com.squareup.anvil.annotations.ContributesBinding
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ interface ExampleEmailRepository {
 /**
  * This is example repository. It is used to demonstrate how to use Dagger in Anvil.
  */
-@ContributesBinding(AppScope::class)
+@ContributesBinding(ApplicationScope::class)
 class ExampleEmailRepositoryImpl
     @Inject
     constructor() : ExampleEmailRepository {
