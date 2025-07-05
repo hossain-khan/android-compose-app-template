@@ -3,10 +3,10 @@ package app.example.di
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.ui.Ui
-import com.squareup.metro.ContributesTo
-import com.squareup.metro.SingleIn
-import com.squareup.metro.Provides
-import com.squareup.metro.Multibinding
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.Multibinding
 
 /**
  * Metro providers that contribute Circuit dependencies.
@@ -23,7 +23,7 @@ interface CircuitModule {
      * Metro multi-binding method that provides a set of Ui.Factory instances.
      */
     @Multibinding(allowEmpty = true)
-    val viewFactories: Set<Ui.Factory>
+    val uiFactories: Set<Ui.Factory>
 
     /**
      * Provides a singleton instance of Circuit with presenter and ui configured.

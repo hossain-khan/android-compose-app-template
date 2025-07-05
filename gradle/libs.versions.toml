@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.10.1"
-agp = "8.3.2"
+agp = "7.4.2"
 circuit = "0.28.1"
 composeBom = "2025.06.01"
 coreKtx = "1.16.0"
@@ -12,7 +12,7 @@ kotlin = "2.1.10"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.1.10 in this case)
 ksp = "2.1.10-1.0.31"
 lifecycleRuntimeKtx = "2.9.1"
-metro = "0.2.0"
+metro = "0.1.2"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -43,8 +43,8 @@ circuitx-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", v
 
 # Metro - Modern dependency injection for Kotlin
 # https://github.com/ZacSweers/metro
-metro-runtime = { group = "com.squareup.metro", name = "metro-runtime", version.ref = "metro" }
-metro-runtime-ksp = { group = "com.squareup.metro", name = "metro-runtime-ksp", version.ref = "metro" }
+metro-runtime = { group = "dev.zacsweers.metro", name = "metro-runtime", version.ref = "metro" }
+metro-runtime-ksp = { group = "dev.zacsweers.metro", name = "metro-runtime-ksp", version.ref = "metro" }
 
 # # https://developer.android.com/develop/ui/compose/text/fonts
 # https://mvnrepository.com/artifact/androidx.compose.ui/ui-text-google-fonts
@@ -69,6 +69,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 # Metro KSP plugin
 # https://zacsweers.github.io/metro/
-metro = { id = "com.squareup.metro", version.ref = "metro" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 
 
