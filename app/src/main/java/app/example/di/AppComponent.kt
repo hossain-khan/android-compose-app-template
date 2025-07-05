@@ -14,6 +14,18 @@ import javax.inject.Provider
 interface AppGraph {
     val activityProviders: Map<Class<out Activity>, @JvmSuppressWildcards Provider<Activity>>
 
+    @Provides
+    @SingleIn(AppScope::class)
+    fun provideCircuit(
+        presenterFactories: Set<Presenter.Factory>,
+        uiFactories: Set<Ui.Factory>,
+    ): Circuit {
+        return Circuit.Builder()
+            .addPresenterFactories(presenterFactories)
+            .addUiFactories(uiFactories)
+            .build()
+    }
+
     @DependencyGraph.Factory
     interface Factory {
         fun create(
