@@ -47,8 +47,8 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
-import com.squareup.metro.Assisted
-import com.squareup.metro.AssistedFactory
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
 import javax.inject.Inject
 import kotlinx.parcelize.Parcelize
 

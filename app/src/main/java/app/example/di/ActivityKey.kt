@@ -1,7 +1,7 @@
 package app.example.di
 
 import android.app.Activity
-import com.squareup.metro.IntoMap
+import dev.zacsweers.metro.IntoMap
 import kotlin.reflect.KClass
 
 /**

@@ -1,6 +1,6 @@
 package app.example.di
 
-import com.squareup.metro.Scope
+import dev.zacsweers.metro.Scope
 
 /**
  * App scope for dependency injection using Metro.
