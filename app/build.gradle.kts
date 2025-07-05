@@ -76,7 +76,8 @@ dependencies {
     implementation(libs.circuitx.overlays)
     ksp(libs.circuit.codegen)
 
-
+    // javax.inject for Metro compatibility
+    implementation(libs.javax.inject)
 
     // Testing
     androidTestImplementation(libs.androidx.espresso.core)
@@ -89,6 +90,6 @@ dependencies {
 }
 
 ksp {
-    // Circuit-KSP
-    arg("circuit-codegen-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
+    // Circuit-KSP for Metro
+    arg("circuit.codegen.mode", "metro")
 }

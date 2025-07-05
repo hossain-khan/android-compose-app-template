@@ -1,6 +1,6 @@
 package app.example.data
 
-import app.example.di.AppScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
 
