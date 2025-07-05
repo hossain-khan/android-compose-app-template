@@ -9,7 +9,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.remember
 import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
-import app.example.di.AppScope
+import dev.zacsweers.metro.AppScope
 import app.example.ui.theme.CircuitAppTheme
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit

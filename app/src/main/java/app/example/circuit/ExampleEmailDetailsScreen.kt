@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import app.example.data.Email
 import app.example.data.ExampleEmailRepository
 import app.example.data.ExampleEmailValidator
-import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
@@ -48,7 +47,7 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AppScope
 import javax.inject.Inject
 import kotlinx.parcelize.Parcelize
 
@@ -68,6 +67,7 @@ data class DetailScreen(
 }
 
 // See https://slackhq.github.io/circuit/presenter/
+@CircuitInject(DetailScreen::class, AppScope::class)
 class DetailPresenter
     @Inject
     constructor(
@@ -89,15 +89,6 @@ class DetailPresenter
                     DetailScreen.Event.BackClicked -> navigator.pop()
                 }
             }
-        }
-
-        @CircuitInject(DetailScreen::class, AppScope::class)
-        @AssistedFactory
-        fun interface Factory {
-            fun create(
-                navigator: Navigator,
-                screen: DetailScreen,
-            ): DetailPresenter
         }
     }
 

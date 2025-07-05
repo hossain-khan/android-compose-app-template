@@ -1,6 +1,7 @@
 package app.example.di
 
 import app.example.data.ExampleEmailValidator
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 
