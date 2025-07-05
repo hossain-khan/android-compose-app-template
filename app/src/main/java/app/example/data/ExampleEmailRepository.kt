@@ -1,7 +1,7 @@
 package app.example.data
 
 import app.example.di.AppScope
-import com.squareup.anvil.annotations.ContributesBinding
+import com.squareup.metro.ContributesBinding
 import javax.inject.Inject
 
 // -------------------------------------------------------------------------------------

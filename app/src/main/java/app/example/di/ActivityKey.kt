@@ -1,12 +1,13 @@
 package app.example.di
 
 import android.app.Activity
-import dagger.MapKey
+import com.squareup.metro.IntoMap
 import kotlin.reflect.KClass
 
 /**
- * A Dagger multi-binding key used for registering a [Activity] into the top level dagger graphs.
+ * A Metro map key annotation used for registering a [Activity] into the dependency graph.
  */
-@MapKey annotation class ActivityKey(
+@IntoMap
+annotation class ActivityKey(
     val value: KClass<out Activity>,
 )

@@ -19,10 +19,10 @@ import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
-import com.squareup.anvil.annotations.ContributesMultibinding
+import com.squareup.metro.ContributesBinding
 import javax.inject.Inject
 
-@ContributesMultibinding(AppScope::class, boundType = Activity::class)
+@ContributesBinding(AppScope::class, boundType = Activity::class)
 @ActivityKey(MainActivity::class)
 class MainActivity
     @Inject
