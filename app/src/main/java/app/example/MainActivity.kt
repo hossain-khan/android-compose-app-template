@@ -23,8 +23,8 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 
-@ContributesIntoMap(AppScope::class, binding = binding<Activity>())
 @ActivityKey(MainActivity::class)
+@ContributesIntoMap(AppScope::class, binding = binding<Activity>())
 @Inject
 class MainActivity(
     private val circuit: Circuit,

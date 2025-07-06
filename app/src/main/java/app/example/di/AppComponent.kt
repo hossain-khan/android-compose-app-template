@@ -23,8 +23,8 @@ interface AppGraph {
     }
 
     companion object {
-        fun create(context: Context): AppGraph =
-            createGraphFactory<AppGraph.Factory>()
+        override fun create(context: Context): AppGraph =
+            createGraphFactory<Factory>()
                 .create(context)
     }
 }
