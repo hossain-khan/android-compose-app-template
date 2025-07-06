@@ -1,8 +1,9 @@
 package app.example.data
 
-import app.example.di.AppScope
-import com.squareup.anvil.annotations.ContributesBinding
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 // -------------------------------------------------------------------------------------
 //
@@ -31,11 +32,12 @@ interface ExampleEmailRepository {
 }
 
 /**
- * This is example repository. It is used to demonstrate how to use Dagger in Anvil.
+ * This is example repository. It is used to demonstrate how to use Metro DI.
  */
+@SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
+@Inject
 class ExampleEmailRepositoryImpl
-    @Inject
     constructor() : ExampleEmailRepository {
         override fun getEmails(): List<Email> =
             listOf(
@@ -97,7 +99,7 @@ class ExampleEmailRepositoryImpl
                 ),
             )
 
-        override fun getEmail(emailId: String): Email =
-            getEmails().find { it.id == emailId }
-                ?: throw IllegalArgumentException("Email not found")
-    }
+    override fun getEmail(emailId: String): Email =
+        getEmails().find { it.id == emailId }
+            ?: throw IllegalArgumentException("Email not found")
+}

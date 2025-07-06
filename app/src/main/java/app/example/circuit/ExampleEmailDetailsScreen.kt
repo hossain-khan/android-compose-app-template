@@ -40,16 +40,16 @@ import androidx.compose.ui.unit.dp
 import app.example.data.Email
 import app.example.data.ExampleEmailRepository
 import app.example.data.ExampleEmailValidator
-import app.example.di.AppScope
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -68,8 +68,8 @@ data class DetailScreen(
 }
 
 // See https://slackhq.github.io/circuit/presenter/
+@Inject
 class DetailPresenter
-    @AssistedInject
     constructor(
         @Assisted private val navigator: Navigator,
         @Assisted private val screen: DetailScreen,
