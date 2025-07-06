@@ -14,11 +14,15 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesTo(AppScope::class)
 interface CircuitModule {
-    @Multibinds
-    fun presenterFactories(): Set<Presenter.Factory>
+    /**
+     * Metro multi-binding method that provides a set of Presenter.Factory instances.
+     */
+    @Multibinds fun presenterFactories(): Set<Presenter.Factory>
 
-    @Multibinds
-    fun uiFactories(): Set<Ui.Factory>
+    /**
+     * Metro multi-binding method that provides a set of Ui.Factory instances.
+     */
+    @Multibinds fun uiFactories(): Set<Ui.Factory>
 
     @Provides
     @SingleIn(AppScope::class)

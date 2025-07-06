@@ -74,31 +74,31 @@ class DetailPresenter(
     @Assisted private val screen: DetailScreen,
     private val emailRepository: ExampleEmailRepository,
     private val exampleEmailValidator: ExampleEmailValidator,
-) : Presenter<DetailScreen.State> {
-    @Composable
-    override fun present(): DetailScreen.State {
-        val email = emailRepository.getEmail(screen.emailId)
+    ) : Presenter<DetailScreen.State> {
+        @Composable
+        override fun present(): DetailScreen.State {
+            val email = emailRepository.getEmail(screen.emailId)
 
-        // Example usage of the validator that is injected in this presenter
-        val allValidEmail = email.recipients.all { exampleEmailValidator.isValidEmail(it) }
-        Log.d("DetailPresenter", "Is ${email.recipients} valid: $allValidEmail")
+            // Example usage of the validator that is injected in this presenter
+            val allValidEmail = email.recipients.all { exampleEmailValidator.isValidEmail(it) }
+            Log.d("DetailPresenter", "Is ${email.recipients} valid: $allValidEmail")
 
-        return DetailScreen.State(email) { event ->
-            when (event) {
-                DetailScreen.Event.BackClicked -> navigator.pop()
+            return DetailScreen.State(email) { event ->
+                when (event) {
+                    DetailScreen.Event.BackClicked -> navigator.pop()
+                }
             }
         }
-    }
 
-    @CircuitInject(DetailScreen::class, AppScope::class)
-    @AssistedFactory
-    fun interface Factory {
-        fun create(
-            navigator: Navigator,
-            screen: DetailScreen,
-        ): DetailPresenter
+        @CircuitInject(DetailScreen::class, AppScope::class)
+        @AssistedFactory
+        fun interface Factory {
+            fun create(
+                navigator: Navigator,
+                screen: DetailScreen,
+            ): DetailPresenter
+        }
     }
-}
 
 @CircuitInject(DetailScreen::class, AppScope::class)
 @Composable
