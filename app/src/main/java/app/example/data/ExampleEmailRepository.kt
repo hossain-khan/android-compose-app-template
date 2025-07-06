@@ -99,7 +99,7 @@ class ExampleEmailRepositoryImpl
                 ),
             )
 
-    override fun getEmail(emailId: String): Email =
-        getEmails().find { it.id == emailId }
-            ?: throw IllegalArgumentException("Email not found")
-}
+        override fun getEmail(emailId: String): Email =
+            getEmails().find { it.id == emailId }
+                ?: throw IllegalArgumentException("Email not found")
+    }
