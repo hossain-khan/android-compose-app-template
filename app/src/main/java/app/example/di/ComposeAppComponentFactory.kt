@@ -87,7 +87,7 @@ class ComposeAppComponentFactory : AppComponentFactory() {
     ): Application {
         val app = super.instantiateApplicationCompat(classLoader, className)
         // Retrieve the Metro app graph and the activity providers from it
-        activityProviders = (app as CircuitApp).appComponent().activityProviders
+        activityProviders = (app as CircuitApp).appGraph().activityProviders
         return app
     }
 
