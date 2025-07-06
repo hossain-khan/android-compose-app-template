@@ -46,10 +46,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
         buildConfig = true
@@ -61,6 +57,13 @@ android {
         // via constructor parameters and instantiated by our DI framework (Metro) rather
         // than the Android system's default no-arg constructor mechanism.
         disable += "Instantiatable"
+    }
+}
+
+kotlin {
+    // See https://kotlinlang.org/docs/gradle-compiler-options.html
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
