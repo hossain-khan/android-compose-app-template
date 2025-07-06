@@ -48,7 +48,8 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AppScope
-import javax.inject.Inject
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -67,30 +68,34 @@ data class DetailScreen(
 }
 
 // See https://slackhq.github.io/circuit/presenter/
-@CircuitInject(DetailScreen::class, AppScope::class)
-class DetailPresenter
-    @Inject
-    constructor(
-        @Assisted private val navigator: Navigator,
-        @Assisted private val screen: DetailScreen,
-        private val emailRepository: ExampleEmailRepository,
-        private val exampleEmailValidator: ExampleEmailValidator,
-    ) : Presenter<DetailScreen.State> {
-        @Composable
-        override fun present(): DetailScreen.State {
-            val email = emailRepository.getEmail(screen.emailId)
+@Inject
+class DetailPresenter(
+    @Assisted private val navigator: Navigator,
+    @Assisted private val screen: DetailScreen,
+    private val emailRepository: ExampleEmailRepository,
+    private val exampleEmailValidator: ExampleEmailValidator,
+) : Presenter<DetailScreen.State> {
+    @Composable
+    override fun present(): DetailScreen.State {
+        val email = emailRepository.getEmail(screen.emailId)
 
-            // Example usage of the validator that is injected in this presenter
-            val allValidEmail = email.recipients.all { exampleEmailValidator.isValidEmail(it) }
-            Log.d("DetailPresenter", "Is ${email.recipients} valid: $allValidEmail")
+        // Example usage of the validator that is injected in this presenter
+        val allValidEmail = email.recipients.all { exampleEmailValidator.isValidEmail(it) }
+        Log.d("DetailPresenter", "Is ${email.recipients} valid: $allValidEmail")
 
-            return DetailScreen.State(email) { event ->
-                when (event) {
-                    DetailScreen.Event.BackClicked -> navigator.pop()
-                }
+        return DetailScreen.State(email) { event ->
+            when (event) {
+                DetailScreen.Event.BackClicked -> navigator.pop()
             }
         }
     }
+
+    @CircuitInject(DetailScreen::class, AppScope::class)
+    @AssistedFactory
+    fun interface Factory {
+        fun create(navigator: Navigator, screen: DetailScreen): DetailPresenter
+    }
+}
 
 @CircuitInject(DetailScreen::class, AppScope::class)
 @Composable

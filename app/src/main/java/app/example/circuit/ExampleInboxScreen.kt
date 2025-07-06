@@ -32,7 +32,8 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AppScope
-import javax.inject.Inject
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -51,31 +52,35 @@ data object InboxScreen : Screen {
 }
 
 // See https://slackhq.github.io/circuit/presenter/
-@CircuitInject(InboxScreen::class, AppScope::class)
-class InboxPresenter
-    @Inject
-    constructor(
-        @Assisted private val navigator: Navigator,
-        private val emailRepository: ExampleEmailRepository,
-        private val appVersionService: ExampleAppVersionService,
-    ) : Presenter<InboxScreen.State> {
-        @Composable
-        override fun present(): InboxScreen.State {
-            val emails by produceState<List<Email>>(initialValue = emptyList()) {
-                value = emailRepository.getEmails()
-            }
+@Inject
+class InboxPresenter(
+    @Assisted private val navigator: Navigator,
+    private val emailRepository: ExampleEmailRepository,
+    private val appVersionService: ExampleAppVersionService,
+) : Presenter<InboxScreen.State> {
+    @Composable
+    override fun present(): InboxScreen.State {
+        val emails by produceState<List<Email>>(initialValue = emptyList()) {
+            value = emailRepository.getEmails()
+        }
 
-            // This is just example of how the DI injected service is used in this presenter
-            Log.d("InboxPresenter", "Application version: ${appVersionService.getApplicationVersion()}")
+        // This is just example of how the DI injected service is used in this presenter
+        Log.d("InboxPresenter", "Application version: ${appVersionService.getApplicationVersion()}")
 
-            return InboxScreen.State(emails) { event ->
-                when (event) {
-                    // Navigate to the detail screen when an email is clicked
-                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
-                }
+        return InboxScreen.State(emails) { event ->
+            when (event) {
+                // Navigate to the detail screen when an email is clicked
+                is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
             }
         }
     }
+
+    @CircuitInject(InboxScreen::class, AppScope::class)
+    @AssistedFactory
+    fun interface Factory {
+        fun create(navigator: Navigator): InboxPresenter
+    }
+}
 
 @CircuitInject(screen = InboxScreen::class, scope = AppScope::class)
 @OptIn(ExperimentalMaterial3Api::class)
