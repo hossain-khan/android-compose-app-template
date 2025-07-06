@@ -76,7 +76,6 @@ dependencies {
     implementation(libs.circuitx.overlays)
     ksp(libs.circuit.codegen)
 
-    // javax.inject for Metro compatibility
     implementation(libs.javax.inject)
 
     // Testing

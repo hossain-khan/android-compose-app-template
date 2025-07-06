@@ -2,7 +2,7 @@
 activityCompose = "1.10.1"
 # https://developer.android.com/build/releases/gradle-plugin
 agp = "8.11.0"
-circuit = "0.28.1"
+circuit = "0.29.1"
 composeBom = "2025.06.01"
 coreKtx = "1.16.0"
 espressoCore = "3.6.1"
@@ -42,14 +42,11 @@ circuitx-effects = { group = "com.slack.circuit", name = "circuitx-effects", ver
 circuitx-gestureNav = { group = "com.slack.circuit", name = "circuitx-gesture-navigation", version.ref = "circuit" }
 circuitx-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", version.ref = "circuit" }
 
-# javax.inject for Metro compatibility
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
 
 # # https://developer.android.com/develop/ui/compose/text/fonts
 # https://mvnrepository.com/artifact/androidx.compose.ui/ui-text-google-fonts
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
-
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
