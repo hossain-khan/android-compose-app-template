@@ -69,11 +69,12 @@ data class DetailScreen(
 
 // See https://slackhq.github.io/circuit/presenter/
 @Inject
-class DetailPresenter(
-    @Assisted private val navigator: Navigator,
-    @Assisted private val screen: DetailScreen,
-    private val emailRepository: ExampleEmailRepository,
-    private val exampleEmailValidator: ExampleEmailValidator,
+class DetailPresenter
+    constructor(
+        @Assisted private val navigator: Navigator,
+        @Assisted private val screen: DetailScreen,
+        private val emailRepository: ExampleEmailRepository,
+        private val exampleEmailValidator: ExampleEmailValidator,
     ) : Presenter<DetailScreen.State> {
         @Composable
         override fun present(): DetailScreen.State {

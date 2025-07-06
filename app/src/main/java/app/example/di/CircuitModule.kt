@@ -24,15 +24,18 @@ interface CircuitModule {
      */
     @Multibinds fun uiFactories(): Set<Ui.Factory>
 
-    @Provides
-    @SingleIn(AppScope::class)
-    fun provideCircuit(
-        presenterFactories: Set<Presenter.Factory>,
-        uiFactories: Set<Ui.Factory>,
-    ): Circuit =
-        Circuit
-            .Builder()
-            .addPresenterFactories(presenterFactories)
-            .addUiFactories(uiFactories)
-            .build()
+        /**
+         * Provides a singleton instance of Circuit with presenter and ui configured.
+         */
+        @Provides
+        @SingleIn(AppScope::class)
+        fun provideCircuit(
+            presenterFactories: Set<Presenter.Factory>,
+            uiFactories: Set<Ui.Factory>,
+        ): Circuit =
+            Circuit
+                .Builder()
+                .addPresenterFactories(presenterFactories)
+                .addUiFactories(uiFactories)
+                .build()
 }

@@ -26,8 +26,9 @@ import dev.zacsweers.metro.binding
 @ActivityKey(MainActivity::class)
 @ContributesIntoMap(AppScope::class, binding = binding<Activity>())
 @Inject
-class MainActivity(
-    private val circuit: Circuit,
+class MainActivity
+    constructor(
+        private val circuit: Circuit,
     ) : ComponentActivity() {
         @OptIn(ExperimentalSharedTransitionApi::class)
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,9 +51,9 @@ class MainActivity(
                                     navigator = navigator,
                                     backStack = backStack,
                                     decoratorFactory =
-                                        remember(navigator) {
-                                            GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
-                                        },
+                                    remember(navigator) {
+                                        GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
+                                    },
                                 )
                             }
                         }
