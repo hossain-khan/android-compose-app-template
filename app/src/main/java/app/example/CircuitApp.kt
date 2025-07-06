@@ -1,20 +1,20 @@
 package app.example
 
 import android.app.Application
+import android.util.Log
 import app.example.di.AppGraph
+import dev.zacsweers.metro.createGraphFactory
 
 /**
  * Application class for the app with key initializations.
  */
 class CircuitApp : Application() {
-    // Using a simple approach that should work with Metro
-    lateinit var appGraph: AppGraph
+    val appGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
 
     override fun onCreate() {
         super.onCreate()
-        // Initialize the graph here - Metro will provide the implementation
-        // For now, we'll leave this as a placeholder
-        // appGraph = MetroGeneratedFactory.create(this)
+
+        Log.d("CircuitApp", "Application onCreate called")
     }
 
     fun appComponent(): AppGraph = appGraph
