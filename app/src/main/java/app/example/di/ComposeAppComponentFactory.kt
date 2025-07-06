@@ -25,6 +25,9 @@ import kotlin.reflect.KClass
  *     android:appComponentFactory=".di.ComposeAppComponentFactory"
  *     ... />
  * ```
+ *
+ * See official example at:
+ * - https://github.com/ZacSweers/metro/blob/main/samples/compose-navigation-app/src/main/kotlin/dev/zacsweers/metro/sample/androidviewmodel/components/MetroAppComponentFactory.kt
  */
 @Keep
 class ComposeAppComponentFactory : AppComponentFactory() {
