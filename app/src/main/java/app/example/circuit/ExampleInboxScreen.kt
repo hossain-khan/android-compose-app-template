@@ -53,10 +53,11 @@ data object InboxScreen : Screen {
 
 // See https://slackhq.github.io/circuit/presenter/
 @Inject
-class InboxPresenter(
-    @Assisted private val navigator: Navigator,
-    private val emailRepository: ExampleEmailRepository,
-    private val appVersionService: ExampleAppVersionService,
+class InboxPresenter
+    constructor(
+        @Assisted private val navigator: Navigator,
+        private val emailRepository: ExampleEmailRepository,
+        private val appVersionService: ExampleAppVersionService,
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {
