@@ -28,36 +28,36 @@ import dev.zacsweers.metro.binding
 @Inject
 class MainActivity(
     private val circuit: Circuit,
-) : ComponentActivity() {
-    @OptIn(ExperimentalSharedTransitionApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
+    ) : ComponentActivity() {
+        @OptIn(ExperimentalSharedTransitionApi::class)
+        override fun onCreate(savedInstanceState: Bundle?) {
+            enableEdgeToEdge()
+            super.onCreate(savedInstanceState)
 
-        setContent {
-            CircuitAppTheme {
-                // See https://slackhq.github.io/circuit/navigation/
-                val backStack = rememberSaveableBackStack(root = InboxScreen)
-                val navigator = rememberCircuitNavigator(backStack)
+            setContent {
+                CircuitAppTheme {
+                    // See https://slackhq.github.io/circuit/navigation/
+                    val backStack = rememberSaveableBackStack(root = InboxScreen)
+                    val navigator = rememberCircuitNavigator(backStack)
 
-                // See https://slackhq.github.io/circuit/circuit-content/
-                CircuitCompositionLocals(circuit) {
-                    // See https://slackhq.github.io/circuit/shared-elements/
-                    SharedElementTransitionLayout {
-                        // See https://slackhq.github.io/circuit/overlays/
-                        ContentWithOverlays {
-                            NavigableCircuitContent(
-                                navigator = navigator,
-                                backStack = backStack,
-                                decoratorFactory =
-                                    remember(navigator) {
-                                        GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
-                                    },
-                            )
+                    // See https://slackhq.github.io/circuit/circuit-content/
+                    CircuitCompositionLocals(circuit) {
+                        // See https://slackhq.github.io/circuit/shared-elements/
+                        SharedElementTransitionLayout {
+                            // See https://slackhq.github.io/circuit/overlays/
+                            ContentWithOverlays {
+                                NavigableCircuitContent(
+                                    navigator = navigator,
+                                    backStack = backStack,
+                                    decoratorFactory =
+                                        remember(navigator) {
+                                            GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
+                                        },
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
-}
