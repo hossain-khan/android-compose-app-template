@@ -1,15 +1,16 @@
 package app.example.di
 
 import app.example.data.ExampleEmailValidator
-import com.squareup.anvil.annotations.ContributesTo
-import dagger.Module
-import dagger.Provides
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-// Example of a Dagger module that provides dependencies for the app.
-// You should delete this file and create your own modules.
+// Example of Metro providers that contribute to the app graph.
+// You should delete this file and create your own providers.
 @ContributesTo(AppScope::class)
-@Module
-class ExampleAppModule {
+interface ExampleAppModule {
     @Provides
-    fun provideEmailRepository(): ExampleEmailValidator = ExampleEmailValidator()
+    @SingleIn(AppScope::class)
+    fun provideEmailValidator(): ExampleEmailValidator = ExampleEmailValidator()
 }

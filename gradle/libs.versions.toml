@@ -1,19 +1,19 @@
 [versions]
 activityCompose = "1.10.1"
+# https://developer.android.com/build/releases/gradle-plugin
 agp = "8.11.0"
-anvil = "0.4.1"
-circuit = "0.28.1"
+circuit = "0.29.1"
 composeBom = "2025.06.01"
 coreKtx = "1.16.0"
-dagger = "2.56.2"
 espressoCore = "3.6.1"
 googleFonts = "1.8.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-kotlin = "2.1.10"
-# The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.1.10 in this case)
-ksp = "2.1.10-1.0.31"
+kotlin = "2.2.0"
+# The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.2.0 in this case)
+ksp = "2.2.0-2.0.2"
 lifecycleRuntimeKtx = "2.9.1"
+metro = "0.4.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -42,21 +42,11 @@ circuitx-effects = { group = "com.slack.circuit", name = "circuitx-effects", ver
 circuitx-gestureNav = { group = "com.slack.circuit", name = "circuitx-gesture-navigation", version.ref = "circuit" }
 circuitx-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", version.ref = "circuit" }
 
-# https://dagger.dev/
-# https://dagger.dev/dev-guide/ksp
-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
-
-# https://mvnrepository.com/artifact/com.squareup.anvil/annotations-optional
-# https://github.com/ZacSweers/anvil/blob/main/FORK.md
-anvil-annotations = { group = "dev.zacsweers.anvil", name = "annotations", version.ref = "anvil"}
-anvil-annotations-optional = { group = "dev.zacsweers.anvil", name = "annotations-optional", version.ref = "anvil"}
+javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
 
 # # https://developer.android.com/develop/ui/compose/text/fonts
 # https://mvnrepository.com/artifact/androidx.compose.ui/ui-text-google-fonts
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
-
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -73,8 +63,8 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 # https://github.com/google/ksp/releases
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
-# Forked Anvil
-# https://github.com/ZacSweers/anvil/blob/main/FORK.md
-anvil = { id = "dev.zacsweers.anvil", version.ref = "anvil" }
+# Metro KSP plugin
+# https://zacsweers.github.io/metro/
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 
 

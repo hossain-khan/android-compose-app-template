@@ -9,7 +9,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.remember
 import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
-import app.example.di.AppScope
 import app.example.ui.theme.CircuitAppTheme
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit
@@ -19,13 +18,15 @@ import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
-import com.squareup.anvil.annotations.ContributesMultibinding
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
 
-@ContributesMultibinding(AppScope::class, boundType = Activity::class)
 @ActivityKey(MainActivity::class)
+@ContributesIntoMap(AppScope::class, binding = binding<Activity>())
+@Inject
 class MainActivity
-    @Inject
     constructor(
         private val circuit: Circuit,
     ) : ComponentActivity() {
