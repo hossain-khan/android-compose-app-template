@@ -102,4 +102,16 @@ dependencies {
 ksp {
     // Circuit-KSP for Metro
     arg("circuit.codegen.mode", "metro")
+    
+    // Metro 0.4.0 feature: Enable scoped inject class hints for better performance
+    // This allows child graphs to depend on parent-scoped dependencies that are unused
+    // See https://zacsweers.github.io/metro/dependency-graphs/
+    arg("metro.enableScopedInjectClassHints", "true")
+}
+
+
+metro {
+    // Enable Metro debug mode for better logging and debugging support
+    // See https://zacsweers.github.io/metro/debugging/
+  debug.set(true)
 }
