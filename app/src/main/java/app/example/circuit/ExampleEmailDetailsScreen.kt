@@ -46,8 +46,8 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
-import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
@@ -93,7 +93,10 @@ class DetailPresenter(
     @CircuitInject(DetailScreen::class, AppScope::class)
     @AssistedFactory
     fun interface Factory {
-        fun create(navigator: Navigator, screen: DetailScreen): DetailPresenter
+        fun create(
+            navigator: Navigator,
+            screen: DetailScreen,
+        ): DetailPresenter
     }
 }
 

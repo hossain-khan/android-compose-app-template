@@ -5,9 +5,9 @@ import android.content.Context
 import com.slack.circuit.foundation.Circuit
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
-import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
 
 @DependencyGraph(scope = AppScope::class)
@@ -18,6 +18,8 @@ interface AppGraph {
 
     @DependencyGraph.Factory
     interface Factory {
-        fun create(@ApplicationContext @Provides context: Context): AppGraph
+        fun create(
+            @ApplicationContext @Provides context: Context,
+        ): AppGraph
     }
 }
