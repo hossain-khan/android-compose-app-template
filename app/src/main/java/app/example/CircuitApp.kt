@@ -10,5 +10,5 @@ import dev.zacsweers.metro.createGraphFactory
 class CircuitApp : Application() {
     val appGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
 
-    fun appComponent(): AppGraph = appGraph
+    fun appGraph(): AppGraph = appGraph
 }
