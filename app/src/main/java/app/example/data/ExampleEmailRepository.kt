@@ -32,7 +32,13 @@ interface ExampleEmailRepository {
 }
 
 /**
- * This is example repository. It is used to demonstrate how to use Metro DI.
+ * Example repository implementation using Metro 0.5.0 enhanced @ContributesBinding.
+ * 
+ * Metro 0.5.0 improvements for @ContributesBinding:
+ * - Better validation and error reporting
+ * - Enhanced diagnostics to catch common binding mistakes
+ * - Improved integration with other Metro features
+ * - Better handling of binding inheritance and overrides
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)

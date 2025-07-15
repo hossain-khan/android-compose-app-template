@@ -23,6 +23,12 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 
+/**
+ * Metro 0.5.0 improved binding<T>() function:
+ * - Removed Any constraint, allowing nullable bindings
+ * - Better type safety and flexibility
+ * - Enhanced compatibility with various dependency types
+ */
 @ActivityKey(MainActivity::class)
 @ContributesIntoMap(AppScope::class, binding = binding<Activity>())
 @Inject

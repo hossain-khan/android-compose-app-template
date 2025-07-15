@@ -16,11 +16,21 @@ import dev.zacsweers.metro.SingleIn
 interface CircuitModule {
     /**
      * Metro multi-binding method that provides a set of Presenter.Factory instances.
+     * 
+     * Metro 0.5.0 improvements:
+     * - Enhanced validation for multibinds (detects cycles earlier)
+     * - Better support for empty sets with improved allowEmpty default behavior
+     * - Support for javax/jakarta Provider types when Dagger interop is enabled
      */
     @Multibinds fun presenterFactories(): Set<Presenter.Factory>
 
     /**
      * Metro multi-binding method that provides a set of Ui.Factory instances.
+     * 
+     * Metro 0.5.0 improvements:
+     * - Enhanced validation for multibinds (detects cycles earlier)  
+     * - Better support for empty sets with improved allowEmpty default behavior
+     * - Support for javax/jakarta Provider types when Dagger interop is enabled
      */
     @Multibinds fun uiFactories(): Set<Ui.Factory>
 

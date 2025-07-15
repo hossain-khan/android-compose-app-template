@@ -91,6 +91,12 @@ class DetailPresenter
             }
         }
 
+        /**
+         * Metro 0.5.0 enhanced @AssistedFactory support:
+         * - Improved interop with kotlin-inject's @AssistedFactory annotations
+         * - Better diagnostics for @Assisted parameters in provides functions
+         * - Enhanced validation to catch common mistakes early
+         */
         @CircuitInject(DetailScreen::class, AppScope::class)
         @AssistedFactory
         fun interface Factory {

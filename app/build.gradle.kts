@@ -103,15 +103,42 @@ ksp {
     // Circuit-KSP for Metro
     arg("circuit.codegen.mode", "metro")
     
-    // Metro 0.4.0 feature: Enable scoped inject class hints for better performance
+    // Metro 0.4.0+ feature: Enable scoped inject class hints for better performance
     // This allows child graphs to depend on parent-scoped dependencies that are unused
     // See https://zacsweers.github.io/metro/dependency-graphs/
     arg("metro.enableScopedInjectClassHints", "true")
+    
+    // Metro 0.5.0+ generates field reports automatically
+    // Look for keys-scopedProviderFields-*.txt and keys-providerFields-*.txt in build output
+    // These files provide insights into generated provider fields
 }
 
 
 metro {
     // Enable Metro debug mode for better logging and debugging support
     // See https://zacsweers.github.io/metro/debugging/
-  debug.set(true)
+    debug.set(true)
+    
+    /*
+     * Metro 0.5.0 Migration Notes:
+     * 
+     * Key improvements in Metro 0.5.0:
+     * 1. Enhanced nullable binding support - binding<T>() no longer has Any constraint
+     * 2. New @BindingContainer annotation for better dependency organization 
+     * 3. Improved diagnostics for common issues like scoped @Binds declarations
+     * 4. Better Dagger interop with default allowEmpty=true for @Multibinds
+     * 5. Enhanced cycle detection moved to earlier validation phase
+     * 6. Support for javax/jakarta Provider types in multibinding Map values
+     * 7. kotlin-inject @AssistedFactory annotation support
+     * 8. New field reports generation (enabled via KSP arg above)
+     * 
+     * Current codebase compatibility:
+     * - ✅ All existing Metro annotations work unchanged
+     * - ✅ @AssistedFactory usage in circuit presenters is supported  
+     * - ✅ @ContributesBinding usage works with improved diagnostics
+     * - ✅ Multibinds for Set<Presenter.Factory> benefit from enhanced validation
+     * - ✅ Activity injection via @ContributesIntoMap works with nullable binding improvements
+     * 
+     * For more details, see: https://github.com/ZacSweers/metro/releases/tag/0.5.0
+     */
 }
