@@ -12,7 +12,7 @@ junitVersion = "1.2.1"
 kotlin = "2.2.0"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.2.0 in this case)
 ksp = "2.2.0-2.0.2"
-lifecycleRuntimeKtx = "2.9.1"
+lifecycleRuntimeKtx = "2.9.2"
 metro = "0.5.1"
 
 [libraries]
