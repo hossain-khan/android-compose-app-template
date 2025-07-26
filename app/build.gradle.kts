@@ -90,6 +90,8 @@ dependencies {
 
     implementation(libs.javax.inject)
 
+    implementation(libs.androidx.work)
+
     // Testing
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
