@@ -1,3 +1,23 @@
+# CI Workflow: Test Setup Project Script
+#
+# This workflow validates the functionality of the setup-project.sh script by testing
+# both with and without WorkManager removal. It ensures that:
+# 1. The setup script can successfully transform the template project
+# 2. The generated project structure is valid
+# 3. The resulting Android project compiles without errors
+# 4. WorkManager features are properly preserved or removed based on flags
+#
+# Test Matrix:
+# - without-any-flag: Tests default behavior (keeps WorkManager and Circuit UI screens)
+# - with-workmanager-flag: Tests WorkManager removal with --remove-workmanager flag
+#
+# Each test scenario validates:
+# - Basic project structure and file existence
+# - Package name and app name transformation
+# - Application class renaming
+# - WorkManager-specific validations (presence/absence)
+# - Final compilation success using Gradle
+
 name: Test Setup Script
 
 on:
@@ -10,14 +30,16 @@ jobs:
   test-setup-script:
     runs-on: ubuntu-latest
     
+    # Test matrix to validate all combination of script parameters
     strategy:
       matrix:
         test-case: [
-          { name: "without-workmanager-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory" },
+          { name: "without-any-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory" },
           { name: "with-workmanager-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory --remove-workmanager" }
         ]
 
     steps:
+      # Setup: Checkout code and configure environment
       - uses: actions/checkout@v4
       
       - name: Set up JDK
@@ -29,14 +51,17 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # Prepare the setup script for execution
       - name: Make setup script executable
         run: chmod +x setup-project.sh
 
+      # Configure Git for the setup script (required for git operations)
       - name: Configure Git for testing
         run: |
           git config --global user.email "test@example.com"
           git config --global user.name "Test User"
 
+      # Create isolated test workspace to avoid conflicts
       - name: Create test directory
         run: |
           # Create test workspace in /tmp to avoid recursive copy issues
@@ -53,6 +78,7 @@ jobs:
           echo "Running: ${{ matrix.test-case.cmd }}"
           ${{ matrix.test-case.cmd }}
 
+      # Validate basic project structure after transformation
       - name: Validate project structure
         run: |
           cd /tmp/test-workspace/original-template
@@ -73,6 +99,7 @@ jobs:
           
           echo "✅ Basic project structure validation passed"
 
+      # Test WorkManager removal scenario - validates that WorkManager is completely removed
       - name: Validate WorkManager removal (for remove-workmanager test)
         if: matrix.test-case.name == 'with-workmanager-flag'
         run: |
@@ -96,7 +123,7 @@ jobs:
           echo "✅ WorkManager removal validation passed"
 
       - name: Validate WorkManager preservation (for without-workmanager test)
-        if: matrix.test-case.name == 'without-workmanager-flag'
+        if: matrix.test-case.name == 'without-any-flag'
         run: |
           cd /tmp/test-workspace/original-template
           
