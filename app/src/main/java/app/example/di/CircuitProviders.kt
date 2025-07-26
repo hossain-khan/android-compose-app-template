@@ -10,10 +10,10 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * Metro providers that contribute Circuit dependencies.
+ * Metro provider that provides dependencies for the Circuit framework.
  */
 @ContributesTo(AppScope::class)
-interface CircuitModule {
+interface CircuitProviders {
     /**
      * Metro multi-binding method that provides a set of Presenter.Factory instances.
      */
@@ -30,8 +30,8 @@ interface CircuitModule {
     @Provides
     @SingleIn(AppScope::class)
     fun provideCircuit(
-        presenterFactories: Set<Presenter.Factory>,
-        uiFactories: Set<Ui.Factory>,
+        presenterFactories: @JvmSuppressWildcards Set<Presenter.Factory>,
+        uiFactories: @JvmSuppressWildcards Set<Ui.Factory>,
     ): Circuit =
         Circuit
             .Builder()

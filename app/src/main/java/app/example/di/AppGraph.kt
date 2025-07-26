@@ -10,12 +10,18 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
 
+/**
+ * Metro dependency graph for the application, which includes all necessary bindings and providers.
+ *
+ * See https://zacsweers.github.io/metro/
+ */
 @DependencyGraph(scope = AppScope::class)
 @SingleIn(AppScope::class)
 interface AppGraph {
     val activityProviders: Map<KClass<out Activity>, Provider<Activity>>
     val circuit: Circuit
 
+    // https://zacsweers.github.io/metro/dependency-graphs/#provides
     @DependencyGraph.Factory
     interface Factory {
         fun create(
