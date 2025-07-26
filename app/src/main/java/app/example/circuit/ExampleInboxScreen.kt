@@ -26,10 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import app.example.circuit.overlay.AppInfoOverlay
 import app.example.data.Email
 import app.example.data.ExampleAppVersionService
 import app.example.data.ExampleEmailRepository
-import app.example.overlay.AppInfoOverlay
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.overlay.LocalOverlayHost
 import com.slack.circuit.runtime.CircuitUiEvent
