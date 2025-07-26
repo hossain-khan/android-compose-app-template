@@ -69,7 +69,12 @@ do
     echo "Creating $n/java/$SUBDIR"
     mkdir -p $n/java/$SUBDIR
     echo "Moving files from $n/java/app/example/* to $n/java/$SUBDIR"
-    mv $n/java/app/example/* $n/java/$SUBDIR/ 2>/dev/null || true
+    if [ "$(find $n/java/app/example -type f | wc -l)" -gt 0 ]; then
+      echo "Moving files from $n/java/app/example to $n/java/$SUBDIR"
+      find $n/java/app/example -type f -exec mv {} $n/java/$SUBDIR/ \;
+    else
+      echo "No files found in $n/java/app/example to move."
+    fi
     echo "Removing old $n/java/app"
     rm -rf $n/java/app
   fi
