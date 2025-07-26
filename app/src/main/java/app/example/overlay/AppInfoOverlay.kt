@@ -25,7 +25,6 @@ import com.slack.circuit.overlay.Overlay
 import com.slack.circuit.overlay.OverlayNavigator
 import com.slack.circuitx.overlays.BottomSheetOverlay
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -38,15 +37,16 @@ data object AppInfoOverlay : Overlay<AppInfoOverlay.Result> {
     )
 }
 
-@Inject
-class AppInfoOverlayImpl : BottomSheetOverlay<AppInfoOverlay.Result> {
-    
-    @CircuitInject(AppInfoOverlay::class, AppScope::class)
-    @Composable
-    override fun Content(
-        overlay: AppInfoOverlay,
-        navigator: OverlayNavigator<AppInfoOverlay.Result>,
-        modifier: Modifier
+@CircuitInject(AppInfoOverlay::class, AppScope::class)
+@Composable
+fun AppInfoBottomSheet(
+    overlay: AppInfoOverlay,
+    navigator: OverlayNavigator<AppInfoOverlay.Result>,
+    modifier: Modifier = Modifier
+) {
+    BottomSheetOverlay<AppInfoOverlay.Result>(
+        model = overlay,
+        onDismiss = { navigator.finish(AppInfoOverlay.Result(dismissed = true)) }
     ) {
         AppInfoContent(
             onDismiss = { navigator.finish(AppInfoOverlay.Result(dismissed = true)) },
