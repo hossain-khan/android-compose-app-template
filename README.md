@@ -22,32 +22,45 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 
 You have **two options** for customizing this template:
 
+<details>
+<summary>Option 1: Automated Customization (Recommended)</summary>
+
 #### Option 1: Automated Customization (Recommended) 🤖
 Run the setup script to automatically handle most of the configuration:
 
 ```bash
-# Basic usage - removes examples and WorkManager
+# Basic usage - keeps examples and WorkManager by default
 ./setup-project.sh com.mycompany.appname MyAppName
 
-# Keep examples for reference
-./setup-project.sh com.mycompany.appname MyAppName --keep-examples
+# Remove examples if you don't need them
+./setup-project.sh com.mycompany.appname MyAppName --remove-examples
 
-# Keep WorkManager if you need background tasks
-./setup-project.sh com.mycompany.appname MyAppName --keep-workmanager --keep-examples
+# Remove WorkManager if you don't need background tasks
+./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager --remove-examples
 
 # Keep the script for debugging (useful during development)
 ./setup-project.sh com.mycompany.appname MyAppName --keep-script
+
+# Flags can be positioned flexibly - all of these work the same:
+./setup-project.sh --remove-examples com.mycompany.appname MyAppName --remove-workmanager
+./setup-project.sh com.mycompany.appname --remove-examples MyAppName --remove-workmanager
+./setup-project.sh com.mycompany.appname MyAppName --remove-examples --remove-workmanager --keep-script
 ```
 
 **What the script does automatically:**
 - Renames package from `app.example` to your preferred package name
-- Updates directory structure based on package name
+- Preserves subdirectory structure (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
-- Removes `Example*` files (optional with `--keep-examples`)
-- Removes WorkManager files (optional with `--keep-workmanager`)
-- Creates a fresh git repository
+- Keeps Example* files by default (use `--remove-examples` to exclude)
+- Keeps WorkManager files by default (use `--remove-workmanager` to exclude)
+- Creates a fresh git repository with descriptive initial commit
 - Removes template-specific files
+
+</details>
+
+<details>
+<summary>Option 2: Manual Customization 🔧</summary>
 
 #### Option 2: Manual Customization 🔧
 If you prefer manual control, complete these tasks:
@@ -59,6 +72,11 @@ If you prefer manual control, complete these tasks:
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
 * [ ] Remove WorkManager and Worker example files if you are not using them.
 
+</details>
+
+<details>
+<summary>Additional Manual Steps (Both Options) 📝</summary>
+
 #### Additional Manual Steps (Both Options) 📝
 These still need to be done manually after using the script:
 
@@ -68,6 +86,8 @@ These still need to be done manually after using the script:
 * [ ] Update/remove repository license
 * [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
+
+</details>
 
 
 ## Demo 📹
