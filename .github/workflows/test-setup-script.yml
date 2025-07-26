@@ -1,0 +1,120 @@
+name: Test Setup Script
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-setup-script:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        test-case: [
+          { name: "without-workmanager-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory" },
+          { name: "with-workmanager-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory --remove-workmanager" }
+        ]
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make setup script executable
+        run: chmod +x setup-project.sh
+
+      - name: Create test directory
+        run: |
+          mkdir -p test-workspace
+          cp -r . test-workspace/original-template
+          cd test-workspace/original-template
+
+      - name: Run setup script - ${{ matrix.test-case.name }}
+        run: |
+          cd test-workspace/original-template
+          ${{ matrix.test-case.cmd }}
+
+      - name: Validate project structure
+        run: |
+          cd test-workspace/original-template
+          
+          # Check that basic Android project files exist
+          test -f "app/build.gradle.kts" || (echo "❌ app/build.gradle.kts not found" && exit 1)
+          test -f "app/src/main/AndroidManifest.xml" || (echo "❌ AndroidManifest.xml not found" && exit 1)
+          test -f "settings.gradle.kts" || (echo "❌ settings.gradle.kts not found" && exit 1)
+          
+          # Check that package name was updated
+          grep -r "dev.hossain.locationhistory" app/ || (echo "❌ Package name not updated" && exit 1)
+          
+          # Check that app name was updated
+          grep -r "LocationHistory" app/src/main/res/values/strings.xml || (echo "❌ App name not updated in strings.xml" && exit 1)
+          
+          # Check that Application class was renamed
+          test -f "app/src/main/kotlin/dev/hossain/locationhistory/LocationHistoryApp.kt" || (echo "❌ Application class not renamed" && exit 1)
+          
+          echo "✅ Basic project structure validation passed"
+
+      - name: Validate WorkManager removal (for remove-workmanager test)
+        if: matrix.test-case.name == 'with-workmanager-flag'
+        run: |
+          cd test-workspace/original-template
+          
+          # Check that WorkManager files are removed
+          ! find . -name "*Worker*.kt" -type f | grep -q . || (echo "❌ WorkManager files still exist" && exit 1)
+          ! find . -name "work" -type d | grep -q . || (echo "❌ work directory still exists" && exit 1)
+          
+          # Check that WorkManager references are removed from source files
+          ! grep -r "import androidx.work" app/src/ || (echo "❌ WorkManager imports still exist" && exit 1)
+          ! grep -r "WorkManager" app/src/ || (echo "❌ WorkManager references still exist" && exit 1)
+          ! grep -r "Configuration.Provider" app/src/ || (echo "❌ Configuration.Provider still exists" && exit 1)
+          
+          # Check that WorkManager dependency is removed from build.gradle.kts
+          ! grep -r "androidx.work" app/build.gradle.kts || (echo "❌ WorkManager dependency still in build.gradle.kts" && exit 1)
+          
+          # Check that WorkManager provider is removed from AndroidManifest.xml
+          ! grep -r "InitializationProvider" app/src/main/AndroidManifest.xml || (echo "❌ WorkManager provider still in AndroidManifest.xml" && exit 1)
+          
+          echo "✅ WorkManager removal validation passed"
+
+      - name: Validate WorkManager preservation (for without-workmanager test)
+        if: matrix.test-case.name == 'without-workmanager-flag'
+        run: |
+          cd test-workspace/original-template
+          
+          # Check that WorkManager files are preserved
+          find . -name "*Worker*.kt" -type f | grep -q . || (echo "❌ WorkManager files were incorrectly removed" && exit 1)
+          
+          # Check that WorkManager references are preserved in source files
+          grep -r "import androidx.work" app/src/ || (echo "❌ WorkManager imports were incorrectly removed" && exit 1)
+          grep -r "WorkManager" app/src/ || (echo "❌ WorkManager references were incorrectly removed" && exit 1)
+          
+          # Check that WorkManager dependency is preserved in build.gradle.kts
+          grep -r "androidx.work" app/build.gradle.kts || (echo "❌ WorkManager dependency was incorrectly removed from build.gradle.kts" && exit 1)
+          
+          echo "✅ WorkManager preservation validation passed"
+
+      - name: Test project compilation
+        run: |
+          cd test-workspace/original-template
+          
+          # Try to compile the project to ensure it's valid
+          ./gradlew assembleDebug --no-daemon --stacktrace
+          
+          echo "✅ Project compilation successful"
+
+      - name: Upload test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-${{ matrix.test-case.name }}
+          path: test-workspace/original-template/
+          retention-days: 3
