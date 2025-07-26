@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import app.example.di.WorkerKey
 import app.example.di.AppWorkerFactory.WorkerInstanceFactory
+import app.example.di.WorkerKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -21,9 +21,8 @@ import kotlin.time.Duration.Companion.seconds
 @Inject
 class SampleWorker(
     context: Context,
-    @Assisted params: WorkerParameters
+    @Assisted params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
-
     companion object {
         const val KEY_WORK_NAME = "workName"
     }
@@ -31,10 +30,10 @@ class SampleWorker(
     override suspend fun doWork(): Result {
         val workName = inputData.getString(KEY_WORK_NAME) ?: "unknown"
         Log.d("SampleWorker", "Sample doWork running: $workName")
-        
+
         // Simulate some work
         delay(5.seconds)
-        
+
         return Result.success()
     }
 

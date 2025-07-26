@@ -60,7 +60,9 @@ class ExampleEmailRepositoryImpl
                 Email(
                     id = "3",
                     subject = "Upcoming Holiday Event",
-                    body = "Join us for the upcoming holiday event next Friday. There will be games, food, and fun activities for everyone. Please RSVP.",
+                    body =
+                        "Join us for the upcoming holiday event next Friday. " +
+                            "There will be games, food, and fun activities for everyone. Please RSVP.",
                     sender = "Jane Smith",
                     timestamp = "5:00 PM",
                     recipients = listOf("everyone@example.com"),
@@ -68,7 +70,9 @@ class ExampleEmailRepositoryImpl
                 Email(
                     id = "4",
                     subject = "Project Update",
-                    body = "Hi team, a quick update on the project status. We are on track to meet the deadline. Please keep up the great work!",
+                    body =
+                        "Hi team, a quick update on the project status. We are on track to meet the deadline. " +
+                            "Please keep up the great work!",
                     sender = "Project Lead",
                     timestamp = "9:00 AM",
                     recipients = listOf("devteam@example.com"),
@@ -76,7 +80,9 @@ class ExampleEmailRepositoryImpl
                 Email(
                     id = "5",
                     subject = "Your Order has Shipped!",
-                    body = "Good news! Your recent order has been shipped and is on its way. You can track its progress using the link below.",
+                    body =
+                        "Good news! Your recent order has been shipped and is on its way. " +
+                            "You can track its progress using the link below.",
                     sender = "OnlineStore",
                     timestamp = "10:30 AM",
                     recipients = listOf("customer@example.com"),
@@ -92,7 +98,9 @@ class ExampleEmailRepositoryImpl
                 Email(
                     id = "7",
                     subject = "New Blog Post: Mastering Kotlin Coroutines",
-                    body = "Check out our latest blog post on mastering Kotlin Coroutines. Learn how to write efficient and concurrent code.",
+                    body =
+                        "Check out our latest blog post on mastering Kotlin Coroutines. " +
+                            "Learn how to write efficient and concurrent code.",
                     sender = "Tech Blog",
                     timestamp = "2:45 PM",
                     recipients = listOf("subscriber@example.com"),

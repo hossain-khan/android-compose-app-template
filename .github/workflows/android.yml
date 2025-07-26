@@ -34,4 +34,4 @@ jobs:
         run: ./gradlew testDebugUnitTest --parallel --daemon
 
       - name: Build with Gradle
-        run: ./gradlew assembleDebug --parallel --daemon
+        run: ./gradlew lintKotlin assembleDebug --parallel --daemon
