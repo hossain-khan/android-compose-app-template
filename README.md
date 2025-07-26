@@ -17,6 +17,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 ## Recent Improvements 🚀
 * ✔️ **Flexible flag positioning** - Put flags before or after positional arguments 
 * ✔️ **Directory structure preservation** - Maintains `ui/theme/`, `di/`, `circuit/`, `work/`, `data/` subdirectories
+* ✔️ **User-friendly defaults** - Keeps examples and WorkManager by default (use `--remove-*` flags to exclude)
 * ✔️ **Improved error handling** - Better feedback during setup process
 * ✔️ **Enhanced argument parsing** - Handles complex flag combinations correctly
 
@@ -32,22 +33,22 @@ You have **two options** for customizing this template:
 Run the setup script to automatically handle most of the configuration:
 
 ```bash
-# Basic usage - removes examples and WorkManager
+# Basic usage - keeps examples and WorkManager by default
 ./setup-project.sh com.mycompany.appname MyAppName
 
-# Keep examples for reference
-./setup-project.sh com.mycompany.appname MyAppName --keep-examples
+# Remove examples if you don't need them
+./setup-project.sh com.mycompany.appname MyAppName --remove-examples
 
-# Keep WorkManager if you need background tasks
-./setup-project.sh com.mycompany.appname MyAppName --keep-workmanager --keep-examples
+# Remove WorkManager if you don't need background tasks
+./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager --remove-examples
 
 # Keep the script for debugging (useful during development)
 ./setup-project.sh com.mycompany.appname MyAppName --keep-script
 
 # Flags can be positioned flexibly - all of these work the same:
-./setup-project.sh --keep-examples com.mycompany.appname MyAppName --keep-workmanager
-./setup-project.sh com.mycompany.appname --keep-examples MyAppName --keep-workmanager
-./setup-project.sh com.mycompany.appname MyAppName --keep-examples --keep-workmanager --keep-script
+./setup-project.sh --remove-examples com.mycompany.appname MyAppName --remove-workmanager
+./setup-project.sh com.mycompany.appname --remove-examples MyAppName --remove-workmanager
+./setup-project.sh com.mycompany.appname MyAppName --remove-examples --remove-workmanager --keep-script
 ```
 
 **What the script does automatically:**
@@ -55,8 +56,8 @@ Run the setup script to automatically handle most of the configuration:
 - **Preserves subdirectory structure** (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
-- Removes `Example*` files (optional with `--keep-examples`)
-- Removes WorkManager files (optional with `--keep-workmanager`)
+- **Keeps Example* files by default** (use `--remove-examples` to exclude)
+- **Keeps WorkManager files by default** (use `--remove-workmanager` to exclude)
 - Creates a fresh git repository with descriptive initial commit
 - Removes template-specific files
 
@@ -83,12 +84,17 @@ These still need to be done manually after using the script:
 ### Troubleshooting 🔧
 
 **Script shows wrong flag values (Keep examples: false when --keep-examples was passed):**
-- ✅ **Fixed** - Script now properly handles flags in any position
+- ✅ **Fixed** - Script now properly handles flags in any position and defaults to keeping examples/WorkManager
 - Use `--keep-script` to preserve the script for debugging if needed
 
 **Directory structure gets flattened (all files moved to package root):**
 - ✅ **Fixed** - Script now preserves subdirectory structure (`ui/theme/`, `di/`, etc.)
 - Files maintain their original organization within the new package
+
+**Want to remove examples or WorkManager:**
+- Use `--remove-examples` to exclude Example* files  
+- Use `--remove-workmanager` to exclude WorkManager components
+- Both are kept by default for easier project exploration
 
 **Need to re-run the script:**
 - Use `--keep-script` flag to prevent script deletion
