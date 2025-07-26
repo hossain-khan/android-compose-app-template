@@ -1,4 +1,4 @@
-package app.example.work
+package app.example.di
 
 import android.content.Context
 import androidx.work.ListenableWorker
@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.collections.get
 import kotlin.reflect.KClass
 
 /**
