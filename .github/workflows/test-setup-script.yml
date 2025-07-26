@@ -32,6 +32,11 @@ jobs:
       - name: Make setup script executable
         run: chmod +x setup-project.sh
 
+      - name: Configure Git for testing
+        run: |
+          git config --global user.email "test@example.com"
+          git config --global user.name "Test User"
+
       - name: Create test directory
         run: |
           mkdir -p test-workspace
