@@ -10,7 +10,7 @@
 #
 
 # Compatible with bash 3.2+ (default on macOS)
-# No minimum version check needed - script uses only POSIX-compatible features
+# No minimum version check needed - script uses bash 3.2+ features
 
 # exit when any command fails
 set -e
