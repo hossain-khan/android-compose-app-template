@@ -78,7 +78,7 @@ class InboxPresenter
 
         @CircuitInject(InboxScreen::class, AppScope::class)
         @AssistedFactory
-        fun interface Factory {
+        interface Factory {
             fun create(navigator: Navigator): InboxPresenter
         }
     }
