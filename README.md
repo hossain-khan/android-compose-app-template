@@ -14,6 +14,12 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 
+## Recent Improvements 🚀
+* ✔️ **Flexible flag positioning** - Put flags before or after positional arguments 
+* ✔️ **Directory structure preservation** - Maintains `ui/theme/`, `di/`, `circuit/`, `work/`, `data/` subdirectories
+* ✔️ **Improved error handling** - Better feedback during setup process
+* ✔️ **Enhanced argument parsing** - Handles complex flag combinations correctly
+
 > [!WARNING]  
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
@@ -37,16 +43,21 @@ Run the setup script to automatically handle most of the configuration:
 
 # Keep the script for debugging (useful during development)
 ./setup-project.sh com.mycompany.appname MyAppName --keep-script
+
+# Flags can be positioned flexibly - all of these work the same:
+./setup-project.sh --keep-examples com.mycompany.appname MyAppName --keep-workmanager
+./setup-project.sh com.mycompany.appname --keep-examples MyAppName --keep-workmanager
+./setup-project.sh com.mycompany.appname MyAppName --keep-examples --keep-workmanager --keep-script
 ```
 
 **What the script does automatically:**
 - Renames package from `app.example` to your preferred package name
-- Updates directory structure based on package name
+- **Preserves subdirectory structure** (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
 - Removes `Example*` files (optional with `--keep-examples`)
 - Removes WorkManager files (optional with `--keep-workmanager`)
-- Creates a fresh git repository
+- Creates a fresh git repository with descriptive initial commit
 - Removes template-specific files
 
 #### Option 2: Manual Customization 🔧
@@ -68,6 +79,21 @@ These still need to be done manually after using the script:
 * [ ] Update/remove repository license
 * [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
+
+### Troubleshooting 🔧
+
+**Script shows wrong flag values (Keep examples: false when --keep-examples was passed):**
+- ✅ **Fixed** - Script now properly handles flags in any position
+- Use `--keep-script` to preserve the script for debugging if needed
+
+**Directory structure gets flattened (all files moved to package root):**
+- ✅ **Fixed** - Script now preserves subdirectory structure (`ui/theme/`, `di/`, etc.)
+- Files maintain their original organization within the new package
+
+**Need to re-run the script:**
+- Use `--keep-script` flag to prevent script deletion
+- Restore from git if you have the original template committed
+- Re-clone the template repository if needed
 
 
 ## Demo 📹

@@ -6,6 +6,19 @@
 #
 # Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]
 #
+# Examples:
+#   bash setup-project.sh com.mycompany.todoapp TodoApp
+#   bash setup-project.sh com.mycompany.newsapp NewsApp --keep-examples
+#   bash setup-project.sh dev.hossain.gphotos MyPhotos --keep-examples --keep-workmanager
+#   bash setup-project.sh com.example.allapp AllApp --keep-examples --keep-workmanager --keep-script
+#
+# Features:
+#   - Flexible flag positioning (flags can come before or after positional arguments)
+#   - Preserves subdirectory structure (ui/theme, di, circuit, work, data directories)
+#   - Handles package renaming and file/class renaming automatically
+#   - Optional retention of Example files and WorkManager components
+#   - Creates fresh git repository with initial commit
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 #
 
@@ -76,6 +89,9 @@ if [[ ${#POSITIONAL_ARGS[@]} -lt 2 ]]; then
    echo "  --keep-examples     Keep Example* files for reference"
    echo "  --keep-workmanager  Keep WorkManager related files"
    echo "  --keep-script       Keep this setup script (useful for debugging)"
+   echo ""
+   echo "Note: Flags can be positioned anywhere in the command line"
+   echo "      Directory structure (ui/theme, di, circuit, work, data) is preserved"
    exit 2
 fi
 
