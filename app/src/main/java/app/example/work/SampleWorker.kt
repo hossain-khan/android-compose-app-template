@@ -22,13 +22,17 @@ class SampleWorker(
     context: Context,
     @Assisted params: WorkerParameters
 ) : CoroutineWorker(context, params) {
-    
+
+    companion object {
+        const val KEY_WORK_NAME = "workName"
+    }
+
     override suspend fun doWork(): Result {
-        val workName = inputData.getString("workName") ?: "unknown"
+        val workName = inputData.getString(KEY_WORK_NAME) ?: "unknown"
         Log.d("SampleWorker", "Sample doWork running: $workName")
         
         // Simulate some work
-        delay(1.seconds)
+        delay(5.seconds)
         
         return Result.success()
     }

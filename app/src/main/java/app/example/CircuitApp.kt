@@ -2,12 +2,14 @@ package app.example
 
 import android.app.Application
 import androidx.work.Configuration
-import androidx.work.Data
+import androidx.work.Constraints
+import androidx.work.WorkManager
+import androidx.work.NetworkType
+import androidx.work.workDataOf
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import app.example.di.AppGraph
 import app.example.work.SampleWorker
-import app.example.work.SecondWorker
 import dev.zacsweers.metro.createGraphFactory
 
 /**
@@ -26,21 +28,22 @@ class CircuitApp : Application(), Configuration.Provider {
         scheduleBackgroundWork()
     }
 
+    /**
+     * Schedules a background work request using the [WorkManager].
+     * This is just an example to demonstrate how to use WorkManager with Metro DI.
+     */
     private fun scheduleBackgroundWork() {
         val workRequest =
             OneTimeWorkRequestBuilder<SampleWorker>()
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .setInputData(Data.Builder().putString("workName", "onCreate").build())
+                .setInputData(workDataOf(SampleWorker.KEY_WORK_NAME to "Circuit App ${System.currentTimeMillis()}"))
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
                 .build()
 
         appGraph.workManager.enqueue(workRequest)
-
-        val secondWorkRequest =
-            OneTimeWorkRequestBuilder<SecondWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .setInputData(Data.Builder().putString("workName", "onCreate").build())
-                .build()
-
-        appGraph.workManager.enqueue(secondWorkRequest)
     }
 }
