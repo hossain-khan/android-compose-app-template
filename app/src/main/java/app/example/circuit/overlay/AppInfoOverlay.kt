@@ -1,4 +1,13 @@
-package app.example.overlay
+package app.example.circuit.overlay
+
+// -------------------------------------------------------------------------------------
+//
+// THIS IS AN EXAMPLE FILE WITH CIRCUIT OVERLAYS EXAMPLE
+// Read more about it at: https://slackhq.github.io/circuit/overlays/
+//
+// You should delete this file and create your own screens with presenters.
+//
+//  -------------------------------------------------------------------------------------
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

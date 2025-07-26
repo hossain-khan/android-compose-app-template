@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import app.example.di.AppWorkerFactory
 import app.example.di.AppWorkerFactory.WorkerInstanceFactory
 import app.example.di.WorkerKey
 import dev.zacsweers.metro.AppScope
@@ -17,6 +18,8 @@ import kotlin.time.Duration.Companion.seconds
 
 /**
  * A sample worker that demonstrates WorkManager integration with Metro DI.
+ *
+ * @see AppWorkerFactory
  */
 @Inject
 class SampleWorker(
