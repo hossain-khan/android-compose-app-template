@@ -39,18 +39,19 @@ jobs:
 
       - name: Create test directory
         run: |
-          mkdir -p test-workspace
-          cp -r . test-workspace/original-template
-          cd test-workspace/original-template
+          # Create test workspace in /tmp to avoid recursive copy issues
+          mkdir -p /tmp/test-workspace/original-template
+          # Copy all files except .git and any test directories
+          rsync -av --exclude='.git' --exclude='test-workspace' --exclude='/tmp' . /tmp/test-workspace/original-template/
 
       - name: Run setup script - ${{ matrix.test-case.name }}
         run: |
-          cd test-workspace/original-template
+          cd /tmp/test-workspace/original-template
           ${{ matrix.test-case.cmd }}
 
       - name: Validate project structure
         run: |
-          cd test-workspace/original-template
+          cd /tmp/test-workspace/original-template
           
           # Check that basic Android project files exist
           test -f "app/build.gradle.kts" || (echo "❌ app/build.gradle.kts not found" && exit 1)
@@ -71,7 +72,7 @@ jobs:
       - name: Validate WorkManager removal (for remove-workmanager test)
         if: matrix.test-case.name == 'with-workmanager-flag'
         run: |
-          cd test-workspace/original-template
+          cd /tmp/test-workspace/original-template
           
           # Check that WorkManager files are removed
           ! find . -name "*Worker*.kt" -type f | grep -q . || (echo "❌ WorkManager files still exist" && exit 1)
@@ -93,7 +94,7 @@ jobs:
       - name: Validate WorkManager preservation (for without-workmanager test)
         if: matrix.test-case.name == 'without-workmanager-flag'
         run: |
-          cd test-workspace/original-template
+          cd /tmp/test-workspace/original-template
           
           # Check that WorkManager files are preserved
           find . -name "*Worker*.kt" -type f | grep -q . || (echo "❌ WorkManager files were incorrectly removed" && exit 1)
@@ -109,7 +110,7 @@ jobs:
 
       - name: Test project compilation
         run: |
-          cd test-workspace/original-template
+          cd /tmp/test-workspace/original-template
           
           # Try to compile the project to ensure it's valid
           ./gradlew assembleDebug --no-daemon --stacktrace
@@ -121,5 +122,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-artifacts-${{ matrix.test-case.name }}
-          path: test-workspace/original-template/
+          path: /tmp/test-workspace/original-template/
           retention-days: 3
