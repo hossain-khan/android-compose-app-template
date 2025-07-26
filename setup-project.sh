@@ -179,15 +179,40 @@ rm -rf .git/ 2>/dev/null || true
 
 # Step 10: Create initial git repository
 echo "📦 Step 10: Initializing new git repository..."
-git init
-git add .
-git commit -m "Initial commit: $APPNAME
+
+# Check if git is installed
+if ! command -v git &> /dev/null; then
+    echo "❌ Error: git is not installed or not available in PATH."
+    exit 1
+fi
+
+# Ensure .git directory does not already exist
+if [ -d ".git" ]; then
+    echo "❌ Error: .git directory already exists. Cannot initialize a new repository."
+    exit 1
+fi
+
+# Initialize git repository and handle errors
+if ! git init; then
+    echo "❌ Error: Failed to initialize git repository."
+    exit 1
+fi
+
+if ! git add .; then
+    echo "❌ Error: Failed to stage files for commit."
+    exit 1
+fi
+
+if ! git commit -m "Initial commit: $APPNAME
 
 - Customized from android-compose-app-template
 - Package: $PACKAGE  
 - Circuit + Metro architecture
 - Examples kept: $KEEP_EXAMPLES
-- WorkManager kept: $KEEP_WORKMANAGER"
+- WorkManager kept: $KEEP_WORKMANAGER"; then
+    echo "❌ Error: Failed to create initial commit."
+    exit 1
+fi
 
 echo ""
 echo "✅ Customization complete!"
