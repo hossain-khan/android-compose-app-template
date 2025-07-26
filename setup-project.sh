@@ -3,7 +3,7 @@
 # Android Compose Circuit App Template Customizer
 # Adapted for Circuit + Metro DI architecture
 #
-# Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager]
+# Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #
@@ -18,9 +18,23 @@ fi
 # exit when any command fails
 set -e
 
+# Error handling function
+cleanup_on_error() {
+    echo ""
+    echo "❌ Script failed at line $1"
+    echo "🔍 The setup script has been preserved for debugging"
+    echo "💡 You can re-run the script after fixing any issues"
+    echo "📝 Check the error message above for details"
+    exit 1
+}
+
+# Set up error trap
+trap 'cleanup_on_error $LINENO' ERR
+
 # Parse arguments
 KEEP_EXAMPLES=false
 KEEP_WORKMANAGER=false
+KEEP_SCRIPT=false
 
 # Check for flags
 for arg in "$@"; do
@@ -33,20 +47,26 @@ for arg in "$@"; do
       KEEP_WORKMANAGER=true
       shift
       ;;
+    --keep-script)
+      KEEP_SCRIPT=true
+      shift
+      ;;
   esac
 done
 
 if [[ $# -lt 2 ]]; then
-   echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager]" >&2
+   echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]" >&2
    echo ""
    echo "Examples:"
    echo "  bash setup-project.sh com.mycompany.todoapp TodoApp"
    echo "  bash setup-project.sh com.mycompany.newsapp NewsApp --keep-examples"
    echo "  bash setup-project.sh com.mycompany.taskapp TaskApp --keep-workmanager"
+   echo "  bash setup-project.sh com.mycompany.debugapp DebugApp --keep-script"
    echo ""
    echo "Options:"
    echo "  --keep-examples     Keep Example* files for reference"
    echo "  --keep-workmanager  Keep WorkManager related files"
+   echo "  --keep-script       Keep this setup script (useful for debugging)"
    exit 2
 fi
 
@@ -59,6 +79,7 @@ echo "📦 New package: $PACKAGE"
 echo "📱 App name: $APPNAME"
 echo "🗂️  Keep examples: $KEEP_EXAMPLES"
 echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
+echo "📜 Keep script: $KEEP_SCRIPT"
 echo ""
 
 # Step 1: Move package structure from app.example to new package
@@ -233,7 +254,15 @@ if [ "$KEEP_WORKMANAGER" = false ]; then
     echo "   5. Add WorkManager back if you need background tasks"
 fi
 echo ""
-echo "🚀 Happy coding!"
 
-# Remove the setup script itself
-rm -f setup-project.sh
+# Handle script cleanup
+if [ "$KEEP_SCRIPT" = false ]; then
+    echo "ℹ️ Removing setup script..."
+    rm -f setup-project.sh
+    echo "🚀 Happy coding!"
+else
+    echo "📜 Setup script kept for debugging/re-running if needed"
+    echo "🚀 Happy coding!"
+    echo ""
+    echo "💡 Tip: You can safely delete the setup-project.sh when you no longer need it"
+fi
