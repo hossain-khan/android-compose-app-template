@@ -32,8 +32,9 @@ trap 'cleanup_on_error $LINENO' ERR
 KEEP_EXAMPLES=false
 KEEP_WORKMANAGER=false
 KEEP_SCRIPT=false
+POSITIONAL_ARGS=()
 
-# Process flags first
+# Process all arguments, collecting positional args and setting flags
 while [[ $# -gt 0 ]]; do
   case $1 in
     --keep-examples)
@@ -53,13 +54,15 @@ while [[ $# -gt 0 ]]; do
       exit 2
       ;;
     *)
-      # First non-flag argument, stop processing flags
-      break
+      # Collect positional arguments
+      POSITIONAL_ARGS+=("$1")
+      shift
       ;;
   esac
 done
 
-if [[ $# -lt 2 ]]; then
+# Check if we have enough positional arguments
+if [[ ${#POSITIONAL_ARGS[@]} -lt 2 ]]; then
    echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]" >&2
    echo ""
    echo "Examples:"
@@ -67,6 +70,7 @@ if [[ $# -lt 2 ]]; then
    echo "  bash setup-project.sh com.mycompany.newsapp NewsApp --keep-examples"
    echo "  bash setup-project.sh com.mycompany.taskapp TaskApp --keep-workmanager"
    echo "  bash setup-project.sh com.mycompany.debugapp DebugApp --keep-script"
+   echo "  bash setup-project.sh com.mycompany.allapp AllApp --keep-examples --keep-workmanager --keep-script"
    echo ""
    echo "Options:"
    echo "  --keep-examples     Keep Example* files for reference"
@@ -75,8 +79,8 @@ if [[ $# -lt 2 ]]; then
    exit 2
 fi
 
-PACKAGE=$1
-APPNAME=$2
+PACKAGE="${POSITIONAL_ARGS[0]}"
+APPNAME="${POSITIONAL_ARGS[1]}"
 SUBDIR=${PACKAGE//.//} # Replaces . with /
 
 echo "🚀 Starting Android Circuit App Template customization..."
@@ -94,10 +98,14 @@ do
   if [ -d "$n/java/app/example" ]; then
     echo "Creating $n/java/$SUBDIR"
     mkdir -p $n/java/$SUBDIR
-    echo "Moving files from $n/java/app/example/* to $n/java/$SUBDIR"
+    echo "Moving directory structure from $n/java/app/example to $n/java/$SUBDIR"
+    # Use cp to preserve directory structure, then remove source
     if [ "$(find $n/java/app/example -type f | wc -l)" -gt 0 ]; then
-      echo "Moving files from $n/java/app/example to $n/java/$SUBDIR"
-      find $n/java/app/example -type f -exec mv {} $n/java/$SUBDIR/ \;
+      # Copy all contents preserving directory structure
+      cp -r $n/java/app/example/* $n/java/$SUBDIR/ 2>/dev/null || true
+      # Also handle the case where there are hidden files
+      cp -r $n/java/app/example/.[^.]* $n/java/$SUBDIR/ 2>/dev/null || true
+      echo "Successfully moved $(find $n/java/$SUBDIR -type f | wc -l | tr -d ' ') files"
     else
       echo "No files found in $n/java/app/example to move."
     fi
