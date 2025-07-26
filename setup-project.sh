@@ -227,22 +227,37 @@ def clean_workmanager_from_app(content):
     content = re.sub(r'import androidx\.work\..*\n', '', content)
     content = re.sub(r'import .*\.work\..*\n', '', content)
     
-    # Remove Configuration.Provider from class declaration
+    # Remove Configuration.Provider from class declaration more carefully
+    # Handle case where it's the only interface: "Application(), Configuration.Provider"
+    content = re.sub(r'Application\(\),\s*Configuration\.Provider\s*{', 'Application() {', content)
+    # Handle case where it's with other interfaces: ", Configuration.Provider"
     content = re.sub(r',\s*Configuration\.Provider', '', content)
-    content = re.sub(r'Configuration\.Provider,?\s*', '', content)
+    # Handle case where it's the first interface: "Configuration.Provider, "
+    content = re.sub(r'Configuration\.Provider,\s*', '', content)
     
-    # Remove workManagerConfiguration property (multi-line)
-    content = re.sub(r'override val workManagerConfiguration:.*?\n.*?\.build\(\)\n', '', content, flags=re.DOTALL)
+    # Remove workManagerConfiguration property (multi-line, more precise)
+    content = re.sub(r'\s*override val workManagerConfiguration:.*?\.build\(\)\s*\n', '', content, flags=re.DOTALL)
     
     # Remove scheduleBackgroundWork method call from onCreate
-    content = re.sub(r'scheduleBackgroundWork\(\)\n', '', content)
+    content = re.sub(r'\s*scheduleBackgroundWork\(\)\s*\n', '\n', content)
     
-    # Remove scheduleBackgroundWork method definition (comprehensive pattern)
-    content = re.sub(r'/\*\*.*?Schedules a background work.*?\*/\s*private fun scheduleBackgroundWork\(\).*?appGraph\.workManager\.enqueue\(workRequest\)\s*\n\s*\}', '', content, flags=re.DOTALL)
+    # Remove the entire scheduleBackgroundWork method (improved pattern)
+    # This pattern matches the comment, method signature, and body until the closing brace
+    content = re.sub(r'\s*/\*\*\s*\*\s*Schedules a background work.*?\*/\s*private fun scheduleBackgroundWork\(\).*?appGraph\.workManager\.enqueue\(workRequest\)\s*\n\s*\}', '', content, flags=re.DOTALL)
     
-    # Clean up extra whitespace and format properly
-    content = re.sub(r'\n\s*\n\s*\n', '\n\n', content)  # Remove triple newlines
+    # Also handle cases where the method might not have the exact comment format
+    content = re.sub(r'\s*private fun scheduleBackgroundWork\(\).*?appGraph\.workManager\.enqueue\(workRequest\)\s*\n\s*\}', '', content, flags=re.DOTALL)
+    
+    # Clean up formatting issues - fix the line that has both appGraph() function and override
+    content = re.sub(r'(\}\s*)(override fun onCreate)', r'\1\n\n    \2', content)
+    content = re.sub(r'(fun appGraph\(\): AppGraph = appGraph)\s*(override fun onCreate)', r'\1\n\n    \2', content)
+    
+    # Clean up extra whitespace and format properly  
+    content = re.sub(r'\n\s*\n\s*\n+', '\n\n', content)  # Remove multiple newlines
     content = re.sub(r'\{\s*\n\s*\}', '{\n    }', content)  # Fix empty braces
+    
+    # Ensure proper formatting around class declaration
+    content = re.sub(r'(class\s+\w+\s*:\s*Application\(\)\s*)\{\s*\n\s*\n', r'\1{\n', content)
     
     return content
 
@@ -304,14 +319,6 @@ EOF
         fi
     done
     
-    # Clean up any orphaned annotations
-    echo "Cleaning up orphaned annotations..."
-    find ./ -name "*.kt" -type f | while read -r file; do
-        if [ -f "$file" ]; then
-            # Remove orphaned @Provides annotations that might be left after function removal
-            sed -i.bak '/^[[:space:]]*@Provides[[:space:]]*$/d' "$file"
-        fi
-    done
     
     echo "WorkManager files and references completely removed"
 else
