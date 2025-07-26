@@ -2,9 +2,13 @@ package app.example.di
 
 import android.app.Activity
 import android.content.Context
+import androidx.work.ListenableWorker
+import androidx.work.WorkManager
+import app.example.work.AppWorkerFactory
 import com.slack.circuit.foundation.Circuit
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -20,6 +24,16 @@ import kotlin.reflect.KClass
 interface AppGraph {
     val activityProviders: Map<KClass<out Activity>, Provider<Activity>>
     val circuit: Circuit
+    val workManager: WorkManager
+    val workerFactory: AppWorkerFactory
+
+    @Provides
+    fun providesWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
+    }
+
+    @Multibinds
+    val workerProviders: Map<KClass<out ListenableWorker>, AppWorkerFactory.WorkerInstanceFactory<*>>
 
     // https://zacsweers.github.io/metro/dependency-graphs/#provides
     @DependencyGraph.Factory
