@@ -20,6 +20,11 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 
 ### Post-process after cloning 🧑‍🏭
 
+**First, download the template:**
+1. Download the latest template: [`android-compose-app-template-main.zip`](https://github.com/hossain-khan/android-compose-app-template/archive/refs/heads/main.zip)
+2. Extract the ZIP file to your desired location
+3. Navigate to the extracted directory in your terminal
+
 You have **two options** for customizing this template:
 
 <details>
