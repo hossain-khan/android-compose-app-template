@@ -13,7 +13,11 @@ import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,7 +28,9 @@ import androidx.compose.ui.Modifier
 import app.example.data.Email
 import app.example.data.ExampleAppVersionService
 import app.example.data.ExampleEmailRepository
+import app.example.overlay.AppInfoOverlay
 import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.overlay.OverlayNavigator
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
@@ -48,6 +54,8 @@ data object InboxScreen : Screen {
         data class EmailClicked(
             val emailId: String,
         ) : Event()
+        
+        data object InfoClicked : Event()
     }
 }
 
@@ -56,6 +64,7 @@ data object InboxScreen : Screen {
 class InboxPresenter
     constructor(
         @Assisted private val navigator: Navigator,
+        @Assisted private val overlayNavigator: OverlayNavigator,
         private val emailRepository: ExampleEmailRepository,
         private val appVersionService: ExampleAppVersionService,
     ) : Presenter<InboxScreen.State> {
@@ -72,6 +81,10 @@ class InboxPresenter
                 when (event) {
                     // Navigate to the detail screen when an email is clicked
                     is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
+                    // Show app info overlay when info button is clicked
+                    InboxScreen.Event.InfoClicked -> {
+                        overlayNavigator.show(AppInfoOverlay)
+                    }
                 }
             }
         }
@@ -79,7 +92,7 @@ class InboxPresenter
         @CircuitInject(InboxScreen::class, AppScope::class)
         @AssistedFactory
         interface Factory {
-            fun create(navigator: Navigator): InboxPresenter
+            fun create(navigator: Navigator, overlayNavigator: OverlayNavigator): InboxPresenter
         }
     }
 
@@ -90,7 +103,24 @@ fun Inbox(
     state: InboxScreen.State,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(modifier = modifier, topBar = { TopAppBar(title = { Text("Inbox") }) }) { innerPadding ->
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text("Inbox") },
+                actions = {
+                    IconButton(
+                        onClick = { state.eventSink(InboxScreen.Event.InfoClicked) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "App Info"
+                        )
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(state.emails) { email ->
                 EmailItem(
