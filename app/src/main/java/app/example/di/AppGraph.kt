@@ -31,9 +31,6 @@ interface AppGraph {
         return WorkManager.getInstance(context)
     }
 
-    @Multibinds
-    val workerProviders: Map<KClass<out ListenableWorker>, AppWorkerFactory.WorkerInstanceFactory<*>>
-
     // https://zacsweers.github.io/metro/dependency-graphs/#provides
     @DependencyGraph.Factory
     interface Factory {
