@@ -42,11 +42,15 @@ jobs:
           # Create test workspace in /tmp to avoid recursive copy issues
           mkdir -p /tmp/test-workspace/original-template
           # Copy all files except .git and any test directories
-          rsync -av --exclude='.git' --exclude='test-workspace' --exclude='/tmp' . /tmp/test-workspace/original-template/
+          rsync -av --exclude='.git' --exclude='test-workspace' . /tmp/test-workspace/original-template/
 
       - name: Run setup script - ${{ matrix.test-case.name }}
         run: |
           cd /tmp/test-workspace/original-template
+          echo "Current directory: $(pwd)"
+          echo "Files in directory:"
+          ls -la
+          echo "Running: ${{ matrix.test-case.cmd }}"
           ${{ matrix.test-case.cmd }}
 
       - name: Validate project structure
@@ -109,11 +113,19 @@ jobs:
           echo "✅ WorkManager preservation validation passed"
 
       - name: Test project compilation
+        timeout-minutes: 10
         run: |
           cd /tmp/test-workspace/original-template
           
+          echo "📋 Project structure after setup:"
+          find . -name "*.kt" -o -name "*.xml" -o -name "*.kts" | head -20
+          
+          echo "🔧 Checking gradle wrapper permissions..."
+          chmod +x ./gradlew
+          
+          echo "🏗️  Building project..."
           # Try to compile the project to ensure it's valid
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace --info
           
           echo "✅ Project compilation successful"
 
