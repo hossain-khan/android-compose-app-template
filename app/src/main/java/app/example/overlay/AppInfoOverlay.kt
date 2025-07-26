@@ -21,18 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.example.BuildConfig
 import com.slack.circuitx.overlays.BottomSheetOverlay
 
 /**
  * App information overlay that shows as a bottom sheet.
  */
 @OptIn(ExperimentalMaterial3Api::class)
+@Suppress("FunctionName")
 fun AppInfoOverlay(onDismiss: () -> Unit = {}): BottomSheetOverlay<Unit, Unit> =
     BottomSheetOverlay(
         model = Unit,
         onDismiss = {
             onDismiss()
-            Unit
         },
     ) { _, overlayNavigator ->
         AppInfoContent(
@@ -78,9 +79,10 @@ private fun AppInfoContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             InfoRow(label = "App Name", value = "Circuit App Template")
-            InfoRow(label = "Version", value = "1.0")
-            InfoRow(label = "Package", value = "app.example")
-            InfoRow(label = "Framework", value = "Circuit + Compose")
+            InfoRow(label = "Version", value = BuildConfig.VERSION_NAME)
+            InfoRow(label = "Package", value = BuildConfig.APPLICATION_ID)
+            InfoRow(label = "Built Type", value = BuildConfig.BUILD_TYPE)
+            InfoRow(label = "Framework", value = "Circuit + Compose + Metro")
 
             Spacer(modifier = Modifier.height(24.dp))
 
