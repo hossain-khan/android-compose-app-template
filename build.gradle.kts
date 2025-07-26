@@ -27,4 +27,8 @@ plugins {
     // Applies the Metro plugin for dependency injection.
     // Project: https://zacsweers.github.io/metro/
     alias(libs.plugins.metro) apply false
+
+    // Applies the Kotlinter plugin for Kotlin code formatting and linting.
+    // Project: https://github.com/jeremymailen/kotlinter-gradle
+    alias(libs.plugins.kotlinter) apply false
 }
