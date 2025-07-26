@@ -4,7 +4,20 @@
 # Adapted for Circuit + Metro DI architecture
 # Compatible with bash 3.2+ (standard on macOS)
 #
-# Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]
+# Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-examples] [--remove-workmanager] [--keep-script]
+#
+# Examples:
+#   bash setup-project.sh com.mycompany.todoapp TodoApp
+#   bash setup-project.sh com.mycompany.newsapp NewsApp --remove-examples
+#   bash setup-project.sh dev.hossain.gphotos MyPhotos --remove-examples --remove-workmanager
+#   bash setup-project.sh com.example.allapp AllApp --remove-examples --remove-workmanager --keep-script
+#
+# Features:
+#   - Flexible flag positioning (flags can come before or after positional arguments)
+#   - Preserves subdirectory structure (ui/theme, di, circuit, work, data directories)
+#   - Handles package renaming and file/class renaming automatically
+#   - Keeps Example files and WorkManager components by default (use --remove-* to exclude)
+#   - Creates fresh git repository with initial commit
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #
@@ -29,20 +42,20 @@ cleanup_on_error() {
 trap 'cleanup_on_error $LINENO' ERR
 
 # Parse arguments using while loop with shift for proper flag handling
-KEEP_EXAMPLES=false
-KEEP_WORKMANAGER=false
+REMOVE_EXAMPLES=false
+REMOVE_WORKMANAGER=false
 KEEP_SCRIPT=false
 POSITIONAL_ARGS=()
 
 # Process all arguments, collecting positional args and setting flags
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --keep-examples)
-      KEEP_EXAMPLES=true
+    --remove-examples)
+      REMOVE_EXAMPLES=true
       shift
       ;;
-    --keep-workmanager)
-      KEEP_WORKMANAGER=true
+    --remove-workmanager)
+      REMOVE_WORKMANAGER=true
       shift
       ;;
     --keep-script)
@@ -63,19 +76,23 @@ done
 
 # Check if we have enough positional arguments
 if [[ ${#POSITIONAL_ARGS[@]} -lt 2 ]]; then
-   echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]" >&2
+   echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-examples] [--remove-workmanager] [--keep-script]" >&2
    echo ""
    echo "Examples:"
    echo "  bash setup-project.sh com.mycompany.todoapp TodoApp"
-   echo "  bash setup-project.sh com.mycompany.newsapp NewsApp --keep-examples"
-   echo "  bash setup-project.sh com.mycompany.taskapp TaskApp --keep-workmanager"
+   echo "  bash setup-project.sh com.mycompany.newsapp NewsApp --remove-examples"
+   echo "  bash setup-project.sh com.mycompany.taskapp TaskApp --remove-workmanager"
    echo "  bash setup-project.sh com.mycompany.debugapp DebugApp --keep-script"
-   echo "  bash setup-project.sh com.mycompany.allapp AllApp --keep-examples --keep-workmanager --keep-script"
+   echo "  bash setup-project.sh com.mycompany.allapp AllApp --remove-examples --remove-workmanager --keep-script"
    echo ""
    echo "Options:"
-   echo "  --keep-examples     Keep Example* files for reference"
-   echo "  --keep-workmanager  Keep WorkManager related files"
+   echo "  --remove-examples   Remove Example* files (kept by default)"
+   echo "  --remove-workmanager Remove WorkManager related files (kept by default)"
    echo "  --keep-script       Keep this setup script (useful for debugging)"
+   echo ""
+   echo "Note: Flags can be positioned anywhere in the command line"
+   echo "      Directory structure (ui/theme, di, circuit, work, data) is preserved"
+   echo "      Examples and WorkManager are kept by default - use --remove-* to exclude"
    exit 2
 fi
 
@@ -86,6 +103,8 @@ SUBDIR=${PACKAGE//.//} # Replaces . with /
 echo "🚀 Starting Android Circuit App Template customization..."
 echo "📦 New package: $PACKAGE"
 echo "📱 App name: $APPNAME"
+KEEP_EXAMPLES=$([ "$REMOVE_EXAMPLES" = false ] && echo "true" || echo "false")
+KEEP_WORKMANAGER=$([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")
 echo "🗂️  Keep examples: $KEEP_EXAMPLES"
 echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
 echo "📜 Keep script: $KEEP_SCRIPT"
@@ -141,7 +160,7 @@ echo "🏷️  Step 5: Updating app name in XML files..."
 find ./ -name "strings.xml" -exec sed -i.bak "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">$APPNAME<\/string>/g" {} \;
 
 # Step 6: Handle Example files
-if [ "$KEEP_EXAMPLES" = false ]; then
+if [ "$REMOVE_EXAMPLES" = true ]; then
     echo "🗑️  Step 6: Removing Example* files..."
     find ./ -name "Example*.kt" -type f -delete
     find ./ -name "*Example*.kt" -type f -delete
@@ -151,7 +170,7 @@ else
 fi
 
 # Step 7: Handle WorkManager files
-if [ "$KEEP_WORKMANAGER" = false ]; then
+if [ "$REMOVE_WORKMANAGER" = true ]; then
     echo "🗑️  Step 7: Removing WorkManager files..."
     find ./ -path "*/work/*" -name "*.kt" -type f -delete
     find ./ -name "*Worker*.kt" -type f -delete
@@ -242,8 +261,8 @@ if ! git commit -m "Initial commit: $APPNAME
 - Customized from android-compose-app-template
 - Package: $PACKAGE  
 - Circuit + Metro architecture
-- Examples kept: $KEEP_EXAMPLES
-- WorkManager kept: $KEEP_WORKMANAGER"; then
+- Examples kept: $([ "$REMOVE_EXAMPLES" = false ] && echo "true" || echo "false")
+- WorkManager kept: $([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")"; then
     echo "❌ Error: Failed to create initial commit."
     exit 1
 fi
@@ -260,10 +279,10 @@ echo "   1. Open the project in Android Studio"
 echo "   2. Update app theme colors"
 echo "   3. Generate your app icon"
 echo "   4. Review and update .editorconfig"
-if [ "$KEEP_EXAMPLES" = true ]; then
+if [ "$REMOVE_EXAMPLES" = false ]; then
     echo "   5. Remove Example* files when you no longer need them"
 fi
-if [ "$KEEP_WORKMANAGER" = false ]; then
+if [ "$REMOVE_WORKMANAGER" = true ]; then
     echo "   5. Add WorkManager back if you need background tasks"
 fi
 echo ""
