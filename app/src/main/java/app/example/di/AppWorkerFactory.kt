@@ -30,16 +30,13 @@ import kotlin.reflect.KClass
 @ContributesBinding(AppScope::class)
 @Inject
 class AppWorkerFactory(
-    private val workerProviders: Map<KClass<out ListenableWorker>, WorkerInstanceFactory<*>>
+    private val workerProviders: Map<KClass<out ListenableWorker>, WorkerInstanceFactory<*>>,
 ) : WorkerFactory() {
-    
     override fun createWorker(
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters,
-    ): ListenableWorker? {
-        return workerProviders[Class.forName(workerClassName).kotlin]?.create(workerParameters)
-    }
+    ): ListenableWorker? = workerProviders[Class.forName(workerClassName).kotlin]?.create(workerParameters)
 
     interface WorkerInstanceFactory<T : ListenableWorker> {
         fun create(params: WorkerParameters): T

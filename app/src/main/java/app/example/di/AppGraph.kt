@@ -2,12 +2,10 @@ package app.example.di
 
 import android.app.Activity
 import android.content.Context
-import androidx.work.ListenableWorker
 import androidx.work.WorkManager
 import com.slack.circuit.foundation.Circuit
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
-import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -27,9 +25,9 @@ interface AppGraph {
     val workerFactory: AppWorkerFactory
 
     @Provides
-    fun providesWorkManager(@ApplicationContext context: Context): WorkManager {
-        return WorkManager.getInstance(context)
-    }
+    fun providesWorkManager(
+        @ApplicationContext context: Context,
+    ): WorkManager = WorkManager.getInstance(context)
 
     // https://zacsweers.github.io/metro/dependency-graphs/#provides
     @DependencyGraph.Factory
