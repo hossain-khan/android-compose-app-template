@@ -2,7 +2,7 @@
 An Android App template that is preconfigured with ⚡️ Circuit UDF architecture.
 
 > [!TIP]
-> Google also has an official template available. Have you checked it out yet?  
+> Google also has an official architectural template available for started apps.
 > https://github.com/android/architecture-templates
 
 ## What do you get in this template? 📜
@@ -12,7 +12,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
 * ✔️ `BuildConfig` turned on with example of reading config from `local.properties` file.
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
-* ✔️ [AndroidX Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
+* ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 
 > [!WARNING]  
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
@@ -24,6 +24,7 @@ Unfortunately, you **do** have to do some manual work after cloning the template
 * [ ] Rename the package from **`app.example`** to your preferred app package name.
 * [ ] Update directory structure based on package name update
 * [ ] Update app name and package id in XML and Gradle
+* [ ] Update `.editorconfig` based on your project preference
 * [ ] Update your app theme colors (_use [Theme Builder](https://material-foundation.github.io/material-theme-builder/)_)
 * [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
 * [ ] Rename `CircuitApp***` to preferred file names
