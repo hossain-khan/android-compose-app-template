@@ -14,13 +14,6 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 
-## Recent Improvements 🚀
-* ✔️ **Flexible flag positioning** - Put flags before or after positional arguments 
-* ✔️ **Directory structure preservation** - Maintains `ui/theme/`, `di/`, `circuit/`, `work/`, `data/` subdirectories
-* ✔️ **User-friendly defaults** - Keeps examples and WorkManager by default (use `--remove-*` flags to exclude)
-* ✔️ **Improved error handling** - Better feedback during setup process
-* ✔️ **Enhanced argument parsing** - Handles complex flag combinations correctly
-
 > [!WARNING]  
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
@@ -28,6 +21,9 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 ### Post-process after cloning 🧑‍🏭
 
 You have **two options** for customizing this template:
+
+<details>
+<summary>Option 1: Automated Customization (Recommended)</summary>
 
 #### Option 1: Automated Customization (Recommended) 🤖
 Run the setup script to automatically handle most of the configuration:
@@ -53,13 +49,18 @@ Run the setup script to automatically handle most of the configuration:
 
 **What the script does automatically:**
 - Renames package from `app.example` to your preferred package name
-- **Preserves subdirectory structure** (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
+- Preserves subdirectory structure (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
-- **Keeps Example* files by default** (use `--remove-examples` to exclude)
-- **Keeps WorkManager files by default** (use `--remove-workmanager` to exclude)
+- Keeps Example* files by default (use `--remove-examples` to exclude)
+- Keeps WorkManager files by default (use `--remove-workmanager` to exclude)
 - Creates a fresh git repository with descriptive initial commit
 - Removes template-specific files
+
+</details>
+
+<details>
+<summary>Option 2: Manual Customization 🔧</summary>
 
 #### Option 2: Manual Customization 🔧
 If you prefer manual control, complete these tasks:
@@ -71,6 +72,11 @@ If you prefer manual control, complete these tasks:
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
 * [ ] Remove WorkManager and Worker example files if you are not using them.
 
+</details>
+
+<details>
+<summary>Additional Manual Steps (Both Options) 📝</summary>
+
 #### Additional Manual Steps (Both Options) 📝
 These still need to be done manually after using the script:
 
@@ -81,25 +87,7 @@ These still need to be done manually after using the script:
 * [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
 
-### Troubleshooting 🔧
-
-**Script shows wrong flag values (Keep examples: false when --keep-examples was passed):**
-- ✅ **Fixed** - Script now properly handles flags in any position and defaults to keeping examples/WorkManager
-- Use `--keep-script` to preserve the script for debugging if needed
-
-**Directory structure gets flattened (all files moved to package root):**
-- ✅ **Fixed** - Script now preserves subdirectory structure (`ui/theme/`, `di/`, etc.)
-- Files maintain their original organization within the new package
-
-**Want to remove examples or WorkManager:**
-- Use `--remove-examples` to exclude Example* files  
-- Use `--remove-workmanager` to exclude WorkManager components
-- Both are kept by default for easier project exploration
-
-**Need to re-run the script:**
-- Use `--keep-script` flag to prevent script deletion
-- Restore from git if you have the original template committed
-- Re-clone the template repository if needed
+</details>
 
 
 ## Demo 📹
