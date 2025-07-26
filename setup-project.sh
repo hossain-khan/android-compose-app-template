@@ -189,14 +189,138 @@ fi
 
 # Step 7: Handle WorkManager files
 if [ "$REMOVE_WORKMANAGER" = true ]; then
-    echo "🗑️  Step 7: Removing WorkManager files..."
+    echo "🗑️  Step 7: Removing WorkManager files and references..."
+    
+    # Remove WorkManager files
     find ./ -path "*/work/*" -name "*.kt" -type f -delete
     find ./ -name "*Worker*.kt" -type f -delete
     find ./ -name "WorkerKey.kt" -type f -delete
     find ./ -name "AppWorkerFactory.kt" -type f -delete
     # Remove work directory if empty
-    find ./ -name "work" -type d -empty -delete 2>/dev/null || true
-    echo "WorkManager files removed"
+    find ./ -name "work" -type d -exec rm -rf {} + 2>/dev/null || true
+    
+    # Clean up AppGraph.kt references
+    echo "Cleaning WorkManager references from AppGraph.kt..."
+    find ./ -name "AppGraph.kt" -type f | while read -r file; do
+        if [ -f "$file" ]; then
+            # Remove WorkManager import
+            sed -i.bak '/import androidx\.work\.WorkManager/d' "$file"
+            # Remove workManager and workerFactory properties
+            sed -i.bak '/val workManager: WorkManager/d' "$file"
+            sed -i.bak '/val workerFactory: AppWorkerFactory/d' "$file"
+            # Remove providesWorkManager function (multi-line removal using sed)
+            sed -i.bak '/^[[:space:]]*@Provides$/,/^[[:space:]]*): WorkManager = WorkManager\.getInstance(context)$/d' "$file"
+        fi
+    done
+    
+    # Clean up Application class (CircuitApp.kt) using Python for complex multi-line patterns
+    echo "Cleaning WorkManager references from Application class..."
+    find ./ -name "*App.kt" -type f | while read -r file; do
+        if [ -f "$file" ] && grep -q "WorkManager\|Configuration\.Provider" "$file"; then
+            # Create temporary Python script for complex cleanup
+            cat > /tmp/cleanup_app.py << 'EOF'
+import sys
+import re
+
+def clean_workmanager_from_app(content):
+    # Remove all WorkManager-related imports
+    content = re.sub(r'import androidx\.work\..*\n', '', content)
+    content = re.sub(r'import .*\.work\..*\n', '', content)
+    
+    # Remove Configuration.Provider from class declaration more carefully
+    # Handle case where it's the only interface: "Application(), Configuration.Provider"
+    content = re.sub(r'Application\(\),\s*Configuration\.Provider\s*{', 'Application() {', content)
+    # Handle case where it's with other interfaces: ", Configuration.Provider"
+    content = re.sub(r',\s*Configuration\.Provider', '', content)
+    # Handle case where it's the first interface: "Configuration.Provider, "
+    content = re.sub(r'Configuration\.Provider,\s*', '', content)
+    
+    # Remove workManagerConfiguration property (multi-line, more precise)
+    content = re.sub(r'\s*override val workManagerConfiguration:.*?\.build\(\)\s*\n', '', content, flags=re.DOTALL)
+    
+    # Remove scheduleBackgroundWork method call from onCreate
+    content = re.sub(r'\s*scheduleBackgroundWork\(\)\s*\n', '\n', content)
+    
+    # Remove the entire scheduleBackgroundWork method (improved pattern)
+    # This pattern matches the comment, method signature, and body until the closing brace
+    content = re.sub(r'\s*/\*\*\s*\*\s*Schedules a background work.*?\*/\s*private fun scheduleBackgroundWork\(\).*?appGraph\.workManager\.enqueue\(workRequest\)\s*\n\s*\}', '', content, flags=re.DOTALL)
+    
+    # Also handle cases where the method might not have the exact comment format
+    content = re.sub(r'\s*private fun scheduleBackgroundWork\(\).*?appGraph\.workManager\.enqueue\(workRequest\)\s*\n\s*\}', '', content, flags=re.DOTALL)
+    
+    # Clean up formatting issues - fix the line that has both appGraph() function and override
+    content = re.sub(r'(\}\s*)(override fun onCreate)', r'\1\n\n    \2', content)
+    content = re.sub(r'(fun appGraph\(\): AppGraph = appGraph)\s*(override fun onCreate)', r'\1\n\n    \2', content)
+    
+    # Clean up extra whitespace and format properly  
+    content = re.sub(r'\n\s*\n\s*\n+', '\n\n', content)  # Remove multiple newlines
+    content = re.sub(r'\{\s*\n\s*\}', '{\n    }', content)  # Fix empty braces
+    
+    # Ensure proper formatting around class declaration
+    content = re.sub(r'(class\s+\w+\s*:\s*Application\(\)\s*)\{\s*\n\s*\n', r'\1{\n', content)
+    
+    return content
+
+if __name__ == "__main__":
+    file_path = sys.argv[1]
+    with open(file_path, 'r') as f:
+        content = f.read()
+    
+    cleaned_content = clean_workmanager_from_app(content)
+    
+    with open(file_path, 'w') as f:
+        f.write(cleaned_content)
+EOF
+            
+            python3 /tmp/cleanup_app.py "$file"
+            rm -f /tmp/cleanup_app.py
+        fi
+    done
+    
+    # Clean up build.gradle.kts
+    echo "Removing WorkManager dependency from build.gradle.kts..."
+    find ./ -name "build.gradle.kts" -type f | while read -r file; do
+        if [ -f "$file" ]; then
+            sed -i.bak '/implementation(libs\.androidx\.work)/d' "$file"
+        fi
+    done
+    
+    # Clean up AndroidManifest.xml WorkManager provider configuration
+    echo "Removing WorkManager configuration from AndroidManifest.xml..."
+    find ./ -name "AndroidManifest.xml" -type f | while read -r file; do
+        if [ -f "$file" ]; then
+            # Use Python for more reliable multi-line XML cleanup
+            cat > /tmp/cleanup_manifest.py << 'EOF'
+import sys
+import re
+
+def clean_workmanager_from_manifest(content):
+    # Remove WorkManager provider configuration including comments
+    # This pattern matches from the WorkManager comment to the closing </provider> tag
+    content = re.sub(r'\s*<!--[^>]*WorkManager[^>]*-->[^<]*<provider[^>]*>\s*<!--[^>]*-->\s*<meta-data[^>]*tools:node="remove"\s*/>\s*</provider>', '', content, flags=re.DOTALL)
+    
+    # Also handle case where there might be variations in whitespace/formatting
+    content = re.sub(r'\s*<!--[^>]*WorkManager.*?</provider>', '', content, flags=re.DOTALL)
+    
+    return content
+
+if __name__ == "__main__":
+    file_path = sys.argv[1]
+    with open(file_path, 'r') as f:
+        content = f.read()
+    
+    cleaned_content = clean_workmanager_from_manifest(content)
+    
+    with open(file_path, 'w') as f:
+        f.write(cleaned_content)
+EOF
+            python3 /tmp/cleanup_manifest.py "$file"
+            rm -f /tmp/cleanup_manifest.py
+        fi
+    done
+    
+    
+    echo "WorkManager files and references completely removed"
 else
     echo "⚙️  Step 7: Keeping WorkManager files..."
 fi
