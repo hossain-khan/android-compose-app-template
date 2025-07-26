@@ -19,19 +19,51 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
 
 ### Post-process after cloning 🧑‍🏭
-Unfortunately, you **do** have to do some manual work after cloning the template 😅, namely:
+
+You have **two options** for customizing this template:
+
+#### Option 1: Automated Customization (Recommended) 🤖
+Run the setup script to automatically handle most of the configuration:
+
+```bash
+# Basic usage - removes examples and WorkManager
+./setup-project.sh com.mycompany.appname MyAppName
+
+# Keep examples for reference
+./setup-project.sh com.mycompany.appname MyAppName --keep-examples
+
+# Keep WorkManager if you need background tasks
+./setup-project.sh com.mycompany.appname MyAppName --keep-workmanager --keep-examples
+```
+
+**What the script does automatically:**
+- Renames package from `app.example` to your preferred package name
+- Updates directory structure based on package name
+- Updates app name and package ID in XML and Gradle files
+- Renames `CircuitApp` to `YourAppNameApp`
+- Removes `Example*` files (optional with `--keep-examples`)
+- Removes WorkManager files (optional with `--keep-workmanager`)
+- Creates a fresh git repository
+- Removes template-specific files
+
+#### Option 2: Manual Customization 🔧
+If you prefer manual control, complete these tasks:
 
 * [ ] Rename the package from **`app.example`** to your preferred app package name.
 * [ ] Update directory structure based on package name update
 * [ ] Update app name and package id in XML and Gradle
-* [ ] Update `.editorconfig` based on your project preference
-* [ ] Update your app theme colors (_use [Theme Builder](https://material-foundation.github.io/material-theme-builder/)_)
-* [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
 * [ ] Rename `CircuitApp***` to preferred file names
 * [ ] Remove `Example***` files that were added to showcase example usage of app and Circuit.
 * [ ] Remove WorkManager and Worker example files if you are not using them.
+
+#### Additional Manual Steps (Both Options) 📝
+These still need to be done manually after using the script:
+
+* [ ] Update `.editorconfig` based on your project preference
+* [ ] Update your app theme colors (_use [Theme Builder](https://material-foundation.github.io/material-theme-builder/)_)
+* [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
 * [ ] Update/remove repository license
-* [ ] Configure [renovate](https://github.com/apps/renovate) for depenency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
+* [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
 
 
