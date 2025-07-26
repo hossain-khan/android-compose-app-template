@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkManager
-import app.example.work.AppWorkerFactory
 import com.slack.circuit.foundation.Circuit
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph

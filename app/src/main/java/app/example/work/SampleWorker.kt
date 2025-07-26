@@ -4,7 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import app.example.work.AppWorkerFactory.WorkerInstanceFactory
+import app.example.di.WorkerKey
+import app.example.di.AppWorkerFactory.WorkerInstanceFactory
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory

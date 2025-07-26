@@ -1,4 +1,4 @@
-package app.example.work
+package app.example.di
 
 import androidx.work.ListenableWorker
 import dev.zacsweers.metro.MapKey
