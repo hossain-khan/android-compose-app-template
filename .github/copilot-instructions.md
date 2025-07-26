@@ -10,8 +10,8 @@ This is a template for an Android app using Jetpack Compose, designed to help yo
 
 ## Libraries and Frameworks
 
-- Circuit for the app architecture.
-- Metro for dependency injection
+- [Circuit](https://github.com/slackhq/circuit) for the app's UDF architecture.
+- [Metro](https://github.com/ZacSweers/metro) for dependency injection
 
 ## Coding Standards
 
