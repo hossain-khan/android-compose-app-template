@@ -54,7 +54,7 @@ data object InboxScreen : Screen {
         data class EmailClicked(
             val emailId: String,
         ) : Event()
-        
+
         data object InfoClicked : Event()
     }
 }
@@ -92,7 +92,10 @@ class InboxPresenter
         @CircuitInject(InboxScreen::class, AppScope::class)
         @AssistedFactory
         interface Factory {
-            fun create(navigator: Navigator, overlayNavigator: OverlayNavigator): InboxPresenter
+            fun create(
+                navigator: Navigator,
+                overlayNavigator: OverlayNavigator,
+            ): InboxPresenter
         }
     }
 
@@ -110,16 +113,16 @@ fun Inbox(
                 title = { Text("Inbox") },
                 actions = {
                     IconButton(
-                        onClick = { state.eventSink(InboxScreen.Event.InfoClicked) }
+                        onClick = { state.eventSink(InboxScreen.Event.InfoClicked) },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Info,
-                            contentDescription = "App Info"
+                            contentDescription = "App Info",
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(state.emails) { email ->
