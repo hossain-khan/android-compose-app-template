@@ -105,7 +105,7 @@ do
       cp -r $n/java/app/example/* $n/java/$SUBDIR/ 2>/dev/null || true
       # Also handle the case where there are hidden files
       cp -r $n/java/app/example/.[^.]* $n/java/$SUBDIR/ 2>/dev/null || true
-      echo "Successfully moved $(find $n/java/$SUBDIR -type f | wc -l | tr -d ' ') files"
+      echo "Successfully copied $(find $n/java/$SUBDIR -type f | wc -l | tr -d ' ') files"
     else
       echo "No files found in $n/java/app/example to move."
     fi
