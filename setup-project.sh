@@ -2,18 +2,15 @@
 #
 # Android Compose Circuit App Template Customizer
 # Adapted for Circuit + Metro DI architecture
+# Compatible with bash 3.2+ (standard on macOS)
 #
 # Usage: bash setup-project.sh com.mycompany.appname AppName [--keep-examples] [--keep-workmanager] [--keep-script]
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #
 
-# Verify bash version. macOS comes with bash 3 preinstalled.
-if [[ ${BASH_VERSINFO[0]} -lt 4 ]]
-then
-  echo "You need at least bash 4 to run this script."
-  exit 1
-fi
+# Compatible with bash 3.2+ (default on macOS)
+# No minimum version check needed - script uses only POSIX-compatible features
 
 # exit when any command fails
 set -e
@@ -31,14 +28,14 @@ cleanup_on_error() {
 # Set up error trap
 trap 'cleanup_on_error $LINENO' ERR
 
-# Parse arguments
+# Parse arguments using while loop with shift for proper flag handling
 KEEP_EXAMPLES=false
 KEEP_WORKMANAGER=false
 KEEP_SCRIPT=false
 
-# Check for flags
-for arg in "$@"; do
-  case $arg in
+# Process flags first
+while [[ $# -gt 0 ]]; do
+  case $1 in
     --keep-examples)
       KEEP_EXAMPLES=true
       shift
@@ -50,6 +47,14 @@ for arg in "$@"; do
     --keep-script)
       KEEP_SCRIPT=true
       shift
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      exit 2
+      ;;
+    *)
+      # First non-flag argument, stop processing flags
+      break
       ;;
   esac
 done
