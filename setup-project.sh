@@ -6,6 +6,11 @@
 #
 # Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-examples] [--remove-workmanager] [--keep-script]
 #
+# Parameters:
+#   com.mycompany.appname  - Your app's package name (reverse domain notation)
+#   AppName                - Your app's class name in PascalCase (used for CircuitApp → AppNameApp)
+#                            Also used as display name in strings.xml and git commit messages
+#
 # Examples:
 #   bash setup-project.sh com.mycompany.todoapp TodoApp
 #   bash setup-project.sh com.mycompany.newsapp NewsApp --remove-examples
@@ -18,6 +23,14 @@
 #   - Handles package renaming and file/class renaming automatically
 #   - Keeps Example files and WorkManager components by default (use --remove-* to exclude)
 #   - Creates fresh git repository with initial commit
+#
+# AppName Usage:
+#   The AppName parameter is used in multiple places and must be in PascalCase:
+#   - Renames CircuitApp.kt → {AppName}App.kt (e.g., TodoApp.kt, NewsApp.kt)
+#   - Updates class references: CircuitApp → {AppName}App in all .kt, .xml, .kts files
+#   - Sets app display name in strings.xml: <string name="app_name">{AppName}</string>
+#   - Used in git commit message as project identifier
+#   - Becomes the main Application class name for your project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 #
@@ -77,6 +90,11 @@ done
 # Check if we have enough positional arguments
 if [[ ${#POSITIONAL_ARGS[@]} -lt 2 ]]; then
    echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-examples] [--remove-workmanager] [--keep-script]" >&2
+   echo ""
+   echo "Parameters:"
+   echo "  com.mycompany.appname  Your app's package name (reverse domain notation)"
+   echo "  AppName                Your app's class name in PascalCase (e.g., TodoApp, NewsApp)"
+   echo "                         Used for: CircuitApp→AppNameApp, app display name, main class"
    echo ""
    echo "Examples:"
    echo "  bash setup-project.sh com.mycompany.todoapp TodoApp"
