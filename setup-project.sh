@@ -103,8 +103,10 @@ SUBDIR=${PACKAGE//.//} # Replaces . with /
 echo "🚀 Starting Android Circuit App Template customization..."
 echo "📦 New package: $PACKAGE"
 echo "📱 App name: $APPNAME"
-echo "🗂️  Keep examples: $([ "$REMOVE_EXAMPLES" = false ] && echo "true" || echo "false")"
-echo "⚙️  Keep WorkManager: $([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")"
+KEEP_EXAMPLES=$([ "$REMOVE_EXAMPLES" = false ] && echo "true" || echo "false")
+KEEP_WORKMANAGER=$([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")
+echo "🗂️  Keep examples: $KEEP_EXAMPLES"
+echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
 echo "📜 Keep script: $KEEP_SCRIPT"
 echo ""
 
