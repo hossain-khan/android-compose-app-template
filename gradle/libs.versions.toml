@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.10.1"
 # https://developer.android.com/build/releases/gradle-plugin
-agp = "8.11.1"
+agp = "8.0.2"
 circuit = "0.29.1"
 composeBom = "2025.07.00"
 coreKtx = "1.16.0"
@@ -12,6 +12,10 @@ junitVersion = "1.2.1"
 kotlin = "2.2.0"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.2.0 in this case)
 ksp = "2.2.0-2.0.2"
+# Kotlin linter with built-in formatter
+# https://github.com/jeremymailen/kotlinter-gradle
+# https://github.com/pinterest/ktlint
+kotlinter = "5.1.1"
 lifecycleRuntimeKtx = "2.9.2"
 metro = "0.5.2"
 
@@ -66,5 +70,10 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 # Metro KSP plugin
 # https://zacsweers.github.io/metro/
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
+
+# Kotlin linter with built-in formatter
+# https://github.com/jeremymailen/kotlinter-gradle
+# https://github.com/pinterest/ktlint
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 
 
