@@ -24,13 +24,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import app.example.data.Email
 import app.example.data.ExampleAppVersionService
 import app.example.data.ExampleEmailRepository
 import app.example.overlay.AppInfoOverlay
 import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.overlay.OverlayNavigator
+import com.slack.circuit.overlay.LocalOverlayHost
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
@@ -40,6 +41,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -64,7 +66,6 @@ data object InboxScreen : Screen {
 class InboxPresenter
     constructor(
         @Assisted private val navigator: Navigator,
-        @Assisted private val overlayNavigator: OverlayNavigator,
         private val emailRepository: ExampleEmailRepository,
         private val appVersionService: ExampleAppVersionService,
     ) : Presenter<InboxScreen.State> {
@@ -83,7 +84,7 @@ class InboxPresenter
                     is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
                     // Show app info overlay when info button is clicked
                     InboxScreen.Event.InfoClicked -> {
-                        overlayNavigator.show(AppInfoOverlay)
+                        // Overlay will be handled in the UI layer
                     }
                 }
             }
@@ -92,10 +93,7 @@ class InboxPresenter
         @CircuitInject(InboxScreen::class, AppScope::class)
         @AssistedFactory
         interface Factory {
-            fun create(
-                navigator: Navigator,
-                overlayNavigator: OverlayNavigator,
-            ): InboxPresenter
+            fun create(navigator: Navigator): InboxPresenter
         }
     }
 
@@ -106,6 +104,9 @@ fun Inbox(
     state: InboxScreen.State,
     modifier: Modifier = Modifier,
 ) {
+    val overlayHost = LocalOverlayHost.current
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -113,7 +114,11 @@ fun Inbox(
                 title = { Text("Inbox") },
                 actions = {
                     IconButton(
-                        onClick = { state.eventSink(InboxScreen.Event.InfoClicked) },
+                        onClick = {
+                            coroutineScope.launch {
+                                overlayHost.show(AppInfoOverlay())
+                            }
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Info,

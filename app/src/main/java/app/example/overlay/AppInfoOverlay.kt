@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,40 +21,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.overlay.Overlay
-import com.slack.circuit.overlay.OverlayNavigator
 import com.slack.circuitx.overlays.BottomSheetOverlay
-import dev.zacsweers.metro.AppScope
-import kotlinx.parcelize.Parcelize
 
 /**
- * Overlay that shows app information in a bottom sheet.
+ * App information overlay that shows as a bottom sheet.
  */
-@Parcelize
-data object AppInfoOverlay : Overlay<AppInfoOverlay.Result> {
-    data class Result(
-        val dismissed: Boolean = true,
-    )
-}
-
-@CircuitInject(AppInfoOverlay::class, AppScope::class)
-@Composable
-fun AppInfoBottomSheet(
-    overlay: AppInfoOverlay,
-    navigator: OverlayNavigator<AppInfoOverlay.Result>,
-    modifier: Modifier = Modifier,
-) {
-    BottomSheetOverlay<AppInfoOverlay.Result>(
-        model = overlay,
-        onDismiss = { navigator.finish(AppInfoOverlay.Result(dismissed = true)) },
-    ) {
+@OptIn(ExperimentalMaterial3Api::class)
+fun AppInfoOverlay(onDismiss: () -> Unit = {}): BottomSheetOverlay<Unit, Unit> =
+    BottomSheetOverlay(
+        model = Unit,
+        onDismiss = {
+            onDismiss()
+            Unit
+        },
+    ) { _, overlayNavigator ->
         AppInfoContent(
-            onDismiss = { navigator.finish(AppInfoOverlay.Result(dismissed = true)) },
-            modifier = modifier,
+            onDismiss = { overlayNavigator.finish(Unit) },
         )
     }
-}
 
 @Composable
 private fun AppInfoContent(
