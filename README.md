@@ -28,6 +28,20 @@ You have **two options** for customizing this template:
 #### Option 1: Automated Customization (Recommended) 🤖
 Run the setup script to automatically handle most of the configuration:
 
+**Script Usage:**
+```bash
+./setup-project.sh <package-name> <AppName> [flags]
+```
+
+**Parameters:**
+- `<package-name>` - Your app's package name in reverse domain notation (e.g., `com.mycompany.appname`)
+- `<AppName>` - Your app's class name in **PascalCase** (e.g., `TodoApp`, `NewsApp`, `MyPhotos`)
+  - Used to rename `CircuitApp` → `{AppName}App`
+  - Becomes your main Application class name
+  - Sets app display name in `strings.xml`
+  - Used in git commit messages
+
+**Examples:**
 ```bash
 # Basic usage - keeps examples and WorkManager by default
 ./setup-project.sh com.mycompany.appname MyAppName
