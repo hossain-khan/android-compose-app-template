@@ -2,7 +2,7 @@
 An Android App template that is preconfigured with ⚡️ Circuit UDF architecture.
 
 > [!TIP]
-> Google also has an official architectural template available for started apps.
+> Google also has an official architectural template available for starter apps.
 > https://github.com/android/architecture-templates
 
 ## What do you get in this template? 📜
