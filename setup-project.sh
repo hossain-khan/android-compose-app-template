@@ -4,7 +4,7 @@
 # Adapted for Circuit + Metro DI architecture
 # Compatible with bash 3.2+ (standard on macOS)
 #
-# Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-examples] [--remove-workmanager] [--keep-script]
+# Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-workmanager] [--keep-script]
 #
 # Parameters:
 #   com.mycompany.appname  - Your app's package name (reverse domain notation)
@@ -13,15 +13,14 @@
 #
 # Examples:
 #   bash setup-project.sh com.mycompany.todoapp TodoApp
-#   bash setup-project.sh com.mycompany.newsapp NewsApp --remove-examples
-#   bash setup-project.sh dev.hossain.gphotos MyPhotos --remove-examples --remove-workmanager
-#   bash setup-project.sh com.example.allapp AllApp --remove-examples --remove-workmanager --keep-script
+#   bash setup-project.sh dev.hossain.gphotos MyPhotos --remove-workmanager
+#   bash setup-project.sh com.example.allapp AllApp --remove-workmanager --keep-script
 #
 # Features:
 #   - Flexible flag positioning (flags can come before or after positional arguments)
 #   - Preserves subdirectory structure (ui/theme, di, circuit, work, data directories)
 #   - Handles package renaming and file/class renaming automatically
-#   - Keeps Example files and WorkManager components by default (use --remove-* to exclude)
+#   - Keeps WorkManager components by default (use --remove-* to exclude)
 #   - Creates fresh git repository with initial commit
 #
 # AppName Usage:
@@ -89,7 +88,7 @@ done
 
 # Check if we have enough positional arguments
 if [[ ${#POSITIONAL_ARGS[@]} -lt 2 ]]; then
-   echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-examples] [--remove-workmanager] [--keep-script]" >&2
+   echo "Usage: bash setup-project.sh com.mycompany.appname AppName [--remove-workmanager] [--keep-script]" >&2
    echo ""
    echo "Parameters:"
    echo "  com.mycompany.appname  Your app's package name (reverse domain notation)"
@@ -98,19 +97,17 @@ if [[ ${#POSITIONAL_ARGS[@]} -lt 2 ]]; then
    echo ""
    echo "Examples:"
    echo "  bash setup-project.sh com.mycompany.todoapp TodoApp"
-   echo "  bash setup-project.sh com.mycompany.newsapp NewsApp --remove-examples"
    echo "  bash setup-project.sh com.mycompany.taskapp TaskApp --remove-workmanager"
    echo "  bash setup-project.sh com.mycompany.debugapp DebugApp --keep-script"
-   echo "  bash setup-project.sh com.mycompany.allapp AllApp --remove-examples --remove-workmanager --keep-script"
+   echo "  bash setup-project.sh com.mycompany.allapp AllApp --remove-workmanager --keep-script"
    echo ""
    echo "Options:"
-   echo "  --remove-examples   Remove Example* files (kept by default)"
    echo "  --remove-workmanager Remove WorkManager related files (kept by default)"
    echo "  --keep-script       Keep this setup script (useful for debugging)"
    echo ""
    echo "Note: Flags can be positioned anywhere in the command line"
    echo "      Directory structure (ui/theme, di, circuit, work, data) is preserved"
-   echo "      Examples and WorkManager are kept by default - use --remove-* to exclude"
+   echo "      WorkManager is kept by default - use --remove-workmanager to exclude"
    exit 2
 fi
 
@@ -121,9 +118,7 @@ SUBDIR=${PACKAGE//.//} # Replaces . with /
 echo "🚀 Starting Android Circuit App Template customization..."
 echo "📦 New package: $PACKAGE"
 echo "📱 App name: $APPNAME"
-KEEP_EXAMPLES=$([ "$REMOVE_EXAMPLES" = false ] && echo "true" || echo "false")
 KEEP_WORKMANAGER=$([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")
-echo "🗂️  Keep examples: $KEEP_EXAMPLES"
 echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
 echo "📜 Keep script: $KEEP_SCRIPT"
 echo ""
@@ -403,7 +398,6 @@ if ! git commit -m "Initial commit: $APPNAME
 - Customized from android-compose-app-template
 - Package: $PACKAGE  
 - Circuit + Metro architecture
-- Examples kept: $([ "$REMOVE_EXAMPLES" = false ] && echo "true" || echo "false")
 - WorkManager kept: $([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")"; then
     echo "❌ Error: Failed to create initial commit."
     exit 1
@@ -421,9 +415,6 @@ echo "   1. Open the project in Android Studio"
 echo "   2. Update app theme colors"
 echo "   3. Generate your app icon"
 echo "   4. Review and update .editorconfig"
-if [ "$REMOVE_EXAMPLES" = false ]; then
-    echo "   5. Remove Example* files when you no longer need them"
-fi
 if [ "$REMOVE_WORKMANAGER" = true ]; then
     echo "   5. Add WorkManager back if you need background tasks"
 fi
