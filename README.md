@@ -51,19 +51,14 @@ Run the setup script to automatically handle most of the configuration:
 # Basic usage - keeps examples and WorkManager by default
 ./setup-project.sh com.mycompany.appname MyAppName
 
-# Remove examples if you don't need them
-./setup-project.sh com.mycompany.appname MyAppName --remove-examples
-
 # Remove WorkManager if you don't need background tasks
-./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager --remove-examples
+./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager
 
 # Keep the script for debugging (useful during development)
 ./setup-project.sh com.mycompany.appname MyAppName --keep-script
 
 # Flags can be positioned flexibly - all of these work the same:
-./setup-project.sh --remove-examples com.mycompany.appname MyAppName --remove-workmanager
-./setup-project.sh com.mycompany.appname --remove-examples MyAppName --remove-workmanager
-./setup-project.sh com.mycompany.appname MyAppName --remove-examples --remove-workmanager --keep-script
+./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager
 ```
 
 **What the script does automatically:**
@@ -71,7 +66,6 @@ Run the setup script to automatically handle most of the configuration:
 - Preserves subdirectory structure (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
-- Keeps Example* files by default (use `--remove-examples` to exclude)
 - Keeps WorkManager files by default (use `--remove-workmanager` to exclude)
 - Creates a fresh git repository with descriptive initial commit
 - Removes template-specific files
