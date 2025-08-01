@@ -14,7 +14,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 
-> [!WARNING]  
+> [!WARNING]
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
 
@@ -99,11 +99,14 @@ These still need to be done manually after using the script:
 * [ ] Update/remove repository license
 * [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
+* [ ] Verify Android Gradle Plugin (AGP) version compatibility with your development environment in `gradle/libs.versions.toml`
 
 </details>
 
 
 ## Demo 📹
-Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) doc.
+Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) documentation.
+
+The demo showcases the basic Circuit architecture pattern with screen navigation and state management.
 
 https://github.com/user-attachments/assets/56d6f28b-5b46-4aac-a30e-80116986589e
