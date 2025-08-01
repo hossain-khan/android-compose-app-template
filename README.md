@@ -14,7 +14,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 
-> [!WARNING]  
+> [!WARNING]
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
 
@@ -104,6 +104,8 @@ These still need to be done manually after using the script:
 
 
 ## Demo 📹
-Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) doc.
+Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) documentation.
+
+The demo showcases the basic Circuit architecture pattern with screen navigation and state management.
 
 https://github.com/user-attachments/assets/56d6f28b-5b46-4aac-a30e-80116986589e
