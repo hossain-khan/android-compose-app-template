@@ -14,6 +14,15 @@ import dev.zacsweers.metro.SingleIn
 //  -------------------------------------------------------------------------------------
 
 /**
+ * Email status enum.
+ */
+enum class EmailStatus {
+    INBOX,
+    DRAFT,
+    SENT,
+}
+
+/**
  * Data class representing an email.
  */
 data class Email(
@@ -23,12 +32,21 @@ data class Email(
     val sender: String,
     val timestamp: String,
     val recipients: List<String>,
+    val status: EmailStatus = EmailStatus.INBOX,
 )
 
 interface ExampleEmailRepository {
     fun getEmails(): List<Email>
 
     fun getEmail(emailId: String): Email
+
+    fun getEmailsByStatus(status: EmailStatus): List<Email>
+
+    fun saveEmailAsDraft(email: Email): Email
+
+    fun sendEmail(emailId: String): Email
+
+    fun deleteEmail(emailId: String)
 }
 
 /**
@@ -39,7 +57,60 @@ interface ExampleEmailRepository {
 @Inject
 class ExampleEmailRepositoryImpl
     constructor() : ExampleEmailRepository {
-        override fun getEmails(): List<Email> =
+        // In-memory storage for dynamic emails (drafts, sent)
+        private val dynamicEmails = mutableListOf<Email>()
+        private var nextEmailId = 100 // Starting from 100 to avoid conflicts with hardcoded emails
+
+        override fun getEmails(): List<Email> = getInboxEmails() + dynamicEmails
+
+        override fun getEmailsByStatus(status: EmailStatus): List<Email> =
+            when (status) {
+                EmailStatus.INBOX -> getInboxEmails()
+                EmailStatus.DRAFT -> dynamicEmails.filter { it.status == EmailStatus.DRAFT }
+                EmailStatus.SENT -> dynamicEmails.filter { it.status == EmailStatus.SENT }
+            }
+
+        override fun saveEmailAsDraft(email: Email): Email {
+            val draftEmail =
+                if (email.id.isEmpty()) {
+                    email.copy(id = (nextEmailId++).toString(), status = EmailStatus.DRAFT)
+                } else {
+                    email.copy(status = EmailStatus.DRAFT)
+                }
+
+            // Remove existing draft with same ID if exists
+            dynamicEmails.removeAll { it.id == draftEmail.id }
+            dynamicEmails.add(draftEmail)
+
+            return draftEmail
+        }
+
+        override fun sendEmail(emailId: String): Email {
+            val email = getEmail(emailId)
+            if (email.status != EmailStatus.DRAFT) {
+                throw IllegalStateException("Only draft emails can be sent")
+            }
+
+            val sentEmail = email.copy(status = EmailStatus.SENT, timestamp = getCurrentTimestamp())
+            dynamicEmails.removeAll { it.id == emailId }
+            dynamicEmails.add(sentEmail)
+
+            return sentEmail
+        }
+
+        override fun deleteEmail(emailId: String) {
+            dynamicEmails.removeAll { it.id == emailId }
+        }
+
+        private fun getCurrentTimestamp(): String {
+            val now = java.time.LocalTime.now()
+            val formatter =
+                java.time.format.DateTimeFormatter
+                    .ofPattern("h:mm a")
+            return now.format(formatter)
+        }
+
+        private fun getInboxEmails(): List<Email> =
             listOf(
                 Email(
                     id = "1",
@@ -48,6 +119,7 @@ class ExampleEmailRepositoryImpl
                     sender = "Ali Connors",
                     timestamp = "3:00 PM",
                     recipients = listOf("a@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
                 Email(
                     id = "2",
@@ -56,6 +128,7 @@ class ExampleEmailRepositoryImpl
                     sender = "John Doe",
                     timestamp = "4:00 PM",
                     recipients = listOf("b@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
                 Email(
                     id = "3",
@@ -66,6 +139,7 @@ class ExampleEmailRepositoryImpl
                     sender = "Jane Smith",
                     timestamp = "5:00 PM",
                     recipients = listOf("everyone@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
                 Email(
                     id = "4",
@@ -76,6 +150,7 @@ class ExampleEmailRepositoryImpl
                     sender = "Project Lead",
                     timestamp = "9:00 AM",
                     recipients = listOf("devteam@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
                 Email(
                     id = "5",
@@ -86,6 +161,7 @@ class ExampleEmailRepositoryImpl
                     sender = "OnlineStore",
                     timestamp = "10:30 AM",
                     recipients = listOf("customer@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
                 Email(
                     id = "6",
@@ -94,6 +170,7 @@ class ExampleEmailRepositoryImpl
                     sender = "Alex Green",
                     timestamp = "1:15 PM",
                     recipients = listOf("friend@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
                 Email(
                     id = "7",
@@ -104,6 +181,7 @@ class ExampleEmailRepositoryImpl
                     sender = "Tech Blog",
                     timestamp = "2:45 PM",
                     recipients = listOf("subscriber@example.com"),
+                    status = EmailStatus.INBOX,
                 ),
             )
 
