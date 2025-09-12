@@ -11,7 +11,7 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 kotlin = "2.2.10"
 # The KSP (Kotlin Symbol Processing) plugin version must align with the Kotlin compiler version (2.2.0 in this case)
-ksp = "2.2.10-2.0.2"
+ksp = "2.2.20-2.0.3"
 # Kotlin linter with built-in formatter
 # https://github.com/jeremymailen/kotlinter-gradle
 # https://github.com/pinterest/ktlint
