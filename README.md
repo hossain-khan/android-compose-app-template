@@ -56,9 +56,6 @@ Run the setup script to automatically handle most of the configuration:
 
 # Keep the script for debugging (useful during development)
 ./setup-project.sh com.mycompany.appname MyAppName --keep-script
-
-# Flags can be positioned flexibly - all of these work the same:
-./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager
 ```
 
 **What the script does automatically:**
