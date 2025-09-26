@@ -422,12 +422,19 @@ echo ""
 
 # Handle script cleanup
 if [ "$KEEP_SCRIPT" = false ]; then
-    echo "ℹ️ Removing setup script..."
+    echo "ℹ️ Removing setup scripts..."
     rm -f setup-project.sh
+    rm -f setup-android-env.sh
     echo "🚀 Happy coding!"
 else
     echo "📜 Setup script kept for debugging/re-running if needed"
     echo "🚀 Happy coding!"
     echo ""
-    echo "💡 Tip: You can safely delete the setup-project.sh when you no longer need it"
+    echo "💡 Tip: You can safely delete the setup-project.sh and setup-android-env.sh when you no longer need them"
+fi
+
+# Always clean up Android environment setup script (it's not needed after project setup)
+if [ -f "setup-android-env.sh" ] && [ "$KEEP_SCRIPT" = true ]; then
+    echo "ℹ️ Removing Android environment setup script (no longer needed)..."
+    rm -f setup-android-env.sh
 fi
