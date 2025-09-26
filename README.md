@@ -18,6 +18,47 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
 
+## Android Environment Setup for Codespaces 🐳
+
+If you're using GitHub Codespaces or other containerized development environments where Android SDK is not pre-installed, you'll need to set up the Android development environment first.
+
+### Quick Setup for Codespaces
+
+Run the Android environment setup script before customizing your project:
+
+```bash
+# Set up Android SDK and environment (required for Codespaces)
+./setup-android-env.sh
+
+# Then customize your project
+./setup-project.sh com.mycompany.appname MyAppName
+```
+
+### What the Android Environment Script Does
+
+The `setup-android-env.sh` script automatically:
+- 🔧 **Downloads & installs** Android SDK command line tools
+- 📜 **Accepts all licenses** required for Android development
+- 📱 **Installs essential packages** (platform-tools, build-tools, Android platforms)
+- ⚙️ **Configures environment** variables (ANDROID_HOME, ANDROID_SDK_ROOT, PATH)
+- 📄 **Creates local.properties** with correct SDK path
+- 💾 **Persists settings** to shell profile for future sessions
+- ✅ **Verifies installation** by testing Gradle build
+
+> [!NOTE]
+> The Android environment script is automatically removed after running `setup-project.sh` to keep your project clean.
+
+### Troubleshooting Codespaces
+
+If you encounter "SDK location not found" errors:
+```bash
+# Run the Android environment setup first
+./setup-android-env.sh
+
+# Verify the setup worked
+./gradlew tasks
+```
+
 ### Post-process after cloning 🧑‍🏭
 
 **First, download the template:**

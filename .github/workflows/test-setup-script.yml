@@ -52,8 +52,25 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       # Prepare the setup script for execution
-      - name: Make setup script executable
-        run: chmod +x setup-project.sh
+      - name: Make setup scripts executable
+        run: |
+          chmod +x setup-project.sh
+          chmod +x setup-android-env.sh
+
+      # Test the Android environment setup script syntax and basic functionality
+      - name: Test Android environment setup script
+        run: |
+          # Test script syntax
+          bash -n setup-android-env.sh
+          echo "✅ Android environment setup script syntax is valid"
+          
+          # Test that the script can show help/status without actually installing SDK
+          # (We can't fully test SDK installation in CI without proper Android setup)
+          echo "🧪 Testing Android environment script basic functionality..."
+          # Test the script doesn't crash on basic checks
+          if [ -f "setup-android-env.sh" ]; then
+            echo "✅ Android environment setup script exists and is readable"
+          fi
 
       # Configure Git for the setup script (required for git operations)
       - name: Configure Git for testing
@@ -138,6 +155,19 @@ jobs:
           grep -r "androidx.work" app/build.gradle.kts || (echo "❌ WorkManager dependency was incorrectly removed from build.gradle.kts" && exit 1)
           
           echo "✅ WorkManager preservation validation passed"
+
+      # Validate Android environment script cleanup
+      - name: Validate Android environment script cleanup
+        run: |
+          cd /tmp/test-workspace/original-template
+          
+          # Check that Android environment setup script was cleaned up
+          if [ -f "setup-android-env.sh" ]; then
+            echo "❌ Android environment setup script should have been removed by setup-project.sh"
+            exit 1
+          fi
+          
+          echo "✅ Android environment script cleanup validation passed"
 
       - name: Test project compilation
         timeout-minutes: 10

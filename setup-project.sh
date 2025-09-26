@@ -434,7 +434,7 @@ else
 fi
 
 # Always clean up Android environment setup script (it's not needed after project setup)
-if [ -f "setup-android-env.sh" ] && [ "$KEEP_SCRIPT" = true ]; then
+if [ -f "setup-android-env.sh" ]; then
     echo "ℹ️ Removing Android environment setup script (no longer needed)..."
     rm -f setup-android-env.sh
 fi
