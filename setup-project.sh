@@ -178,6 +178,11 @@ if [ "$REMOVE_EXAMPLES" = true ]; then
     find ./ -name "Example*.kt" -type f -delete
     find ./ -name "*Example*.kt" -type f -delete
     echo "Example files removed"
+    # Remove baseline_* vector drawable icons
+    echo "🗑️  Removing baseline_* vector drawable icons..."
+    rm -f ./app/src/main/res/drawable/baseline_info_24.xml
+    rm -f ./app/src/main/res/drawable/baseline_person_24.xml
+    echo "baseline_* vector drawable icons removed"
 else
     echo "📚 Step 6: Keeping Example* files for reference..."
 fi

@@ -139,6 +139,17 @@ jobs:
           
           echo "✅ WorkManager preservation validation passed"
 
+      - name: Validate baseline_* vector drawable icons are deleted
+        run: |
+          cd /tmp/test-workspace/original-template
+          if ls app/src/main/res/drawable/baseline_*.xml 1> /dev/null 2>&1; then
+            echo "❌ baseline_* vector drawable icons still exist!"
+            ls app/src/main/res/drawable/baseline_*.xml
+            exit 1
+          else
+            echo "✅ No baseline_* vector drawable icons found."
+          fi
+
       - name: Test project compilation
         timeout-minutes: 10
         run: |
