@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,9 +26,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.example.BuildConfig
+import app.example.R
 import com.slack.circuitx.overlays.BottomSheetOverlay
 
 /**
@@ -73,7 +73,7 @@ private fun AppInfoContent(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    painter = painterResource(id = R.drawable.baseline_info_24),
                     contentDescription = "App Info",
                     tint = MaterialTheme.colorScheme.primary,
                 )

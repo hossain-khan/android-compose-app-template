@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -34,9 +32,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.example.R
 import app.example.data.Email
 import app.example.data.ExampleEmailRepository
 import app.example.data.ExampleEmailValidator
@@ -112,7 +112,7 @@ fun EmailDetailContent(
         Column(modifier.padding(innerPadding).padding(16.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Image(
-                    Icons.Default.Person,
+                    painter = painterResource(id = R.drawable.baseline_person_24),
                     modifier =
                         Modifier
                             .size(40.dp)
@@ -177,7 +177,7 @@ fun EmailItem(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Image(
-            Icons.Default.Person,
+            painter = painterResource(id = R.drawable.baseline_person_24),
             modifier =
                 Modifier
                     .size(40.dp)
