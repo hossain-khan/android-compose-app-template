@@ -107,3 +107,13 @@ Here is a demo of the template app containing screens shown in the 📖 [circuit
 The demo showcases the basic Circuit architecture pattern with screen navigation and state management.
 
 https://github.com/user-attachments/assets/56d6f28b-5b46-4aac-a30e-80116986589e
+
+
+### Templated Apps
+Here are some apps that has been created using the template.
+
+| 📱 App | Repo URL | 
+| ------ | ------- |
+| Weather Alert | https://github.com/hossain-khan/android-weather-alert |
+| Remote Notify | https://github.com/hossain-khan/android-remote-notify |
+
