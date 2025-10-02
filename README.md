@@ -25,6 +25,8 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 2. Extract the ZIP file to your desired location
 3. Navigate to the extracted directory in your terminal
 
+> NOTE: _You could also clone/fork the repo, however that will carry all the Git history of this repo, which is not that useful._
+
 You have **two options** for customizing this template:
 
 <details>
