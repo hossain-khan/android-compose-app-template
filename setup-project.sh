@@ -168,9 +168,10 @@ if [ -f "app/src/main/java/$SUBDIR/CircuitApp.kt" ]; then
     echo "Renamed CircuitApp.kt to ${APPNAME}App.kt"
 fi
 
-# Step 5: Update app name in strings.xml and other XML files
-echo "🏷️  Step 5: Updating app name in XML files..."
+# Step 5: Update app name in strings.xml and settings.gradle.kts
+echo "🏷️  Step 5: Updating app name in resource and configuration files..."
 find ./ -name "strings.xml" -exec sed -i.bak "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">$APPNAME<\/string>/g" {} \;
+find ./ -name "settings.gradle.kts" -exec sed -i.bak "s/rootProject\.name = \".*\"/rootProject.name = \"$APPNAME\"/g" {} \;
 
 # Step 6: Handle Example files
 if [ "$REMOVE_EXAMPLES" = true ]; then
