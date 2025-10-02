@@ -27,7 +27,8 @@
 #   The AppName parameter is used in multiple places and must be in PascalCase:
 #   - Renames CircuitApp.kt → {AppName}App.kt (e.g., TodoApp.kt, NewsApp.kt)
 #   - Updates class references: CircuitApp → {AppName}App in all .kt, .xml, .kts files
-#   - Sets app display name in strings.xml: <string name="app_name">{AppName}</string>
+#   - Sets app display name in strings.xml by splitting PascalCase: WeatherForecast → "Weather Forecast"
+#   - Sets project name in settings.gradle.kts by splitting PascalCase: PhotoGallery → "Photo Gallery"
 #   - Used in git commit message as project identifier
 #   - Becomes the main Application class name for your project
 #
@@ -115,9 +116,14 @@ PACKAGE="${POSITIONAL_ARGS[0]}"
 APPNAME="${POSITIONAL_ARGS[1]}"
 SUBDIR=${PACKAGE//.//} # Replaces . with /
 
+# Create display name by splitting PascalCase into separate words
+# e.g., "WeatherForecast" becomes "Weather Forecast"
+DISPLAY_NAME=$(echo "$APPNAME" | sed 's/\([A-Z]\)/ \1/g' | sed 's/^ //')
+
 echo "🚀 Starting Android Circuit App Template customization..."
 echo "📦 New package: $PACKAGE"
 echo "📱 App name: $APPNAME"
+echo "📱 Display name: $DISPLAY_NAME"
 KEEP_WORKMANAGER=$([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")
 echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
 echo "📜 Keep script: $KEEP_SCRIPT"
@@ -168,9 +174,10 @@ if [ -f "app/src/main/java/$SUBDIR/CircuitApp.kt" ]; then
     echo "Renamed CircuitApp.kt to ${APPNAME}App.kt"
 fi
 
-# Step 5: Update app name in strings.xml and other XML files
-echo "🏷️  Step 5: Updating app name in XML files..."
-find ./ -name "strings.xml" -exec sed -i.bak "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">$APPNAME<\/string>/g" {} \;
+# Step 5: Update app name in strings.xml and settings.gradle.kts
+echo "🏷️  Step 5: Updating app name in resource and configuration files..."
+find ./ -name "strings.xml" -exec sed -i.bak "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">$DISPLAY_NAME<\/string>/g" {} \;
+find ./ -name "settings.gradle.kts" -exec sed -i.bak "s/rootProject\.name = \".*\"/rootProject.name = \"$DISPLAY_NAME\"/g" {} \;
 
 # Step 6: Handle Example files
 if [ "$REMOVE_EXAMPLES" = true ]; then
