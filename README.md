@@ -114,4 +114,6 @@ Here are some apps that has been created using the template.
 | ------ | ------- |
 | Weather Alert | https://github.com/hossain-khan/android-weather-alert |
 | Remote Notify | https://github.com/hossain-khan/android-remote-notify |
+| TRMNL Display | https://github.com/usetrmnl/trmnl-android |
+| TRMNL Buddy | https://github.com/hossain-khan/trmnl-android-buddy | 
 
