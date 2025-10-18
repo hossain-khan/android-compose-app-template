@@ -40,7 +40,7 @@ import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -62,7 +62,7 @@ data object InboxScreen : Screen {
 }
 
 // See https://slackhq.github.io/circuit/presenter/
-@Inject
+@AssistedInject
 class InboxPresenter
     constructor(
         @Assisted private val navigator: Navigator,
