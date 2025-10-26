@@ -23,6 +23,24 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 
+/**
+ * Main activity for the application, demonstrating Metro constructor injection for Activities.
+ *
+ * This Activity is injected via constructor using Metro DI, enabled by [ComposeAppComponentFactory].
+ *
+ * Key Metro features demonstrated:
+ * - [ActivityKey]: Map key annotation for multibinding
+ * - [ContributesIntoMap]: Contributes this Activity to the multibinding map
+ * - [Inject]: Marks this class for constructor injection
+ * - [binding]: Type-safe binding helper for specifying the bound type
+ *
+ * The Activity receives its dependencies ([Circuit]) through constructor injection,
+ * which is more testable and type-safe than field injection.
+ *
+ * See https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection for constructor injection.
+ * See https://zacsweers.github.io/metro/latest/bindings/#multibindings for multibindings.
+ * See https://zacsweers.github.io/metro/latest/aggregation/ for contribution.
+ */
 @ActivityKey(MainActivity::class)
 @ContributesIntoMap(AppScope::class, binding = binding<Activity>())
 @Inject

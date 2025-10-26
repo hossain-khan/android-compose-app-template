@@ -14,6 +14,72 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 
+## Metro Dependency Injection 🔧
+
+This template uses [Metro](https://zacsweers.github.io/metro/latest/) (v0.7.2) - a modern, multiplatform Kotlin dependency injection framework. 
+
+> **What is Dependency Injection?** DI is a design pattern that provides objects (dependencies) to a class rather than having the class create them itself. This makes code more testable, maintainable, and modular.
+
+Metro combines the best features of:
+- **Dagger**: Lean, efficient generated code with compile-time validation
+- **kotlin-inject**: Simple, Kotlin-first API design
+- **Anvil**: Powerful aggregation and contribution system
+
+### Key Metro Features Used
+
+The template demonstrates several Metro patterns:
+
+- **[Dependency Graphs](https://zacsweers.github.io/metro/latest/dependency-graphs/)**: `AppGraph` is the root DI component scoped to the application lifecycle
+- **[Constructor Injection](https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection)**: Activities and other classes use `@Inject` for constructor-based DI
+- **[Aggregation](https://zacsweers.github.io/metro/latest/aggregation/)**: `@ContributesTo` automatically contributes bindings to the graph without explicit wiring
+- **[Multibindings](https://zacsweers.github.io/metro/latest/bindings/#multibindings)**: Activity and Worker factories use map multibindings for flexible injection
+- **[Assisted Injection](https://zacsweers.github.io/metro/latest/injection-types/#assisted-injection)**: Workers mix runtime parameters with injected dependencies
+- **[Scopes](https://zacsweers.github.io/metro/latest/scopes/)**: `@SingleIn(AppScope::class)` ensures singleton instances
+
+### Metro Implementation Examples
+
+Below are simplified examples from the template. See the actual implementation files for complete details.
+
+```kotlin
+// AppGraph - Root dependency graph
+@DependencyGraph(scope = AppScope::class)
+@SingleIn(AppScope::class)
+interface AppGraph {
+    val circuit: Circuit
+    val workManager: WorkManager
+    // ... other graph accessors
+    
+    @DependencyGraph.Factory
+    interface Factory {
+        fun create(@ApplicationContext @Provides context: Context): AppGraph
+    }
+}
+
+// Activity with constructor injection
+@ActivityKey(MainActivity::class)
+@ContributesIntoMap(AppScope::class, binding = binding<Activity>())
+@Inject
+class MainActivity(
+    private val circuit: Circuit,
+) : ComponentActivity() {
+    // ... activity implementation
+}
+
+// Worker with assisted injection (requires additional annotations for multibinding)
+@AssistedInject
+class SampleWorker(
+    context: Context,
+    @Assisted params: WorkerParameters,
+) : CoroutineWorker(context, params) {
+    // ... worker implementation
+    
+    // Note: Requires @WorkerKey and @AssistedFactory annotations
+    // See app/src/main/java/app/example/work/SampleWorker.kt for complete example
+}
+```
+
+For complete Metro documentation and advanced features, see the [official Metro documentation](https://zacsweers.github.io/metro/latest/).
+
 > [!WARNING]
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
 > _look at the official [Circuit](https://github.com/slackhq/circuit) example apps included in the project repository._
