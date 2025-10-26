@@ -103,18 +103,22 @@ dependencies {
 }
 
 ksp {
-    // Circuit-KSP for Metro
+    // Circuit-KSP configuration for Metro DI integration
+    // See https://slackhq.github.io/circuit/code-gen/
     arg("circuit.codegen.mode", "metro")
-    
-    // Metro 0.4.0 feature: Enable scoped inject class hints for better performance
-    // This allows child graphs to depend on parent-scoped dependencies that are unused
-    // See https://zacsweers.github.io/metro/dependency-graphs/
-    arg("metro.enableScopedInjectClassHints", "true")
 }
-
 
 metro {
     // Enable Metro debug mode for better logging and debugging support
-    // See https://zacsweers.github.io/metro/debugging/
-  debug.set(true)
+    // When enabled, Metro will emit detailed debug information about the dependency graph
+    // See https://zacsweers.github.io/metro/latest/
+    debug.set(true)
+
+    // Shrink unused bindings to reduce generated code size (enabled by default)
+    // See https://zacsweers.github.io/metro/latest/dependency-graphs/
+    shrinkUnusedBindings.set(true)
+
+    // Enable chunking of field initializers for better performance in large graphs (enabled by default)
+    // See https://zacsweers.github.io/metro/latest/dependency-graphs/
+    chunkFieldInits.set(true)
 }

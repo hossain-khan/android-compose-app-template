@@ -14,22 +14,68 @@ import kotlin.reflect.KClass
 /**
  * Metro dependency graph for the application, which includes all necessary bindings and providers.
  *
- * See https://zacsweers.github.io/metro/
+ * This is the root dependency graph (component) for the application. It is scoped to [AppScope]
+ * which makes all bindings in this graph singletons within the application lifecycle.
+ *
+ * Key Metro features used:
+ * - [DependencyGraph]: Marks this as a Metro dependency graph (similar to Dagger's @Component)
+ * - [SingleIn]: Declares the scope for this graph (AppScope in this case)
+ * - [Provides]: Functions that provide dependencies to the graph
+ * - [DependencyGraph.Factory]: Factory interface for creating the graph with runtime inputs
+ * - Multibindings: `activityProviders` is a map multibinding for Activity injection
+ *
+ * See https://zacsweers.github.io/metro/latest/dependency-graphs/ for more information on dependency graphs.
+ * See https://zacsweers.github.io/metro/latest/scopes/ for more information on scopes.
+ * See https://zacsweers.github.io/metro/latest/bindings/ for more information on bindings and multibindings.
  */
 @DependencyGraph(scope = AppScope::class)
 @SingleIn(AppScope::class)
 interface AppGraph {
+    /**
+     * Map of Activity classes to their providers. This is a multibinding that allows
+     * activities to be injected via constructor using [ComposeAppComponentFactory].
+     *
+     * See https://zacsweers.github.io/metro/latest/bindings/#multibindings
+     */
     val activityProviders: Map<KClass<out Activity>, Provider<Activity>>
+
+    /**
+     * Circuit instance for handling UI presentation and state management.
+     *
+     * See https://slackhq.github.io/circuit/
+     */
     val circuit: Circuit
+
+    /**
+     * WorkManager instance for scheduling background work.
+     */
     val workManager: WorkManager
+
+    /**
+     * Custom WorkerFactory for creating Workers with Metro DI.
+     *
+     * See [AppWorkerFactory] for more details on Worker injection.
+     */
     val workerFactory: AppWorkerFactory
 
+    /**
+     * Provides the WorkManager instance from the application context.
+     *
+     * See https://zacsweers.github.io/metro/latest/bindings/#provides
+     */
     @Provides
     fun providesWorkManager(
         @ApplicationContext context: Context,
     ): WorkManager = WorkManager.getInstance(context)
 
-    // https://zacsweers.github.io/metro/dependency-graphs/#provides
+    /**
+     * Factory for creating the [AppGraph] with runtime inputs.
+     *
+     * The [ApplicationContext] parameter is marked with [@Provides][Provides] which makes it
+     * available as a binding in the graph. This is analogous to Dagger's @BindsInstance.
+     *
+     * See https://zacsweers.github.io/metro/latest/dependency-graphs/#provides
+     */
     @DependencyGraph.Factory
     interface Factory {
         fun create(

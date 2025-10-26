@@ -25,7 +25,10 @@ plugins {
     alias(libs.plugins.ksp) apply false
 
     // Applies the Metro plugin for dependency injection.
-    // Project: https://zacsweers.github.io/metro/
+    // Metro is a multiplatform Kotlin dependency injection framework with familiar semantics,
+    // compile-time validation, and excellent performance. It combines the best features of
+    // Dagger (lean generated code), kotlin-inject (simple API), and Anvil (aggregation).
+    // Project: https://zacsweers.github.io/metro/latest/
     alias(libs.plugins.metro) apply false
 
     // Applies the Kotlinter plugin for Kotlin code formatting and linting.

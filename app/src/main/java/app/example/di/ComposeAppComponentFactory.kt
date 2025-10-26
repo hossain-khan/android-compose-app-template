@@ -15,19 +15,31 @@ import kotlin.reflect.KClass
  * allows the Android system to delegate activity instantiation to Metro's dependency
  * graph, enabling constructor injection instead of field injection.
  *
- * This class is referenced in the `AndroidManifest` within the `<application>` tag.
+ * This is a powerful Metro pattern that enables:
+ * - Constructor injection for Activities (instead of field injection)
+ * - Type-safe dependency injection
+ * - Better testing support (easier to mock dependencies in constructors)
  *
- * Usage:
- * Add the following to your AndroidManifest.xml:
+ * This class is referenced in the `AndroidManifest.xml` within the `<application>` tag.
  *
+ * Usage in AndroidManifest.xml:
  * ```xml
  * <application
  *     android:appComponentFactory=".di.ComposeAppComponentFactory"
  *     ... />
  * ```
  *
- * See official example at:
- * - https://github.com/ZacSweers/metro/blob/main/samples/compose-navigation-app/src/main/kotlin/dev/zacsweers/metro/sample/androidviewmodel/components/MetroAppComponentFactory.kt
+ * How it works:
+ * 1. When Android needs to create an Activity, it calls [instantiateActivityCompat]
+ * 2. This method looks up the Activity class in the Metro-provided `activityProviders` map
+ * 3. If found, Metro creates the Activity with all its constructor dependencies injected
+ * 4. If not found, falls back to Android's default Activity creation
+ *
+ * See official Metro example at:
+ * https://github.com/ZacSweers/metro/blob/main/samples/compose-navigation-app/src/main/kotlin/dev/zacsweers/metro/sample/androidviewmodel/components/MetroAppComponentFactory.kt
+ *
+ * See https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection for more on constructor injection.
+ * See https://zacsweers.github.io/metro/latest/bindings/#multibindings for more on multibindings.
  */
 @Keep
 class ComposeAppComponentFactory : AppComponentFactory() {
