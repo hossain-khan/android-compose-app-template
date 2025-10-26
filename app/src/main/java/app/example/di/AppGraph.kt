@@ -46,23 +46,9 @@ interface AppGraph {
      */
     val circuit: Circuit
 
-    /**
-     * WorkManager instance for scheduling background work.
-     */
     val workManager: WorkManager
-
-    /**
-     * Custom WorkerFactory for creating Workers with Metro DI.
-     *
-     * See [AppWorkerFactory] for more details on Worker injection.
-     */
     val workerFactory: AppWorkerFactory
 
-    /**
-     * Provides the WorkManager instance from the application context.
-     *
-     * See https://zacsweers.github.io/metro/latest/bindings/#provides
-     */
     @Provides
     fun providesWorkManager(
         @ApplicationContext context: Context,

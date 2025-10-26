@@ -18,7 +18,6 @@ import dev.zacsweers.metro.createGraphFactory
  * This class demonstrates the following Metro features:
  * - Graph creation using [createGraphFactory]
  * - Lazy initialization of the dependency graph
- * - Integration with WorkManager using Metro-injected WorkerFactory
  *
  * See https://zacsweers.github.io/metro/latest/dependency-graphs/ for more on creating graphs.
  */
