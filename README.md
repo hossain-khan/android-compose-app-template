@@ -16,7 +16,11 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 
 ## Metro Dependency Injection 🔧
 
-This template uses [Metro](https://zacsweers.github.io/metro/latest/) (v0.7.2) - a modern, multiplatform Kotlin dependency injection framework. Metro combines the best features of:
+This template uses [Metro](https://zacsweers.github.io/metro/latest/) (v0.7.2) - a modern, multiplatform Kotlin dependency injection framework. 
+
+> **What is Dependency Injection?** DI is a design pattern that provides objects (dependencies) to a class rather than having the class create them itself. This makes code more testable, maintainable, and modular.
+
+Metro combines the best features of:
 - **Dagger**: Lean, efficient generated code with compile-time validation
 - **kotlin-inject**: Simple, Kotlin-first API design
 - **Anvil**: Powerful aggregation and contribution system
@@ -34,13 +38,17 @@ The template demonstrates several Metro patterns:
 
 ### Metro Implementation Examples
 
+Below are simplified examples from the template. See the actual implementation files for complete details.
+
 ```kotlin
 // AppGraph - Root dependency graph
 @DependencyGraph(scope = AppScope::class)
 @SingleIn(AppScope::class)
 interface AppGraph {
     val circuit: Circuit
-    // Factory for creating graph with runtime inputs
+    val workManager: WorkManager
+    // ... other graph accessors
+    
     @DependencyGraph.Factory
     interface Factory {
         fun create(@ApplicationContext @Provides context: Context): AppGraph
@@ -53,14 +61,21 @@ interface AppGraph {
 @Inject
 class MainActivity(
     private val circuit: Circuit,
-) : ComponentActivity() { /* ... */ }
+) : ComponentActivity() {
+    // ... activity implementation
+}
 
-// Worker with assisted injection
+// Worker with assisted injection (requires additional annotations for multibinding)
 @AssistedInject
 class SampleWorker(
     context: Context,
     @Assisted params: WorkerParameters,
-) : CoroutineWorker(context, params) { /* ... */ }
+) : CoroutineWorker(context, params) {
+    // ... worker implementation
+    
+    // Note: Requires @WorkerKey and @AssistedFactory annotations
+    // See app/src/main/java/app/example/work/SampleWorker.kt for complete example
+}
 ```
 
 For complete Metro documentation and advanced features, see the [official Metro documentation](https://zacsweers.github.io/metro/latest/).
