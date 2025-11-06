@@ -112,10 +112,10 @@ Here are some apps that has been created using the template.
 
 | 📱 App | Repo URL | 
 | ------ | ------- |
-| Weather Alert | https://github.com/hossain-khan/android-weather-alert |
-| Remote Notify | https://github.com/hossain-khan/android-remote-notify |
-| TRMNL Display | https://github.com/usetrmnl/trmnl-android |
-| TRMNL Buddy | https://github.com/hossain-khan/trmnl-android-buddy | 
+| <img alt="google-play" src="https://github.com/user-attachments/assets/18725aa7-ea0b-4d6d-962a-e0358703041c" height="14"> Weather Alert | https://github.com/hossain-khan/android-weather-alert |
+| <img alt="google-play" src="https://github.com/user-attachments/assets/18725aa7-ea0b-4d6d-962a-e0358703041c" height="14"> Remote Notify | https://github.com/hossain-khan/android-remote-notify |
+| <img alt="google-play" src="https://github.com/user-attachments/assets/18725aa7-ea0b-4d6d-962a-e0358703041c" height="14"> TRMNL Display | https://github.com/usetrmnl/trmnl-android |
+| <img alt="google-play" src="https://github.com/user-attachments/assets/18725aa7-ea0b-4d6d-962a-e0358703041c" height="14"> TRMNL Buddy | https://github.com/hossain-khan/trmnl-android-buddy | 
 
 ## 📓 Additional References
 
