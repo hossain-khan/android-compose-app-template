@@ -55,16 +55,15 @@ jobs:
         run: |
           # Only decode and use production keystore if secrets are configured
           if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
-            echo "Using production keystore from secrets"
+            echo "✅ Using production keystore from secrets"
             echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/app-release.keystore
             echo "KEYSTORE_FILE=keystore/app-release.keystore" >> $GITHUB_ENV
             echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
             echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           else
             echo "⚠️ Production keystore not configured, falling back to debug keystore"
-            echo "KEYSTORE_FILE=" >> $GITHUB_ENV
-            echo "KEYSTORE_PASSWORD=android" >> $GITHUB_ENV
-            echo "KEY_ALIAS=androiddebugkey" >> $GITHUB_ENV
+            # Don't set KEYSTORE_FILE - let build.gradle.kts fall back to debug keystore
+            # The build.gradle.kts checks System.getenv("KEYSTORE_FILE") and uses debug keystore when null
           fi
 
       - name: Ensure gradlew is executable
