@@ -84,14 +84,14 @@ jobs:
           path: artifact/app-v${{ steps.version.outputs.VERSION }}.apk
           # Use maximum allowed retention period
           # https://github.com/actions/upload-artifact?tab=readme-ov-file#retention-period
-          retention-days: 30
+          retention-days: 90
 
       - name: Upload Release AAB
         uses: actions/upload-artifact@v4
         with:
           name: app-aab
           path: artifact/app-v${{ steps.version.outputs.VERSION }}.aab
-          retention-days: 30
+          retention-days: 90
 
       # If this is running due to a GitHub release, attach the APK and AAB to the release
       - name: Attach APK and AAB to GitHub Release
