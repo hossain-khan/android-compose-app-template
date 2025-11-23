@@ -7,8 +7,8 @@ name: Android Release Build
 # AAB (Android App Bundle) is provided for Google Play Store distribution.
 #
 # See:
-# - https://github.com/hossain-khan/android-compose-app-template/tree/main/keystore
-# - https://github.com/hossain-khan/android-compose-app-template/blob/main/app/build.gradle.kts (signing configuration)
+# - https://github.com/${{ github.repository }}/tree/main/keystore
+# - https://github.com/${{ github.repository }}/blob/main/app/build.gradle.kts (signing configuration)
 
 on:
   push:
