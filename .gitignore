@@ -25,6 +25,8 @@ render.experimental.xml
 # Keystore files
 *.jks
 *.keystore
+# Exception: Allow debug keystore for development
+!keystore/debug.keystore
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json

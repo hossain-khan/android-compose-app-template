@@ -1,0 +1,29 @@
+## Android Signing Keystore
+
+This directory contains keystores for signing Android builds.
+
+### Debug Keystore
+
+For local development, a debug keystore (`debug.keystore`) is used with standard Android debug credentials:
+- Store Password: `android`
+- Key Alias: `androiddebugkey`
+- Key Password: `android`
+
+See https://developer.android.com/studio/publish/app-signing#debug-mode
+
+### Release Keystore (Production)
+Release builds are signed by workflows using securely stored keystore files and credentials.
+As soon as a tagged release is created, the release workflow signs the APK using the production keystore and uploads it to GitHub Releases.
+
+For example:
+
+<img src="../docs/github-release-build-assets.png" width="500" alt="GitHub Release Assets with built APK" />
+
+### Workflows
+
+Three GitHub Actions workflows are available for testing and building releases:
+
+1. **[android-release.yml](../../.github/workflows/android-release.yml)**: Builds release APK on main branch pushes and GitHub releases
+2. **[test-keystore-apk-signing.yml](../../.github/workflows/test-keystore-apk-signing.yml)**: Validates keystore configuration and APK signing
+
+See [RELEASE.md](../RELEASE.md) for details on how to setup the workflows with secrets.
