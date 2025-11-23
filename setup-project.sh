@@ -360,15 +360,30 @@ An Android app built with:
 
 This app follows the Circuit UDF (Unidirectional Data Flow) architecture with Metro for dependency injection.
 
+## GitHub Actions
+
+This project includes automated workflows:
+- **CI builds** on pull requests and main branch
+- **Android Lint** checks for code quality
+- **Release builds** - Currently uses debug keystore (see builds are signed but not for production)
+
+Note: For production releases with proper signing, you'll need to:
+1. Generate a production keystore
+2. Configure GitHub secrets (KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS)
+3. The workflows will automatically use production keystore once secrets are set
+
 EOF
 fi
 
 # Remove template-specific files
 echo "🗑️  Removing template-specific files..."
 rm -rf .google/ 2>/dev/null || true
-rm -rf .github/ 2>/dev/null || true
+# Remove only template-specific GitHub Actions workflows, keep CI and release workflows
+rm -f .github/workflows/test-setup-script.yml 2>/dev/null || true
 rm -f CONTRIBUTING.md 2>/dev/null || true
 rm -f LICENSE 2>/dev/null || true
+rm -f RELEASE.md 2>/dev/null || true
+rm -rf keystore/ 2>/dev/null || true
 
 # Remove renovate config (user can add back if needed)
 if [ -f "renovate.json" ]; then
