@@ -4,16 +4,23 @@ This directory contains keystores for signing Android builds.
 
 ### Debug Keystore
 
-For local development, a debug keystore (`debug.keystore`) is used with standard Android debug credentials:
+For local development and CI builds without production keystore configured, a debug keystore (`debug.keystore`) is used with standard Android debug credentials:
 - Store Password: `android`
 - Key Alias: `androiddebugkey`
 - Key Password: `android`
 
+**Note:** The release workflow automatically falls back to this debug keystore when production secrets are not configured, allowing the template to build successfully out of the box.
+
 See https://developer.android.com/studio/publish/app-signing#debug-mode
 
 ### Release Keystore (Production)
-Release builds are signed by workflows using securely stored keystore files and credentials.
-As soon as a tagged release is created, the release workflow signs the APK using the production keystore and uploads it to GitHub Releases.
+
+**For production releases**, you should configure a production keystore following the setup guide in [RELEASE.md](../RELEASE.md).
+
+Once configured:
+- Release builds are automatically signed with your production keystore
+- APK and AAB files are built on every push to main branch
+- When a GitHub release is created, signed APK/AAB are automatically attached
 
 For example:
 
