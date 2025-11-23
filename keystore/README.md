@@ -21,7 +21,7 @@ For example:
 
 ### Workflows
 
-Three GitHub Actions workflows are available for testing and building releases:
+Two GitHub Actions workflows are available for testing and building releases:
 
 1. **[android-release.yml](../../.github/workflows/android-release.yml)**: Builds release APK on main branch pushes and GitHub releases
 2. **[test-keystore-apk-signing.yml](../../.github/workflows/test-keystore-apk-signing.yml)**: Validates keystore configuration and APK signing
