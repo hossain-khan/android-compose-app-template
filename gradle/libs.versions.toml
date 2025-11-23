@@ -19,7 +19,7 @@ ksp = "2.3.2"
 # https://github.com/jeremymailen/kotlinter-gradle
 # https://github.com/pinterest/ktlint
 kotlinter = "5.2.0"
-lifecycleRuntimeKtx = "2.9.4"
+lifecycleRuntimeKtx = "2.10.0"
 metro = "0.7.7"
 androidxWork = "2.11.0"
 
