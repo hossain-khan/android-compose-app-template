@@ -51,20 +51,26 @@ jobs:
             echo "📦 Building snapshot from main branch"
           fi
 
-      - name: Decode keystore from base64
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+      - name: Setup keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/app-release.keystore
+          # Only decode and use production keystore if secrets are configured
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "Using production keystore from secrets"
+            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/app-release.keystore
+            echo "KEYSTORE_FILE=keystore/app-release.keystore" >> $GITHUB_ENV
+            echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+            echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          else
+            echo "⚠️ Production keystore not configured, falling back to debug keystore"
+            echo "KEYSTORE_FILE=" >> $GITHUB_ENV
+            echo "KEYSTORE_PASSWORD=android" >> $GITHUB_ENV
+            echo "KEY_ALIAS=androiddebugkey" >> $GITHUB_ENV
+          fi
 
       - name: Ensure gradlew is executable
         run: chmod +x gradlew
       - name: Build Release APK and AAB
         run: ./gradlew assembleRelease bundleRelease --parallel --daemon
-        env:
-          # Only set KEYSTORE_FILE if the secret is configured, otherwise fall back to debug keystore
-          KEYSTORE_FILE: ${{ secrets.KEYSTORE_BASE64 != '' && 'keystore/app-release.keystore' || '' }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
 
       - name: Extract version name
         id: version
