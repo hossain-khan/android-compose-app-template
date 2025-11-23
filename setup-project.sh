@@ -383,7 +383,9 @@ rm -f .github/workflows/test-setup-script.yml 2>/dev/null || true
 rm -f CONTRIBUTING.md 2>/dev/null || true
 rm -f LICENSE 2>/dev/null || true
 rm -f RELEASE.md 2>/dev/null || true
-rm -rf keystore/ 2>/dev/null || true
+# Keep keystore/ directory - it contains debug.keystore needed for release builds
+# Remove only the README inside keystore/ as it's template-specific
+rm -f keystore/README.md 2>/dev/null || true
 
 # Remove renovate config (user can add back if needed)
 if [ -f "renovate.json" ]; then
