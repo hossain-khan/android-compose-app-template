@@ -55,6 +55,8 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/app-release.keystore
 
+      - name: Ensure gradlew is executable
+        run: chmod +x gradlew
       - name: Build Release APK and AAB
         run: ./gradlew assembleRelease bundleRelease --parallel --daemon
         env:
