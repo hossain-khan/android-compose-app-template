@@ -58,15 +58,19 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 
 Example:
 ```kotlin
-// Inject dependencies via constructor
-@Inject
-class EmailRepository(
-    private val apiService: ApiService
-)
+// Define interface
+interface EmailRepository {
+    suspend fun getEmails(): List<Email>
+}
 
-// Contribute to AppScope
+// Implementation with dependency injection
+@Inject
 @ContributesBinding(AppScope::class)
-interface EmailRepositoryImpl : EmailRepository
+class EmailRepositoryImpl(
+    private val apiService: ApiService
+) : EmailRepository {
+    override suspend fun getEmails() = apiService.fetchEmails()
+}
 ```
 
 ## Code Style
