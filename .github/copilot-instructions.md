@@ -60,16 +60,15 @@ Example:
 ```kotlin
 // Define interface
 interface EmailRepository {
-    suspend fun getEmails(): List<Email>
+    fun getEmails(): List<Email>
 }
 
-// Implementation with dependency injection
-@Inject
+// Implementation with Metro DI
+@SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class EmailRepositoryImpl(
-    private val apiService: ApiService
-) : EmailRepository {
-    override suspend fun getEmails() = apiService.fetchEmails()
+@Inject
+class EmailRepositoryImpl constructor() : EmailRepository {
+    override fun getEmails() = listOf(/* emails */)
 }
 ```
 
