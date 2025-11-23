@@ -81,7 +81,10 @@ class InboxPresenter
             return InboxScreen.State(emails) { event ->
                 when (event) {
                     // Navigate to the detail screen when an email is clicked
-                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
+                    is InboxScreen.Event.EmailClicked -> {
+                        navigator.goTo(DetailScreen(event.emailId))
+                    }
+
                     // Show app info overlay when info button is clicked
                     InboxScreen.Event.InfoClicked -> {
                         // Overlay will be handled in the UI layer
