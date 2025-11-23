@@ -1,10 +1,7 @@
 package app.example.di
 
-import app.example.data.ExampleEmailValidator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provides
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Example of Metro binding container that contributes bindings to the app graph.
@@ -15,24 +12,17 @@ import dev.zacsweers.metro.SingleIn
  *
  * Key Metro features used:
  * - [ContributesTo]: Automatically contributes bindings to the specified scope
- * - [Provides]: Functions that provide dependencies to the graph
- * - [SingleIn]: Scopes the binding to ensure only one instance exists per scope
  *
- * You should delete this file and create your own providers for your application.
+ * This is an empty example interface. You should delete this file and create your own
+ * providers for your application when needed. For simple classes without interfaces,
+ * prefer using [@Inject][dev.zacsweers.metro.Inject] constructor injection directly on
+ * the class instead of creating a separate binding container.
  *
  * See https://zacsweers.github.io/metro/latest/aggregation/ for more on contribution/aggregation.
- * See https://zacsweers.github.io/metro/latest/bindings/#provides for more on @Provides.
- * See https://zacsweers.github.io/metro/latest/scopes/ for more on scoping.
+ * See https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection for constructor injection.
  */
 @ContributesTo(AppScope::class)
 interface ExampleAppBindings {
-    /**
-     * Provides an [ExampleEmailValidator] instance.
-     *
-     * This is scoped to [AppScope] which means only one instance will be created
-     * and shared across the entire application lifetime.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun provideEmailValidator(): ExampleEmailValidator = ExampleEmailValidator()
+    // Example bindings would go here. Classes with simple constructor injection
+    // don't need explicit @Provides functions - they can use @Inject directly.
 }
