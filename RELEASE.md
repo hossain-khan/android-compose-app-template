@@ -2,6 +2,8 @@
 
 This guide walks you through setting up automated release builds and signing for your Android app template.
 
+> **Note:** The release workflow will work without secrets configured by using the debug keystore as a fallback. However, for production releases, you **must** configure the secrets to use a proper production keystore.
+
 ## Prerequisites
 
 - [ ] You have admin access to the GitHub repository
