@@ -8,7 +8,8 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 ## What do you get in this template? 📜
 * ✔️ [Circuit](https://github.com/slackhq/circuit) library setup for the app
 * ✔️ [Metro](https://zacsweers.github.io/metro/) Dependency Injection for all Circuit Screens & Presenter combo
-* ✔️ GitHub Actions for CI
+* ✔️ GitHub Actions for CI and automated release builds
+* ✔️ Automated APK/AAB builds with keystore signing (see [RELEASE.md](RELEASE.md))
 * ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
 * ✔️ `BuildConfig` turned on with example of reading config from `local.properties` file.
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
@@ -95,6 +96,7 @@ These still need to be done manually after using the script:
 * [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
 * [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
 * [ ] Verify Android Gradle Plugin (AGP) version compatibility with your development environment in `gradle/libs.versions.toml`
+* [ ] **(Optional)** Set up production keystore for release builds - see [RELEASE.md](RELEASE.md) for automated APK signing
 
 </details>
 
