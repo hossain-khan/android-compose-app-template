@@ -46,7 +46,10 @@ android {
                 ?: file("../keystore/debug.keystore")
             val keystorePassword = System.getenv("KEYSTORE_PASSWORD") ?: "android"
             val keyAliasValue = System.getenv("KEY_ALIAS") ?: "androiddebugkey"
-            val keyPasswordValue = keystorePassword // Use store password for key password
+            // Note: Using the same password for both store and key is a common practice and required
+            // by the setup documented in RELEASE.md. If you need different passwords, add a KEY_PASSWORD
+            // environment variable: System.getenv("KEY_PASSWORD") ?: keystorePassword
+            val keyPasswordValue = keystorePassword
 
             storeFile = keystoreFile
             storePassword = keystorePassword
