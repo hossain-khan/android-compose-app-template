@@ -24,7 +24,9 @@ Once configured:
 
 For example:
 
-<img src="../docs/github-release-build-assets.png" width="500" alt="GitHub Release Assets with built APK" />
+<img width="600" alt="Screenshot 2025-11-23 at 7 45 24 PM" src="https://github.com/user-attachments/assets/e79d887e-4a56-486c-869e-4b4a42e3adaa" />
+
+
 
 ### Workflows
 
