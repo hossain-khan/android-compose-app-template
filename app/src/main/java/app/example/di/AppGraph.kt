@@ -65,7 +65,7 @@ interface AppGraph {
      * See https://zacsweers.github.io/metro/latest/bindings/#multibindings
      */
     @Multibinds
-    val workerProviders: Map<KClass<out ListenableWorker>, Provider<AppWorkerFactory.WorkerInstanceFactory<*>>>
+    val workerProviders: Map<KClass<out ListenableWorker>, AppWorkerFactory.WorkerInstanceFactory<*>>
 
     @Provides
     fun providesWorkManager(
