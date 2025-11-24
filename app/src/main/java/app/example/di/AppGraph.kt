@@ -2,7 +2,6 @@ package app.example.di
 
 import android.app.Activity
 import android.content.Context
-import androidx.work.ListenableWorker
 import androidx.work.WorkManager
 import com.slack.circuit.foundation.Circuit
 import dev.zacsweers.metro.AppScope
@@ -54,18 +53,6 @@ interface AppGraph {
 
     val workManager: WorkManager
     val workerFactory: AppWorkerFactory
-
-    /**
-     * Map of Worker classes to their factory providers. This is a multibinding that allows
-     * workers to be injected via assisted injection using [AppWorkerFactory].
-     *
-     * The [@Multibinds][Multibinds] annotation declares this as a multibinding collection
-     * that Worker classes can contribute to via [@ContributesIntoMap][ContributesIntoMap].
-     *
-     * See https://zacsweers.github.io/metro/latest/bindings/#multibindings
-     */
-    @Multibinds
-    val workerProviders: Map<KClass<out ListenableWorker>, AppWorkerFactory.WorkerInstanceFactory<*>>
 
     @Provides
     fun providesWorkManager(
