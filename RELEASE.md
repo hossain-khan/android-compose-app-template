@@ -2,7 +2,10 @@
 
 This guide walks you through setting up automated release builds and signing for your Android app template.
 
+> [!IMPORTANT]  
 > **Note:** The release workflow will work without secrets configured by using the debug keystore as a fallback. However, for production releases, you **must** configure the secrets to use a proper production keystore.
+
+
 
 ## Prerequisites
 
@@ -26,11 +29,12 @@ keytool -genkey -v \
   -storetype PKCS12
 ```
 
-**Important Notes:**
-- You'll be prompted for a keystore password - **use a strong, unique password**
-- You'll be prompted for a key password - **use the SAME password as the keystore password**
-- Fill in the certificate information (name, organization, etc.)
-- The keystore will be valid for ~27 years (10,000 days)
+> [!CAUTION]  
+> **Important Notes:**
+> - You'll be prompted for a keystore password - **use a strong, unique password**
+> - You'll be prompted for a key password - **use the SAME password as the keystore password**
+> - Fill in the certificate information (name, organization, etc.)
+> - The keystore will be valid for ~27 years (10,000 days)
 
 ### 1.2 Secure the Keystore
 
