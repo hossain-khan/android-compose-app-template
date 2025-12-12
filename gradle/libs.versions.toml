@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.12.1"
 # https://developer.android.com/build/releases/gradle-plugin
-agp = "8.13.1"
+agp = "8.13.2"
 circuit = "0.31.0"
 composeBom = "2025.12.00"
 coreKtx = "1.17.0"
