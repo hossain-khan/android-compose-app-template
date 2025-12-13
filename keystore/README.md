@@ -32,7 +32,7 @@ For example:
 
 Two GitHub Actions workflows are available for testing and building releases:
 
-1. **[android-release.yml](../../.github/workflows/android-release.yml)**: Builds release APK on main branch pushes and GitHub releases
-2. **[test-keystore-apk-signing.yml](../../.github/workflows/test-keystore-apk-signing.yml)**: Validates keystore configuration and APK signing
+1. **[android-release.yml](https://github.com/hossain-khan/android-compose-app-template/blob/main/.github/workflows/android-release.yml)**: Builds release APK on main branch pushes and GitHub releases
+2. **[test-keystore-apk-signing.yml](https://github.com/hossain-khan/android-compose-app-template/blob/main/.github/workflows/test-keystore-apk-signing.yml)**: Validates keystore configuration and APK signing
 
 See [RELEASE.md](../RELEASE.md) for details on how to setup the workflows with secrets.
