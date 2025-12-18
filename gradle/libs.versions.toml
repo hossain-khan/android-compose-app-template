@@ -1,5 +1,5 @@
 [versions]
-activityCompose = "1.12.1"
+activityCompose = "1.12.2"
 # https://developer.android.com/build/releases/gradle-plugin
 agp = "8.13.2"
 circuit = "0.31.0"
