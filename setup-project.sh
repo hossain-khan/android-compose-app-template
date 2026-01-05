@@ -341,7 +341,7 @@ echo "✨ Step 9: Formatting Kotlin code..."
 if [ -f "./gradlew" ]; then
     chmod +x ./gradlew
     echo "Running ./gradlew formatKotlin to fix code formatting..."
-    if ./gradlew formatKotlin --no-daemon --console=plain 2>&1 | tee /tmp/format-output.log; then
+    if ./gradlew formatKotlin --no-daemon --console=plain; then
         echo "✅ Code formatting completed successfully"
     else
         echo "⚠️  Warning: formatKotlin failed or gradle is not available"
