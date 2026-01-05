@@ -150,6 +150,10 @@ jobs:
           echo "🔧 Checking gradle wrapper permissions..."
           chmod +x ./gradlew
           
+          echo "🧹 Checking code formatting..."
+          # Verify that code is properly formatted after setup
+          ./gradlew lintKotlin --no-daemon --stacktrace
+          
           echo "🏗️  Building project..."
           # Try to compile the project to ensure it's valid
           ./gradlew assembleDebug --no-daemon --stacktrace --info

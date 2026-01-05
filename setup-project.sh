@@ -336,8 +336,25 @@ fi
 echo "🧹 Step 8: Cleaning up backup files..."
 find . -name "*.bak" -type f -delete
 
-# Step 9: Update README and remove template-specific files
-echo "📄 Step 9: Cleaning up template files..."
+# Step 9: Format Kotlin code
+echo "✨ Step 9: Formatting Kotlin code..."
+if [ -f "./gradlew" ]; then
+    chmod +x ./gradlew
+    echo "Running ./gradlew formatKotlin to fix code formatting..."
+    if ./gradlew formatKotlin --no-daemon --console=plain 2>&1 | tee /tmp/format-output.log; then
+        echo "✅ Code formatting completed successfully"
+    else
+        echo "⚠️  Warning: formatKotlin failed or gradle is not available"
+        echo "   Please run './gradlew formatKotlin' manually after setup completes"
+        echo "   This will fix any Kotlin code formatting issues"
+    fi
+else
+    echo "⚠️  Warning: gradlew not found, skipping automatic formatting"
+    echo "   Please run './gradlew formatKotlin' manually after setup completes"
+fi
+
+# Step 10: Update README and remove template-specific files
+echo "📄 Step 10: Cleaning up template files..."
 if [ -f "README.md" ]; then
     # Create a minimal README for the new project
     cat > README.md << EOF
@@ -392,8 +409,8 @@ if [ -f "renovate.json" ]; then
     echo "📋 Found renovate.json - you may want to review and configure this for your project"
 fi
 
-# Step 10: Handle git repository initialization
-echo "📦 Step 10: Checking git repository status..."
+# Step 11: Handle git repository initialization
+echo "📦 Step 11: Checking git repository status..."
 
 # Check if git is installed
 if ! command -v git &> /dev/null; then
