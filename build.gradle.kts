@@ -4,10 +4,6 @@ plugins {
     // Project: https://developer.android.com/build
     alias(libs.plugins.android.application) apply false
 
-    // Applies the Kotlin Android plugin.
-    // Project: https://kotlinlang.org/docs/android-overview.html
-    alias(libs.plugins.kotlin.android) apply false
-
     // Applies the Kotlin Compose plugin.
     // Project: https://developer.android.com/jetpack/compose
     alias(libs.plugins.kotlin.compose) apply false
