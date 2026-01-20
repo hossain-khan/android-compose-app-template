@@ -20,7 +20,7 @@ ksp = "2.3.4"
 # https://github.com/pinterest/ktlint
 kotlinter = "5.3.0"
 lifecycleRuntimeKtx = "2.10.0"
-metro = "0.9.4"
+metro = "0.10.0"
 androidxWork = "2.11.0"
 
 [libraries]
