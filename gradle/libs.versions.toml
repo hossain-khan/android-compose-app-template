@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.12.3"
 # https://developer.android.com/build/releases/gradle-plugin
-agp = "8.13.2"
+agp = "9.0.0"
 circuit = "0.32.0"
 composeBom = "2026.01.01"
 coreKtx = "1.17.0"
@@ -61,7 +61,6 @@ androidx-work = { group = "androidx.work", name = "work-runtime-ktx", version.re
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
