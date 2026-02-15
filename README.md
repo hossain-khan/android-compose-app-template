@@ -127,7 +127,7 @@ Here are some apps that has been created using the template.
 
 ## Metro Dependency Injection 🔧
 
-This template uses [Metro](https://zacsweers.github.io/metro/latest/) (v0.7.2) - a modern, multiplatform Kotlin dependency injection framework. 
+This template uses [Metro](https://zacsweers.github.io/metro/latest/) (v0.10.4) - a modern, multiplatform Kotlin dependency injection framework. 
 
 > **What is Dependency Injection?** DI is a design pattern that provides objects (dependencies) to a class rather than having the class create them itself. This makes code more testable, maintainable, and modular.
 
@@ -141,11 +141,20 @@ Metro combines the best features of:
 The template demonstrates several Metro patterns:
 
 - **[Dependency Graphs](https://zacsweers.github.io/metro/latest/dependency-graphs/)**: `AppGraph` is the root DI component scoped to the application lifecycle
-- **[Constructor Injection](https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection)**: Activities and other classes use `@Inject` for constructor-based DI
+- **[Constructor Injection](https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection)**: Activities and other classes use constructor-based DI
 - **[Aggregation](https://zacsweers.github.io/metro/latest/aggregation/)**: `@ContributesTo` automatically contributes bindings to the graph without explicit wiring
 - **[Multibindings](https://zacsweers.github.io/metro/latest/bindings/#multibindings)**: Activity and Worker factories use map multibindings for flexible injection
 - **[Assisted Injection](https://zacsweers.github.io/metro/latest/injection-types/#assisted-injection)**: Workers mix runtime parameters with injected dependencies
 - **[Scopes](https://zacsweers.github.io/metro/latest/scopes/)**: `@SingleIn(AppScope::class)` ensures singleton instances
+
+### Metro 0.10.x Modern Patterns
+
+**Since Metro 0.10.0**, the `contributesAsInject` feature is enabled by default, making `@Inject` implicit on:
+- `@ContributesBinding`
+- `@ContributesIntoMap`
+- `@ContributesIntoSet`
+
+This means you no longer need to explicitly annotate contributing classes with `@Inject` - it's automatic! ✨
 
 ### Metro Implementation Examples
 
@@ -166,10 +175,9 @@ interface AppGraph {
     }
 }
 
-// Activity with constructor injection
+// Activity with constructor injection (no @Inject needed!)
 @ActivityKey(MainActivity::class)
 @ContributesIntoMap(AppScope::class, binding = binding<Activity>())
-@Inject
 class MainActivity(
     private val circuit: Circuit,
 ) : ComponentActivity() {

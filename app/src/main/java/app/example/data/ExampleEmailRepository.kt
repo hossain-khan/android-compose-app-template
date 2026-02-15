@@ -33,10 +33,12 @@ interface ExampleEmailRepository {
 
 /**
  * This is example repository. It is used to demonstrate how to use Metro DI.
+ *
+ * Note: [@Inject][Inject] is now implicit when using [@ContributesBinding][ContributesBinding]
+ * as of Metro 0.10.0 with `contributesAsInject` enabled by default.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-@Inject
 class ExampleEmailRepositoryImpl
     constructor() : ExampleEmailRepository {
         override fun getEmails(): List<Email> =
