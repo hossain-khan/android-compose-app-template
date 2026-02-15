@@ -18,7 +18,7 @@ ksp = "2.3.5"
 # Kotlin linter with built-in formatter
 # https://github.com/jeremymailen/kotlinter-gradle
 # https://github.com/pinterest/ktlint
-kotlinter = "5.4.0"
+kotlinter = "5.4.2"
 lifecycleRuntimeKtx = "2.10.0"
 metro = "0.10.4"
 androidxWork = "2.11.1"
