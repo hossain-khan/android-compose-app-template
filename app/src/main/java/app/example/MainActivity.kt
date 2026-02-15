@@ -40,10 +40,12 @@ import dev.zacsweers.metro.binding
  * See https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection for constructor injection.
  * See https://zacsweers.github.io/metro/latest/bindings/#multibindings for multibindings.
  * See https://zacsweers.github.io/metro/latest/aggregation/ for contribution.
+ *
+ * Note: [@Inject][Inject] is now implicit when using [@ContributesIntoMap][ContributesIntoMap]
+ * as of Metro 0.10.0 with `contributesAsInject` enabled by default.
  */
 @ActivityKey(MainActivity::class)
 @ContributesIntoMap(AppScope::class, binding = binding<Activity>())
-@Inject
 class MainActivity
     constructor(
         private val circuit: Circuit,

@@ -47,9 +47,11 @@ import kotlin.reflect.KClass
  * See https://zacsweers.github.io/metro/latest/injection-types/#assisted-injection for assisted injection.
  * See https://zacsweers.github.io/metro/latest/bindings/#multibindings for multibindings.
  * See https://zacsweers.github.io/metro/latest/aggregation/ for contribution.
+ *
+ * Note: [@Inject][Inject] is now implicit when using [@ContributesBinding][ContributesBinding]
+ * as of Metro 0.10.0 with `contributesAsInject` enabled by default.
  */
 @ContributesBinding(AppScope::class)
-@Inject
 class AppWorkerFactory(
     private val workerProviders: Map<KClass<out ListenableWorker>, WorkerInstanceFactory<*>>,
 ) : WorkerFactory() {

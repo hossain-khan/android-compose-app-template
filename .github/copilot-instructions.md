@@ -51,10 +51,11 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 
 ### Metro Dependency Injection
 
-1. **Use `@ContributesBinding`** for interface implementations
-2. **Use `@Inject` constructor injection** for dependencies
+1. **Use `@ContributesBinding`** for interface implementations (no need for `@Inject` since Metro 0.10.0)
+2. **Use `@Inject` constructor injection** only for non-contributing classes
 3. **Scopes**: `@ApplicationContext`, `@ActivityKey`, `@WorkerKey`
 4. **Multibindings**: Use for activity and worker factories
+5. **`@Inject` is implicit** on `@ContributesBinding`, `@ContributesIntoMap`, and `@ContributesIntoSet` (since Metro 0.10.0)
 
 Example:
 ```kotlin
@@ -63,12 +64,18 @@ interface EmailRepository {
     fun getEmails(): List<Email>
 }
 
-// Implementation with Metro DI
+// Implementation with Metro DI (no @Inject needed!)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-@Inject
 class EmailRepositoryImpl constructor() : EmailRepository {
     override fun getEmails() = listOf(/* emails */)
+}
+
+// For non-contributing classes, still use @Inject
+@SingleIn(AppScope::class)
+@Inject
+class SomeService constructor() {
+    // ...
 }
 ```
 
