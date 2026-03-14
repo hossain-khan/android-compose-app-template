@@ -143,11 +143,12 @@ metro {
     // See https://zacsweers.github.io/metro/latest/
     debug.set(true)
 
-    // Shrink unused bindings to reduce generated code size (enabled by default)
+    // Shrink unused bindings to reduce generated code size (delicate API in Metro 0.11+)
+    // This is a delicate API - use with caution in large dependency graphs
     // See https://zacsweers.github.io/metro/latest/dependency-graphs/
+    @Suppress("DelicateApi")
     shrinkUnusedBindings.set(true)
 
-    // Enable chunking of field initializers for better performance in large graphs (enabled by default)
-    // See https://zacsweers.github.io/metro/latest/dependency-graphs/
-    chunkFieldInits.set(true)
+    // Note: chunkFieldInits is now DEPRECATED as of Metro 0.11.0 and removed
+    // This option has been replaced with default behavior and is always enabled
 }
