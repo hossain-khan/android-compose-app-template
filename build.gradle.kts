@@ -4,9 +4,8 @@ plugins {
     // Project: https://developer.android.com/build
     alias(libs.plugins.android.application) apply false
 
-    // Applies the Kotlin Android plugin.
-    // Project: https://kotlinlang.org/docs/android-overview.html
-    alias(libs.plugins.kotlin.android) apply false
+    // Kotlin support is built into AGP 9.1+ - kotlin-android plugin is no longer needed
+    // See: https://developer.android.com/build/migrate-to-built-in-kotlin
 
     // Applies the Kotlin Compose plugin.
     // Project: https://developer.android.com/jetpack/compose
@@ -15,10 +14,6 @@ plugins {
     // Applies the Kotlin Parcelize plugin.
     // Project: https://developer.android.com/kotlin/parcelize
     alias(libs.plugins.kotlin.parcelize) apply false
-
-    // Applies the Kotlin KAPT (Kotlin Annotation Processing Tool) plugin.
-    // Project: https://kotlinlang.org/docs/kapt.html
-    alias(libs.plugins.kotlin.kapt) apply false
 
     // Applies the Kotlin Symbol Processing (KSP) plugin.
     // Project: https://github.com/google/ksp

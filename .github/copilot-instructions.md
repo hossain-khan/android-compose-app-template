@@ -177,11 +177,14 @@ Card(colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
 All dependency versions are centralized in `gradle/libs.versions.toml`:
 
 **Major Dependencies**:
-- Kotlin: 2.2.21
-- Circuit: 0.31.0
-- Metro: 0.7.7
-- Compose BOM: 2025.11.01
-- WorkManager: 2.11.0
+- Android Gradle Plugin (AGP): 9.1.0 (supports built-in Kotlin)
+- Kotlin: 2.3.10 (latest stable)
+- KSP: 2.3.6
+- Circuit: 0.33.1
+- Metro: 0.10.4
+- Compose BOM: 2026.03.00
+- WorkManager: 2.11.1
+- Gradle: 9.4.0 (minimum required: 9.3.1)
 
 ## Common Patterns
 
@@ -216,3 +219,16 @@ All dependency versions are centralized in `gradle/libs.versions.toml`:
 - Prefer constructor injection over field injection
 - Follow existing code structure and patterns
 - Keep code concise and readable
+
+## AGP 9.1.0 - Built-in Kotlin Support
+
+This project has been migrated to AGP 9.1.0 with **built-in Kotlin support**. Key points:
+
+1. **No `kotlin-android` plugin needed** — AGP 9.1+ includes native Kotlin compilation support
+2. **KAPT is incompatible** — Built-in Kotlin doesn't support `kotlin-kapt`. This project uses Metro with KSP instead
+3. **Gradle 9.3.1+ required** — Ensure your Gradle version is 9.3.1 or higher
+4. **kotlin.compilerOptions{} DSL** — Use for Kotlin compiler options (not `android.kotlinOptions{}`)
+5. **android.sourceSets.kotlin{}** — The only supported way to add custom Kotlin source directories
+
+For more info: https://developer.android.com/build/migrate-to-built-in-kotlin
+

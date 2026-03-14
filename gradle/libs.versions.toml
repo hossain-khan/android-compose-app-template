@@ -1,7 +1,8 @@
 [versions]
 activityCompose = "1.13.0"
 # https://developer.android.com/build/releases/gradle-plugin
-agp = "8.13.2"
+# AGP 9.1 requires Gradle 9.3.1 or higher
+agp = "9.1.0"
 circuit = "0.33.1"
 composeBom = "2026.03.00"
 coreKtx = "1.18.0"
@@ -61,12 +62,8 @@ androidx-work = { group = "androidx.work", name = "work-runtime-ktx", version.re
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+# kotlin-android plugin is no longer needed with AGP 9.1+ (built-in Kotlin support)
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-
-# Add @Parcelize support
-# https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.parcelize
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
 # Kotlin Symbol Processing API
