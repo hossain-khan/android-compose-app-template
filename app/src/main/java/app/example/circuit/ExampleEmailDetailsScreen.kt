@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -117,9 +116,9 @@ fun EmailDetailContent(
                         Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(Color.Magenta)
+                            .background(MaterialTheme.colorScheme.tertiary)
                             .padding(4.dp),
-                    colorFilter = ColorFilter.tint(Color.White),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary),
                     contentDescription = null,
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -151,8 +150,7 @@ fun EmailDetailContent(
                     }
                 }
             }
-            @Suppress("DEPRECATION") // Deprecated in Android but not yet available in CM
-            (Divider(modifier = Modifier.padding(vertical = 16.dp)))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
 
             Button(
@@ -182,9 +180,9 @@ fun EmailItem(
                 Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(Color.Magenta)
+                    .background(MaterialTheme.colorScheme.tertiary)
                     .padding(4.dp),
-            colorFilter = ColorFilter.tint(Color.White),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary),
             contentDescription = null,
         )
         Column {
