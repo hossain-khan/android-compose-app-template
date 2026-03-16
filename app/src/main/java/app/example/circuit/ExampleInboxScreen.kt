@@ -20,9 +20,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import app.example.R
@@ -31,7 +32,8 @@ import app.example.data.Email
 import app.example.data.ExampleAppVersionService
 import app.example.data.ExampleEmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.overlay.LocalOverlayHost
+import com.slack.circuit.overlay.OverlayEffect
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
@@ -41,7 +43,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 // See https://slackhq.github.io/circuit/screen/
@@ -49,6 +50,7 @@ import kotlinx.parcelize.Parcelize
 data object InboxScreen : Screen {
     data class State(
         val emails: List<Email>,
+        val showAppInfo: Boolean = false,
         val eventSink: (Event) -> Unit,
     ) : CircuitUiState
 
@@ -58,6 +60,8 @@ data object InboxScreen : Screen {
         ) : Event()
 
         data object InfoClicked : Event()
+
+        data object InfoDismissed : Event()
     }
 }
 
@@ -71,14 +75,18 @@ class InboxPresenter
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {
-            val emails by produceState<List<Email>>(initialValue = emptyList()) {
-                value = emailRepository.getEmails()
-            }
+            // rememberRetained persists state across configuration changes AND back-stack navigation,
+            // so emails are not re-fetched on screen rotation or when returning from a detail screen.
+            // See https://slackhq.github.io/circuit/presenter/#retention
+            var emails by rememberRetained { mutableStateOf<List<Email>>(emptyList()) }
+            LaunchedEffect(Unit) { emails = emailRepository.getEmails() }
+
+            var showAppInfo by rememberRetained { mutableStateOf(false) }
 
             // This is just example of how the DI injected service is used in this presenter
             Log.d("InboxPresenter", "Application version: ${appVersionService.getApplicationVersion()}")
 
-            return InboxScreen.State(emails) { event ->
+            return InboxScreen.State(emails = emails, showAppInfo = showAppInfo) { event ->
                 when (event) {
                     // Navigate to the detail screen when an email is clicked
                     is InboxScreen.Event.EmailClicked -> {
@@ -87,7 +95,12 @@ class InboxPresenter
 
                     // Show app info overlay when info button is clicked
                     InboxScreen.Event.InfoClicked -> {
-                        // Overlay will be handled in the UI layer
+                        showAppInfo = true
+                    }
+
+                    // Dismiss app info overlay
+                    InboxScreen.Event.InfoDismissed -> {
+                        showAppInfo = false
                     }
                 }
             }
@@ -107,8 +120,17 @@ fun Inbox(
     state: InboxScreen.State,
     modifier: Modifier = Modifier,
 ) {
-    val overlayHost = LocalOverlayHost.current
-    val coroutineScope = rememberCoroutineScope()
+    // Use OverlayEffect for a state-driven, UDF-compliant overlay pattern.
+    // show() is a suspend function that blocks until the overlay is dismissed.
+    // InfoDismissed is only emitted after the user closes the overlay.
+    // See https://slackhq.github.io/circuit/overlays/
+    if (state.showAppInfo) {
+        OverlayEffect {
+            // Suspends here until the user dismisses the overlay
+            show(AppInfoOverlay())
+            state.eventSink(InboxScreen.Event.InfoDismissed)
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -117,11 +139,7 @@ fun Inbox(
                 title = { Text("Inbox") },
                 actions = {
                     IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                overlayHost.show(AppInfoOverlay())
-                            }
-                        },
+                        onClick = { state.eventSink(InboxScreen.Event.InfoClicked) },
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_info_24),
