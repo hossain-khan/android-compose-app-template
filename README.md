@@ -106,6 +106,8 @@ These still need to be done manually after using the script:
 
 This template includes a [Dev Container](.devcontainer) configuration for a ready-to-use Android development environment.
 
+<details>
+
 ### Features
 - **Base Image**: Java 21 (Bookworm)
 - **Android SDK**: Automatically installed via post-create script (API 36, Build Tools 36.0.0)
@@ -135,6 +137,8 @@ You can also open this project directly in [GitHub Codespaces](https://github.co
 # Lint Kotlin code
 ./gradlew lintKotlin
 ```
+
+</details>
 
 ## Demo 📹
 Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) documentation.
