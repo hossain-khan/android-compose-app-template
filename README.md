@@ -14,6 +14,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ `BuildConfig` turned on with example of reading config from `local.properties` file.
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
+* ✔️ [Dev Container](.devcontainer) for a ready-to-use Android development environment in VS Code or GitHub Codespaces
 
 > [!WARNING]
 > _This template is only for Android app setup. If you are looking for a multi-platform supported template,_
@@ -100,6 +101,40 @@ These still need to be done manually after using the script:
 
 </details>
 
+
+## Dev Container 🐳
+
+This template includes a [Dev Container](.devcontainer) configuration for a ready-to-use Android development environment.
+
+### Features
+- **Base Image**: Java 21 (Bookworm)
+- **Android SDK**: Automatically installed via post-create script (API 36, Build Tools 36.0.0)
+- **VS Code Extensions**: Kotlin, Gradle, Java, and GitHub Copilot support
+- **ADB Access**: Configured with `--privileged` mode to allow connecting physical Android devices
+
+### Usage
+
+1. Open the project in VS Code
+2. When prompted, click **"Reopen in Container"** (or run `Dev Containers: Reopen in Container` from the Command Palette)
+3. Wait for the container to build and the post-create script to complete
+
+You can also open this project directly in [GitHub Codespaces](https://github.com/features/codespaces).
+
+### Available Commands
+
+```bash
+# Build the project
+./gradlew build
+
+# Run tests
+./gradlew test
+
+# Format Kotlin code
+./gradlew formatKotlin
+
+# Lint Kotlin code
+./gradlew lintKotlin
+```
 
 ## Demo 📹
 Here is a demo of the template app containing screens shown in the 📖 [circuit tutorial](https://slackhq.github.io/circuit/tutorial/) documentation.
