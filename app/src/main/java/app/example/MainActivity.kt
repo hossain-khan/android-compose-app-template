@@ -10,10 +10,10 @@ import androidx.compose.runtime.remember
 import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
 import app.example.ui.theme.CircuitAppTheme
-import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
+import com.slack.circuit.foundation.navstack.rememberSaveableNavStack
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
@@ -58,8 +58,8 @@ class MainActivity
             setContent {
                 CircuitAppTheme {
                     // See https://slackhq.github.io/circuit/navigation/
-                    val backStack = rememberSaveableBackStack(root = InboxScreen)
-                    val navigator = rememberCircuitNavigator(backStack)
+                    val navStack = rememberSaveableNavStack(root = InboxScreen)
+                    val navigator = rememberCircuitNavigator(navStack)
 
                     // See https://slackhq.github.io/circuit/circuit-content/
                     CircuitCompositionLocals(circuit) {
@@ -69,7 +69,7 @@ class MainActivity
                             ContentWithOverlays {
                                 NavigableCircuitContent(
                                     navigator = navigator,
-                                    backStack = backStack,
+                                    navStack = navStack,
                                     decoratorFactory =
                                         remember(navigator) {
                                             GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
