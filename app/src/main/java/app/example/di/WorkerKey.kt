@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
  * See [MapKey] for more on map key annotations.
  */
 @MapKey
-@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class WorkerKey(
     val value: KClass<out ListenableWorker>,
