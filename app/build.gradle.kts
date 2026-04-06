@@ -115,7 +115,6 @@ dependencies {
     implementation(libs.circuitx.effects)
     implementation(libs.circuitx.gestureNav)
     implementation(libs.circuitx.overlays)
-    ksp(libs.circuit.codegen)
 
     implementation(libs.javax.inject)
 
@@ -131,24 +130,20 @@ dependencies {
     testImplementation(libs.junit)
 }
 
-ksp {
-    // Circuit-KSP configuration for Metro DI integration
-    // See https://slackhq.github.io/circuit/code-gen/
-    arg("circuit.codegen.mode", "metro")
-}
-
 metro {
     // Enable Metro debug mode for better logging and debugging support
     // When enabled, Metro will emit detailed debug information about the dependency graph
     // See https://zacsweers.github.io/metro/latest/
     debug.set(true)
 
+    // Enable Metro's built-in Circuit codegen support (introduced in Metro 0.13.0).
+    // This replaces the circuit-codegen KSP processor and the circuit.codegen.mode=metro KSP arg.
+    // See https://zacsweers.github.io/metro/latest/circuit/
+    enableCircuitCodegen.set(true)
+
     // Shrink unused bindings to reduce generated code size (delicate API in Metro 0.11+)
     // This is a delicate API - use with caution in large dependency graphs
     // See https://zacsweers.github.io/metro/latest/dependency-graphs/
     @Suppress("DelicateApi")
     shrinkUnusedBindings.set(true)
-
-    // Note: chunkFieldInits is now DEPRECATED as of Metro 0.11.0 and removed
-    // This option has been replaced with default behavior and is always enabled
 }

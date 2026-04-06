@@ -42,7 +42,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 # Circuit - ⚡️A Compose-driven architecture for Kotlin and Android applications.
 # https://github.com/slackhq/circuit/releases
-circuit-codegen = { group = "com.slack.circuit", name = "circuit-codegen", version.ref = "circuit" }
+# Note: circuit-codegen KSP processor is no longer needed; Metro provides built-in Circuit codegen.
+# The circuit-codegen-annotations artifact is added automatically by Metro's enableCircuitCodegen.
 circuit-codegen-annotations = { group = "com.slack.circuit", name = "circuit-codegen-annotations", version.ref = "circuit" }
 circuit-foundation = { group = "com.slack.circuit", name = "circuit-foundation", version.ref = "circuit" }
 circuit-overlay = { group = "com.slack.circuit", name = "circuit-overlay", version.ref = "circuit" }
