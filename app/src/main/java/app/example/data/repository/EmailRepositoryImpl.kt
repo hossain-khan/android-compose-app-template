@@ -2,6 +2,8 @@ package app.example.data.repository
 
 import app.example.data.model.Email
 import app.example.data.network.EmailApiService
+import app.example.data.network.dto.CreateDraftRequest
+import app.example.data.network.dto.SendEmailRequest
 import app.example.data.network.dto.toDomain
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -26,6 +28,9 @@ class EmailRepositoryImpl
         /** In-memory cache populated on the first successful inbox fetch. */
         private var cachedEmails: List<Email>? = null
 
+        /** In-memory cache populated on the first successful drafts fetch. */
+        private var cachedDraftEmails: List<Email>? = null
+
         override suspend fun getInboxEmails(): List<Email> =
             apiService
                 .getInboxEmails()
@@ -38,4 +43,61 @@ class EmailRepositoryImpl
             // the full inbox list when the requested email is not already in the local cache.
             cachedEmails?.find { it.id == emailId }
                 ?: getInboxEmails().find { it.id == emailId }
+
+        override suspend fun getDraftEmails(): List<Email> =
+            apiService
+                .getDraftEmails()
+                .data
+                .map { it.toDomain() }
+                .also { cachedDraftEmails = it }
+
+        override suspend fun getSentEmails(): List<Email> = getInboxEmails().filter { it.status == "sent" }
+
+        override suspend fun sendEmail(
+            to: String,
+            subject: String,
+            body: String,
+        ): Email {
+            val recipients = to.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+            val request =
+                SendEmailRequest(
+                    subject = subject,
+                    body = body,
+                    sender = "Me",
+                    senderEmail = "me@example.com",
+                    recipients = recipients,
+                )
+            val result = apiService.sendEmail(request).data.toDomain()
+            // Invalidate inbox cache so sent email appears on next inbox load
+            cachedEmails = null
+            return result
+        }
+
+        override suspend fun saveDraft(
+            to: String,
+            subject: String,
+            body: String,
+        ): Email {
+            val recipients = to.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+            val request =
+                CreateDraftRequest(
+                    subject = subject,
+                    body = body,
+                    sender = "Me",
+                    senderEmail = "me@example.com",
+                    recipients = recipients,
+                )
+            val result = apiService.createDraft(request).data.toDomain()
+            // Invalidate draft cache so it is refreshed on next load
+            cachedDraftEmails = null
+            return result
+        }
+
+        override suspend fun deleteDraft(draftId: String): Boolean {
+            val response = apiService.deleteEmail(draftId)
+            if (response.success) {
+                cachedDraftEmails = cachedDraftEmails?.filter { it.id != draftId }
+            }
+            return response.success
+        }
     }
