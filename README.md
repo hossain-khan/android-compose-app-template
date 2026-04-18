@@ -9,6 +9,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 ## What do you get in this template? 📜
 * ✔️ [Circuit](https://github.com/slackhq/circuit) library setup for the app
 * ✔️ [Metro](https://zacsweers.github.io/metro/) Dependency Injection for all Circuit Screens & Presenter combo
+* ✔️ [OkHttp](https://square.github.io/okhttp/) & [Retrofit](https://square.github.io/retrofit/) networking with [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) and sample API implementation
 * ✔️ GitHub Actions for CI and automated release builds
 * ✔️ Automated APK/AAB builds with keystore signing (see [RELEASE.md](RELEASE.md))
 * ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
