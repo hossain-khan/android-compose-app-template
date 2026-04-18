@@ -23,4 +23,56 @@ interface EmailRepository {
      * @throws Exception if the network request fails.
      */
     suspend fun getEmail(emailId: String): Email?
+
+    /**
+     * Returns all draft emails.
+     *
+     * @throws Exception if the network request fails.
+     */
+    suspend fun getDraftEmails(): List<Email>
+
+    /**
+     * Returns all sent emails.
+     *
+     * @throws Exception if the network request fails.
+     */
+    suspend fun getSentEmails(): List<Email>
+
+    /**
+     * Sends an email.
+     *
+     * @param to Comma-separated recipient addresses.
+     * @param subject Email subject line.
+     * @param body Email body text.
+     * @return The sent [Email] domain model.
+     * @throws Exception if the network request fails.
+     */
+    suspend fun sendEmail(
+        to: String,
+        subject: String,
+        body: String,
+    ): Email
+
+    /**
+     * Saves an email as a draft.
+     *
+     * @param to Comma-separated recipient addresses.
+     * @param subject Email subject line.
+     * @param body Email body text.
+     * @return The saved draft [Email] domain model.
+     * @throws Exception if the network request fails.
+     */
+    suspend fun saveDraft(
+        to: String,
+        subject: String,
+        body: String,
+    ): Email
+
+    /**
+     * Deletes the draft with the given [draftId].
+     *
+     * @return `true` if the deletion succeeded.
+     * @throws Exception if the network request fails.
+     */
+    suspend fun deleteDraft(draftId: String): Boolean
 }

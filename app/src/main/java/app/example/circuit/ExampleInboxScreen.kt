@@ -16,12 +16,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -81,6 +89,12 @@ data object InboxScreen : Screen {
         data object InfoDismissed : Event()
 
         data object Retry : Event()
+
+        data object OnNewEmail : Event()
+
+        data object OnViewDrafts : Event()
+
+        data object OnViewSent : Event()
     }
 }
 
@@ -128,6 +142,15 @@ class InboxPresenter
 
                     // Retry loading emails after an error
                     InboxScreen.Event.Retry -> retryTrigger++
+
+                    // Navigate to compose new email screen
+                    InboxScreen.Event.OnNewEmail -> navigator.goTo(ComposeEmailScreen())
+
+                    // Navigate to drafts screen
+                    InboxScreen.Event.OnViewDrafts -> navigator.goTo(DraftsScreen)
+
+                    // Navigate to sent screen
+                    InboxScreen.Event.OnViewSent -> navigator.goTo(SentScreen)
                 }
             }
 
@@ -206,6 +229,55 @@ fun Inbox(
                             }
                         },
                     )
+                },
+                bottomBar = {
+                    NavigationBar {
+                        NavigationBarItem(
+                            selected = true,
+                            onClick = {},
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Email,
+                                    contentDescription = "Inbox",
+                                )
+                            },
+                            label = { Text("Inbox") },
+                        )
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { state.eventSink(InboxScreen.Event.OnViewDrafts) },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = "Drafts",
+                                )
+                            },
+                            label = { Text("Drafts") },
+                        )
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { state.eventSink(InboxScreen.Event.OnViewSent) },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.Send,
+                                    contentDescription = "Sent",
+                                )
+                            },
+                            label = { Text("Sent") },
+                        )
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { state.eventSink(InboxScreen.Event.OnNewEmail) },
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "New Email",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                    }
                 },
             ) { innerPadding ->
                 LazyColumn(modifier = Modifier.padding(innerPadding)) {
