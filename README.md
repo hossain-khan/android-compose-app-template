@@ -1,9 +1,9 @@
 # Android - Circuit App Template
 An Android App template that is preconfigured with ⚡️ Circuit UDF architecture.
 
-> [!TIP]
-> Google also has an official architectural template available for starter apps.
-> https://github.com/android/architecture-templates
+> [!CAUTION]
+> Since [`1.0.0`](https://github.com/hossain-khan/android-compose-app-template/releases/tag/1.0.0) release this this template has extended it's feature set
+> and does not adhere to templating realm any more. If you plan to use latest version, you may have to spend extra time deleting features that you don't want.
 
 ## What do you get in this template? 📜
 * ✔️ [Circuit](https://github.com/slackhq/circuit) library setup for the app
