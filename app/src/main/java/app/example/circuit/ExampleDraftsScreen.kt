@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 /** Screen that lists all draft emails. */
@@ -92,6 +94,7 @@ class DraftsPresenter
             var drafts by rememberRetained { mutableStateOf<List<Email>?>(null) }
             var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
             var retryTrigger by rememberRetained { mutableStateOf(0) }
+            val scope = rememberCoroutineScope()
 
             LaunchedEffect(retryTrigger) {
                 drafts = null
@@ -110,8 +113,16 @@ class DraftsPresenter
                     }
 
                     is DraftsScreen.Event.OnDeleteDraft -> {
+                        // Optimistically remove from local list while the API call runs
                         drafts = drafts?.filter { it.id != event.draftId }
-                        retryTrigger++
+                        scope.launch {
+                            try {
+                                emailRepository.deleteDraft(event.draftId)
+                            } catch (_: Exception) {
+                                // Refresh the list to restore the draft if deletion failed
+                                retryTrigger++
+                            }
+                        }
                     }
 
                     DraftsScreen.Event.OnNewEmail -> {

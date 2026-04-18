@@ -89,6 +89,9 @@ data class ComposeEmailScreen(
     }
 }
 
+/** Represents a pending async action triggered from the compose screen. */
+private enum class PendingAction { SAVE_DRAFT, SEND }
+
 @AssistedInject
 class ComposeEmailPresenter
     constructor(
@@ -105,6 +108,7 @@ class ComposeEmailPresenter
             var isLoading by rememberRetained { mutableStateOf(screen.draftId != null) }
             var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
             var loadedDraft by rememberRetained { mutableStateOf<Email?>(null) }
+            var pendingAction by rememberRetained { mutableStateOf<PendingAction?>(null) }
 
             // Load the draft if editing an existing one
             LaunchedEffect(screen.draftId) {
@@ -130,6 +134,23 @@ class ComposeEmailPresenter
                 }
             }
 
+            // Execute pending save/send actions
+            LaunchedEffect(pendingAction) {
+                val action = pendingAction ?: return@LaunchedEffect
+                try {
+                    when (action) {
+                        PendingAction.SAVE_DRAFT -> emailRepository.saveDraft(to, subject, body)
+                        PendingAction.SEND -> emailRepository.sendEmail(to, subject, body)
+                    }
+                    navigator.pop()
+                } catch (e: Exception) {
+                    errorMessage = e.message ?: "Operation failed"
+                } finally {
+                    isSaving = false
+                    pendingAction = null
+                }
+            }
+
             val eventSink: (ComposeEmailScreen.Event) -> Unit = { event ->
                 when (event) {
                     is ComposeEmailScreen.Event.OnToChanged -> {
@@ -150,49 +171,13 @@ class ComposeEmailPresenter
 
                     ComposeEmailScreen.Event.OnSaveDraft -> {
                         isSaving = true
-                        // Launch save in a coroutine via LaunchedEffect trick — handled below
+                        pendingAction = PendingAction.SAVE_DRAFT
                     }
 
                     ComposeEmailScreen.Event.OnSend -> {
                         isSaving = true
+                        pendingAction = PendingAction.SEND
                     }
-                }
-            }
-
-            // Handle save/send as side-effects keyed on isSaving so they run once per trigger
-            var pendingAction by rememberRetained { mutableStateOf<String?>(null) }
-
-            val actionEventSink: (ComposeEmailScreen.Event) -> Unit = { event ->
-                when (event) {
-                    ComposeEmailScreen.Event.OnSaveDraft -> {
-                        isSaving = true
-                        pendingAction = "save"
-                    }
-
-                    ComposeEmailScreen.Event.OnSend -> {
-                        isSaving = true
-                        pendingAction = "send"
-                    }
-
-                    else -> {
-                        eventSink(event)
-                    }
-                }
-            }
-
-            LaunchedEffect(pendingAction) {
-                val action = pendingAction ?: return@LaunchedEffect
-                try {
-                    when (action) {
-                        "save" -> emailRepository.saveDraft(to, subject, body)
-                        "send" -> emailRepository.sendEmail(to, subject, body)
-                    }
-                    navigator.pop()
-                } catch (e: Exception) {
-                    errorMessage = e.message ?: "Operation failed"
-                } finally {
-                    isSaving = false
-                    pendingAction = null
                 }
             }
 
@@ -204,7 +189,7 @@ class ComposeEmailPresenter
                 errorMessage != null -> {
                     ComposeEmailScreen.State.Error(
                         message = errorMessage!!,
-                        eventSink = actionEventSink,
+                        eventSink = eventSink,
                     )
                 }
 
@@ -214,7 +199,7 @@ class ComposeEmailPresenter
                         subject = subject,
                         body = body,
                         isSaving = isSaving,
-                        eventSink = actionEventSink,
+                        eventSink = eventSink,
                     )
                 }
             }
