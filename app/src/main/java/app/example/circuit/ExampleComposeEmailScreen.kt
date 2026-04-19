@@ -24,7 +24,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -51,8 +53,10 @@ import kotlinx.parcelize.Parcelize
 data class ComposeEmailScreen(
     val draftId: String? = null,
 ) : Screen {
-    sealed class State : CircuitUiState {
-        data object Loading : State()
+    // See https://slackhq.github.io/circuit/states-and-events/
+    @Stable
+    sealed interface State : CircuitUiState {
+        data object Loading : State
 
         data class Success(
             val to: String,
@@ -60,32 +64,33 @@ data class ComposeEmailScreen(
             val body: String,
             val isSaving: Boolean,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
 
         data class Error(
             val message: String,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
     }
 
-    sealed class Event : CircuitUiEvent {
+    @Immutable
+    sealed interface Event : CircuitUiEvent {
         data class OnToChanged(
             val to: String,
-        ) : Event()
+        ) : Event
 
         data class OnSubjectChanged(
             val subject: String,
-        ) : Event()
+        ) : Event
 
         data class OnBodyChanged(
             val body: String,
-        ) : Event()
+        ) : Event
 
-        data object OnSaveDraft : Event()
+        data object OnSaveDraft : Event
 
-        data object OnSend : Event()
+        data object OnSend : Event
 
-        data object OnBack : Event()
+        data object OnBack : Event
     }
 }
 

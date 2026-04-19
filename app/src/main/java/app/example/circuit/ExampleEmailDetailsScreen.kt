@@ -28,7 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -63,24 +65,27 @@ import kotlinx.parcelize.Parcelize
 data class DetailScreen(
     val emailId: String,
 ) : Screen {
-    sealed class State : CircuitUiState {
-        data object Loading : State()
+    // See https://slackhq.github.io/circuit/states-and-events/
+    @Stable
+    sealed interface State : CircuitUiState {
+        data object Loading : State
 
         data class Success(
             val email: Email,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
 
         data class Error(
             val message: String,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
     }
 
-    sealed class Event : CircuitUiEvent {
-        data object BackClicked : Event()
+    @Immutable
+    sealed interface Event : CircuitUiEvent {
+        data object BackClicked : Event
 
-        data object Retry : Event()
+        data object Retry : Event
     }
 }
 
