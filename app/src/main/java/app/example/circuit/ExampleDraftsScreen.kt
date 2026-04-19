@@ -8,10 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import app.example.R
 import app.example.data.model.Email
 import app.example.data.repository.EmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -204,7 +202,7 @@ fun DraftsContent(
                         navigationIcon = {
                             IconButton(onClick = { state.eventSink(DraftsScreen.Event.OnBack) }) {
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    painter = painterResource(id = R.drawable.arrow_back_24dp),
                                     contentDescription = "Back",
                                 )
                             }
@@ -217,7 +215,7 @@ fun DraftsContent(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Add,
+                            painter = painterResource(id = R.drawable.add_24dp),
                             contentDescription = "New Email",
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
@@ -290,7 +288,7 @@ fun DraftItem(
         }
         IconButton(onClick = onDelete) {
             Icon(
-                imageVector = Icons.Filled.Delete,
+                painter = painterResource(id = R.drawable.delete_24dp),
                 contentDescription = "Delete draft",
                 tint = MaterialTheme.colorScheme.error,
             )

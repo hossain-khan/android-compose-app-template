@@ -16,11 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -242,7 +237,7 @@ fun Inbox(
                             onClick = {},
                             icon = {
                                 Icon(
-                                    imageVector = Icons.Filled.Email,
+                                    painter = painterResource(id = R.drawable.email_24dp),
                                     contentDescription = "Inbox",
                                 )
                             },
@@ -253,7 +248,7 @@ fun Inbox(
                             onClick = { state.eventSink(InboxScreen.Event.OnViewDrafts) },
                             icon = {
                                 Icon(
-                                    imageVector = Icons.Filled.Edit,
+                                    painter = painterResource(id = R.drawable.edit_24dp),
                                     contentDescription = "Drafts",
                                 )
                             },
@@ -264,7 +259,7 @@ fun Inbox(
                             onClick = { state.eventSink(InboxScreen.Event.OnViewSent) },
                             icon = {
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.Send,
+                                    painter = painterResource(id = R.drawable.send_24dp),
                                     contentDescription = "Sent",
                                 )
                             },
@@ -278,7 +273,7 @@ fun Inbox(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Add,
+                            painter = painterResource(id = R.drawable.add_24dp),
                             contentDescription = "New Email",
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
