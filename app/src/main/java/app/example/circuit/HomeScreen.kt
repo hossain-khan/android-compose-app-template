@@ -12,7 +12,6 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -27,7 +26,6 @@ data object HomeScreen : Screen {
 }
 
 @CircuitInject(HomeScreen::class, AppScope::class)
-@Inject
 class HomePresenter
     constructor() : Presenter<HomeScreen.State> {
         @Composable

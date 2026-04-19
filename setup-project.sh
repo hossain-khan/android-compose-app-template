@@ -367,20 +367,25 @@ import sys
 import re
 
 def clean_unused_context_from_appgraph(content):
-    # Remove @ApplicationContext and Context imports (no longer needed)
-    content = re.sub(r'^import [^\n]*\.di\.ApplicationContext\n', '', content, flags=re.MULTILINE)
-    content = re.sub(r'^import android\.content\.Context\n', '', content, flags=re.MULTILINE)
+    # Normalize line endings to LF for consistent processing
+    content = content.replace('\r\n', '\n').replace('\r', '\n')
 
-    # Remove the @ApplicationContext @Provides context: Context parameter from Factory.create()
+    # Remove @ApplicationContext and Context imports (no longer needed).
+    # Match the full import line regardless of what comes before the package segment.
+    content = re.sub(r'^import\s+\S+\.di\.ApplicationContext[ \t]*\n', '', content, flags=re.MULTILINE)
+    content = re.sub(r'^import\s+android\.content\.Context[ \t]*\n', '', content, flags=re.MULTILINE)
+
+    # Remove the @ApplicationContext @Provides context: Context parameter from Factory.create().
+    # The parameter may span multiple lines (annotation on one line, param on the next).
     # This parameter becomes unused when both WorkManager and examples are removed.
-    # The pattern anchors on the Factory interface signature to avoid false positives.
     content = re.sub(
         r'(fun create\()\s*@ApplicationContext\s+@Provides\s+context:\s+Context,?\s*(\))',
         r'\1\2',
-        content
+        content,
+        flags=re.DOTALL
     )
 
-    # Clean up extra blank lines
+    # Clean up consecutive blank lines left behind
     content = re.sub(r'\n{3,}', '\n\n', content)
 
     return content
