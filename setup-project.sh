@@ -212,6 +212,84 @@ if [ "$REMOVE_EXAMPLES" = true ]; then
     rm -f ./app/src/main/res/drawable/email_24dp.xml
     rm -f ./app/src/main/res/drawable/send_24dp.xml
     echo "Example-only drawables removed"
+
+    # Generate a minimal HomeScreen.kt as the new root navigation destination.
+    # This replaces InboxScreen (removed with Example* files) so MainActivity compiles.
+    echo "📝 Generating HomeScreen.kt as starter root screen..."
+    CIRCUIT_DIR=$(find ./ -type d -name "circuit" -path "*/main/*" 2>/dev/null | head -1)
+    if [ -n "$CIRCUIT_DIR" ]; then
+        # Derive the base app package from MainActivity.kt (most reliable source)
+        BASE_PACKAGE=$(find ./ -name "MainActivity.kt" -type f 2>/dev/null | head -1 | xargs grep "^package " 2>/dev/null | sed 's/^package //' | tr -d '[:space:]')
+        CIRCUIT_PACKAGE="${BASE_PACKAGE}.circuit"
+        cat > "$CIRCUIT_DIR/HomeScreen.kt" << HOMESCREEN_EOF
+package ${CIRCUIT_PACKAGE}
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.presenter.Presenter
+import com.slack.circuit.runtime.screen.Screen
+import dev.zacsweers.metro.AppScope
+import kotlinx.parcelize.Parcelize
+
+/**
+ * Home screen - the app's starting point.
+ *
+ * Replace this with your own initial screen.
+ * See https://slackhq.github.io/circuit/ for Circuit architecture guidance.
+ */
+@Parcelize
+data object HomeScreen : Screen {
+    data object State : CircuitUiState
+}
+
+@CircuitInject(HomeScreen::class, AppScope::class)
+class HomePresenter
+    constructor() : Presenter<HomeScreen.State> {
+        @Composable
+        override fun present(): HomeScreen.State = HomeScreen.State
+    }
+
+@CircuitInject(HomeScreen::class, AppScope::class)
+@Composable
+fun HomeContent(
+    @Suppress("UNUSED_PARAMETER") state: HomeScreen.State,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Welcome! Replace this screen with your own.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+    }
+}
+HOMESCREEN_EOF
+        echo "Created: $CIRCUIT_DIR/HomeScreen.kt"
+    fi
+
+    # Update MainActivity.kt to use HomeScreen instead of InboxScreen
+    echo "🔧 Updating MainActivity.kt to use HomeScreen..."
+    find ./ -name "MainActivity.kt" -type f | while read -r file; do
+        if [ -f "$file" ] && grep -q "InboxScreen" "$file"; then
+            # Replace the InboxScreen import line with HomeScreen import
+            sed -i.bak "s|import ${BASE_PACKAGE}\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
+            # Replace any wildcard circuit import that would have covered InboxScreen
+            sed -i.bak "s|import app\.example\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
+            # Replace the root screen in the nav stack
+            sed -i.bak 's/root = InboxScreen/root = HomeScreen/' "$file"
+            echo "Updated MainActivity.kt to use HomeScreen"
+        fi
+    done
 else
     echo "📚 Step 6: Keeping Example* files for reference..."
 fi

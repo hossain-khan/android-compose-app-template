@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.remember
-import app.example.circuit.HomeScreen
+import app.example.circuit.InboxScreen
 import app.example.di.ActivityKey
 import app.example.ui.theme.CircuitAppTheme
 import com.slack.circuit.foundation.Circuit
@@ -58,7 +58,7 @@ class MainActivity
             setContent {
                 CircuitAppTheme {
                     // See https://slackhq.github.io/circuit/navigation/
-                    val navStack = rememberSaveableNavStack(root = HomeScreen)
+                    val navStack = rememberSaveableNavStack(root = InboxScreen)
                     val navigator = rememberCircuitNavigator(navStack)
 
                     // See https://slackhq.github.io/circuit/circuit-content/
