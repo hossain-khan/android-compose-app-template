@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
  * ```kotlin
  * @AssistedInject
  * class YourWorker(
- *     context: Context,
+ *     @ApplicationContext context: Context,
  *     @Assisted params: WorkerParameters,
  *     // Your injected dependencies here
  * ) : CoroutineWorker(context, params) {
@@ -49,7 +49,7 @@ import kotlin.reflect.KClass
  * See https://zacsweers.github.io/metro/latest/aggregation/ for contribution.
  *
  * Note: [@Inject][Inject] is now implicit when using [@ContributesBinding][ContributesBinding]
- * as of Metro 0.10.0 with `contributesAsInject` enabled by default.
+ * with `contributesAsInject` enabled by default.
  */
 @ContributesBinding(AppScope::class)
 class AppWorkerFactory(

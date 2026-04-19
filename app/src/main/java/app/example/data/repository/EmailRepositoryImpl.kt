@@ -13,11 +13,11 @@ import dev.zacsweers.metro.SingleIn
  * Production implementation of [EmailRepository] that fetches emails from the
  * live email demo API via [EmailApiService].
  *
- * Results are cached in memory after the first successful fetch so that
- * navigating to a detail screen does not require an additional network call.
+ * Results are cached in memory after successful fetches so that
+ * navigating to a detail screen does not always require an additional network call.
  *
  * Note: [@Inject][dev.zacsweers.metro.Inject] is implicit when using
- * [@ContributesBinding][ContributesBinding] as of Metro 0.10.0.
+ * [@ContributesBinding][ContributesBinding].
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
@@ -25,10 +25,10 @@ class EmailRepositoryImpl
     constructor(
         private val apiService: EmailApiService,
     ) : EmailRepository {
-        /** In-memory cache populated on the first successful inbox fetch. */
+        /** In-memory cache populated on successful inbox fetches. */
         private var cachedEmails: List<Email>? = null
 
-        /** In-memory cache populated on the first successful drafts fetch. */
+        /** In-memory cache populated on successful drafts fetches. */
         private var cachedDraftEmails: List<Email>? = null
 
         override suspend fun getInboxEmails(): List<Email> =
@@ -39,8 +39,9 @@ class EmailRepositoryImpl
                 .also { cachedEmails = it }
 
         override suspend fun getEmail(emailId: String): Email? =
-            // The API does not provide a GET /emails/{id} endpoint, so we fall back to fetching
-            // the full inbox list when the requested email is not already in the local cache.
+            // The API does not provide a GET /emails/{id} endpoint, so we check the local cache
+            // first and fall back to fetching the full inbox list if the requested email is
+            // not found.
             cachedEmails?.find { it.id == emailId }
                 ?: getInboxEmails().find { it.id == emailId }
 

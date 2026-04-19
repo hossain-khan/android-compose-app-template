@@ -8,7 +8,7 @@ import dev.zacsweers.metro.SingleIn
  * Example of a class that participates in Metro dependency injection using constructor injection.
  *
  * This demonstrates Metro's constructor injection - the [@Inject][Inject] annotation on the
- * constructor tells Metro to create this class as a dependency.
+ * class itself tells Metro to create this class using its primary constructor.
  *
  * The [@SingleIn][SingleIn] annotation ensures only one instance is created per [AppScope].
  *

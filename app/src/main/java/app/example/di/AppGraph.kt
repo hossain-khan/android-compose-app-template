@@ -62,8 +62,9 @@ interface AppGraph {
     /**
      * Factory for creating the [AppGraph] with runtime inputs.
      *
-     * The [ApplicationContext] parameter is marked with [@Provides][Provides] which makes it
-     * available as a binding in the graph. This is analogous to Dagger's @BindsInstance.
+     * Parameters in the factory's create method can be marked with [@Provides][Provides]
+     * to make them available as bindings in the graph. This is analogous to Dagger's
+     * @BindsInstance.
      *
      * See https://zacsweers.github.io/metro/latest/dependency-graphs/#provides
      */
