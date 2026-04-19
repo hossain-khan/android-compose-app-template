@@ -63,34 +63,30 @@ jobs:
         if: steps.changed-files.outputs.relevant_changes == 'true'
         uses: gradle/actions/setup-gradle@v6
 
-      # Build PR APK
+      # Build base branch APK first so that both APKs are built with the same process
+      - name: Build base branch APK
+        if: steps.changed-files.outputs.relevant_changes == 'true'
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git checkout origin/${{ github.base_ref }}
+          ./gradlew assembleRelease --parallel --daemon
+          cp app/build/outputs/apk/release/app-release.apk base.apk
+          echo "Base APK ($(git rev-parse --short HEAD)) size: $(du -sh base.apk | cut -f1)"
+
+      # Build PR APK (switch back to the PR merge commit)
       - name: Build PR APK
         if: steps.changed-files.outputs.relevant_changes == 'true'
-        run: ./gradlew assembleRelease --parallel --daemon
+        run: |
+          git checkout ${{ github.sha }}
+          ./gradlew assembleRelease --parallel --daemon
+          echo "PR APK size: $(du -sh app/build/outputs/apk/release/app-release.apk | cut -f1)"
 
       - name: List APK outputs
         if: steps.changed-files.outputs.relevant_changes == 'true'
         run: |
           echo "Listing APK outputs:"
           find app/build/outputs/apk -name "*.apk"
-
-      # Download base APK from latest release
-      - name: Download base APK from latest release
-        if: steps.changed-files.outputs.relevant_changes == 'true'
-        run: |
-          # Get latest release info
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest)
-
-          # Extract APK download URL
-          APK_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[] | select(.name | endswith(".apk")) | .browser_download_url')
-
-          if [ -z "$APK_URL" ]; then
-            echo "Error: No APK found in latest release"
-            exit 1
-          fi
-
-          echo "Downloading base APK from: $APK_URL"
-          curl -L -o base.apk "$APK_URL"
+          echo "Base APK: $(ls -la base.apk)"
 
       # Run Diffuse comparison using the action
       - name: Run Diffuse
@@ -121,7 +117,7 @@ jobs:
           body: |
             ## 📊 APK Size Analysis
 
-            Comparing `${{ github.base_ref }}` (latest release) → `${{ github.head_ref }}` (this PR)
+            Comparing `${{ github.base_ref }}` (base branch) → `${{ github.head_ref }}` (this PR)
 
             ${{ steps.diffuse.outputs.diff-gh-comment || '⚠️ Diffuse analysis failed. Check the workflow logs for details.' }}
 
