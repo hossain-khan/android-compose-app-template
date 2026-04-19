@@ -12,14 +12,14 @@ plugins {
 
 android {
     namespace = "app.example"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "app.example"
-        minSdk = 28
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = 2
+        versionName = "1.1.0"
 
         // Read key or other properties from local.properties
         val localProperties =
