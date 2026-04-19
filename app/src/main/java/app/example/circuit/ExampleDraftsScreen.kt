@@ -49,7 +49,14 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
-/** Screen that lists all draft emails. */
+/**
+ * Screen that lists all draft emails.
+ *
+ * This screen demonstrates:
+ * - Fetching drafts from [EmailRepository.getDraftEmails].
+ * - Optimistic UI updates when deleting a draft.
+ * - Navigation to [ComposeEmailScreen] for editing or creating drafts.
+ */
 @Parcelize
 data object DraftsScreen : Screen {
     sealed class State : CircuitUiState {

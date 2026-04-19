@@ -38,9 +38,12 @@ class EmailRepositoryImpl
                 .map { it.toDomain() }
                 .also { cachedEmails = it }
 
+        /**
+         * Implementation that uses the in-memory [cachedEmails] if available,
+         * otherwise falls back to fetching the full inbox list since the API
+         * does not provide a single email retrieval endpoint.
+         */
         override suspend fun getEmail(emailId: String): Email? =
-            // The API does not provide a GET /emails/{id} endpoint, so we fall back to fetching
-            // the full inbox list when the requested email is not already in the local cache.
             cachedEmails?.find { it.id == emailId }
                 ?: getInboxEmails().find { it.id == emailId }
 
@@ -51,8 +54,15 @@ class EmailRepositoryImpl
                 .map { it.toDomain() }
                 .also { cachedDraftEmails = it }
 
+        /**
+         * Implementation that filters the inbox for emails with "sent" status.
+         */
         override suspend fun getSentEmails(): List<Email> = getInboxEmails().filter { it.status == "sent" }
 
+        /**
+         * Sends an email and invalidates the [cachedEmails] to ensure the
+         * newly sent email appears in the inbox on the next fetch.
+         */
         override suspend fun sendEmail(
             to: String,
             subject: String,
@@ -73,6 +83,10 @@ class EmailRepositoryImpl
             return result
         }
 
+        /**
+         * Saves a draft email and invalidates the [cachedDraftEmails] to ensure
+         * the new draft is visible on the next drafts list fetch.
+         */
         override suspend fun saveDraft(
             to: String,
             subject: String,
@@ -93,6 +107,10 @@ class EmailRepositoryImpl
             return result
         }
 
+        /**
+         * Deletes a draft and removes it from the [cachedDraftEmails] if the
+         * operation was successful.
+         */
         override suspend fun deleteDraft(draftId: String): Boolean {
             val response = apiService.deleteEmail(draftId)
             if (response.success) {

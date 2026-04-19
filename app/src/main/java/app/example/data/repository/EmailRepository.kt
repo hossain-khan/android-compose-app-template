@@ -34,12 +34,16 @@ interface EmailRepository {
     /**
      * Returns all sent emails.
      *
+     * Note: Implementations may derive this by filtering the inbox.
+     *
      * @throws Exception if the network request fails.
      */
     suspend fun getSentEmails(): List<Email>
 
     /**
      * Sends an email.
+     *
+     * Note: This operation may invalidate local email caches.
      *
      * @param to Comma-separated recipient addresses.
      * @param subject Email subject line.
@@ -55,6 +59,8 @@ interface EmailRepository {
 
     /**
      * Saves an email as a draft.
+     *
+     * Note: This operation may invalidate local draft caches.
      *
      * @param to Comma-separated recipient addresses.
      * @param subject Email subject line.

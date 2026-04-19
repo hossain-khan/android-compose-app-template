@@ -38,6 +38,9 @@ interface EmailApiService {
     /**
      * Send an email (moves it from draft to inbox on the server).
      *
+     * Note: Calling this operation may require invalidating local caches
+     * in the repository to reflect changes in the inbox.
+     *
      * @param request The email content to send.
      */
     @POST("api/emails/send")
@@ -47,6 +50,9 @@ interface EmailApiService {
 
     /**
      * Create or update a draft email.
+     *
+     * Note: Calling this operation may require invalidating local draft
+     * caches in the repository to reflect the new or updated draft.
      *
      * @param request The draft email content.
      */

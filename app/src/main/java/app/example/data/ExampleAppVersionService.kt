@@ -12,6 +12,10 @@ import dev.zacsweers.metro.SingleIn
  * The [@Inject][Inject] annotation marks this class for constructor injection, and
  * [@SingleIn][SingleIn] ensures only one instance exists per [AppScope].
  *
+ * Note: [@Inject][Inject] is implicit when using [@ContributesBinding][dev.zacsweers.metro.ContributesBinding]
+ * or [@ContributesIntoMap][dev.zacsweers.metro.ContributesIntoMap] as of Metro 0.10.0,
+ * but is explicitly used here for standard classes.
+ *
  * This service retrieves the application version at initialization time and caches it.
  *
  * See https://zacsweers.github.io/metro/latest/injection-types/#constructor-injection

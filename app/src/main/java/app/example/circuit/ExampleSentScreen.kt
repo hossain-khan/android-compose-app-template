@@ -41,7 +41,12 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.parcelize.Parcelize
 
-/** Screen that lists all sent emails (read-only). */
+/**
+ * Screen that lists all sent emails (read-only).
+ *
+ * This screen fetches emails via [EmailRepository.getSentEmails], which in the
+ * current implementation filters the inbox for emails with "sent" status.
+ */
 @Parcelize
 data object SentScreen : Screen {
     sealed class State : CircuitUiState {
