@@ -185,11 +185,111 @@ if [ "$REMOVE_EXAMPLES" = true ]; then
     find ./ -name "Example*.kt" -type f -delete
     find ./ -name "*Example*.kt" -type f -delete
     echo "Example files removed"
-    # Remove baseline_* vector drawable icons
-    echo "🗑️  Removing baseline_* vector drawable icons..."
+
+    # Remove circuit overlay directory (AppInfoOverlay.kt references example-only icons)
+    echo "🗑️  Removing circuit/overlay directory..."
+    OVERLAY_DIR=$(find ./ -type d -name "overlay" -path "*/circuit/overlay" 2>/dev/null | head -1)
+    [ -n "$OVERLAY_DIR" ] && rm -rf "$OVERLAY_DIR" && echo "Removed: $OVERLAY_DIR"
+
+    # Remove example-only data layer files (model, network, repository)
+    echo "🗑️  Removing example data layer (model, network, repository)..."
+    for DATA_SUBDIR in model network repository; do
+        DIR=$(find ./ -type d -name "$DATA_SUBDIR" -path "*/data/$DATA_SUBDIR" 2>/dev/null | head -1)
+        [ -n "$DIR" ] && rm -rf "$DIR" && echo "Removed: $DIR"
+    done
+    # Remove top-level data directory if it becomes empty
+    DATA_DIR=$(find ./ -type d -name "data" -empty 2>/dev/null | head -1)
+    [ -n "$DATA_DIR" ] && rm -rf "$DATA_DIR" && echo "Removed empty data dir: $DATA_DIR"
+
+    # Remove example-only vector drawable icons
+    echo "🗑️  Removing example-only vector drawable icons..."
     rm -f ./app/src/main/res/drawable/baseline_info_24.xml
     rm -f ./app/src/main/res/drawable/baseline_person_24.xml
-    echo "baseline_* vector drawable icons removed"
+    rm -f ./app/src/main/res/drawable/add_24dp.xml
+    rm -f ./app/src/main/res/drawable/arrow_back_24dp.xml
+    rm -f ./app/src/main/res/drawable/delete_24dp.xml
+    rm -f ./app/src/main/res/drawable/edit_24dp.xml
+    rm -f ./app/src/main/res/drawable/email_24dp.xml
+    rm -f ./app/src/main/res/drawable/send_24dp.xml
+    echo "Example-only drawables removed"
+
+    # Generate a minimal HomeScreen.kt as the new root navigation destination.
+    # This replaces InboxScreen (removed with Example* files) so MainActivity compiles.
+    echo "📝 Generating HomeScreen.kt as starter root screen..."
+    CIRCUIT_DIR=$(find ./ -type d -name "circuit" -path "*/main/*" 2>/dev/null | head -1)
+    if [ -n "$CIRCUIT_DIR" ]; then
+        # Derive the base app package from MainActivity.kt (most reliable source)
+        BASE_PACKAGE=$(find ./ -name "MainActivity.kt" -type f 2>/dev/null | head -1 | xargs grep "^package " 2>/dev/null | sed 's/^package //' | tr -d '[:space:]')
+        CIRCUIT_PACKAGE="${BASE_PACKAGE}.circuit"
+        cat > "$CIRCUIT_DIR/HomeScreen.kt" << HOMESCREEN_EOF
+package ${CIRCUIT_PACKAGE}
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.presenter.Presenter
+import com.slack.circuit.runtime.screen.Screen
+import dev.zacsweers.metro.AppScope
+import kotlinx.parcelize.Parcelize
+
+/**
+ * Home screen - the app's starting point.
+ *
+ * Replace this with your own initial screen.
+ * See https://slackhq.github.io/circuit/ for Circuit architecture guidance.
+ */
+@Parcelize
+data object HomeScreen : Screen {
+    data object State : CircuitUiState
+}
+
+@CircuitInject(HomeScreen::class, AppScope::class)
+class HomePresenter
+    constructor() : Presenter<HomeScreen.State> {
+        @Composable
+        override fun present(): HomeScreen.State = HomeScreen.State
+    }
+
+@CircuitInject(HomeScreen::class, AppScope::class)
+@Composable
+fun HomeContent(
+    @Suppress("UNUSED_PARAMETER") state: HomeScreen.State,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Welcome! Replace this screen with your own.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+    }
+}
+HOMESCREEN_EOF
+        echo "Created: $CIRCUIT_DIR/HomeScreen.kt"
+    fi
+
+    # Update MainActivity.kt to use HomeScreen instead of InboxScreen
+    echo "🔧 Updating MainActivity.kt to use HomeScreen..."
+    find ./ -name "MainActivity.kt" -type f | while read -r file; do
+        if [ -f "$file" ] && grep -q "InboxScreen" "$file"; then
+            # Replace the InboxScreen import line with HomeScreen import
+            sed -i.bak "s|import ${BASE_PACKAGE}\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
+            # Replace any wildcard circuit import that would have covered InboxScreen
+            sed -i.bak "s|import app\.example\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
+            # Replace the root screen in the nav stack
+            sed -i.bak 's/root = InboxScreen/root = HomeScreen/' "$file"
+            echo "Updated MainActivity.kt to use HomeScreen"
+        fi
+    done
 else
     echo "📚 Step 6: Keeping Example* files for reference..."
 fi
@@ -330,6 +430,67 @@ EOF
     echo "WorkManager files and references completely removed"
 else
     echo "⚙️  Step 7: Keeping WorkManager files..."
+fi
+
+# Post-cleanup: Handle AppGraph.kt context parameter when both examples and WorkManager are removed
+# When both are removed, the @ApplicationContext @Provides context: Context in AppGraph.Factory
+# becomes unused (no @Provides function or contributed binding requires it), causing a Metro warning
+# that is treated as an error due to -Werror. Remove the unused context parameter in that case.
+if [ "$REMOVE_WORKMANAGER" = true ] && [ "$REMOVE_EXAMPLES" = true ]; then
+    echo "🔧 Post-cleanup: Removing unused context parameter from AppGraph.Factory..."
+    find ./ -name "AppGraph.kt" -type f | while read -r file; do
+        if [ -f "$file" ] && grep -q "ApplicationContext" "$file"; then
+            cat > /tmp/cleanup_appgraph_context.py << 'EOF'
+import sys
+import re
+
+def clean_unused_context_from_appgraph(content):
+    # Normalize line endings to LF for consistent processing
+    content = content.replace('\r\n', '\n').replace('\r', '\n')
+
+    # Remove @ApplicationContext and Context imports (no longer needed).
+    # Match the full import line regardless of what comes before the package segment.
+    content = re.sub(r'^import\s+\S+\.di\.ApplicationContext[ \t]*\n', '', content, flags=re.MULTILINE)
+    content = re.sub(r'^import\s+android\.content\.Context[ \t]*\n', '', content, flags=re.MULTILINE)
+
+    # Remove the @ApplicationContext @Provides context: Context parameter from Factory.create().
+    # The parameter may span multiple lines (annotation on one line, param on the next).
+    # This parameter becomes unused when both WorkManager and examples are removed.
+    content = re.sub(
+        r'(fun create\()\s*@ApplicationContext\s+@Provides\s+context:\s+Context,?\s*(\))',
+        r'\1\2',
+        content,
+        flags=re.DOTALL
+    )
+
+    # Clean up consecutive blank lines left behind
+    content = re.sub(r'\n{3,}', '\n\n', content)
+
+    return content
+
+if __name__ == "__main__":
+    file_path = sys.argv[1]
+    with open(file_path, 'r') as f:
+        content = f.read()
+
+    cleaned_content = clean_unused_context_from_appgraph(content)
+
+    with open(file_path, 'w') as f:
+        f.write(cleaned_content)
+EOF
+            python3 /tmp/cleanup_appgraph_context.py "$file"
+            rm -f /tmp/cleanup_appgraph_context.py
+        fi
+    done
+
+    # Update Application class to call create() without context argument
+    find ./ -name "*App.kt" -type f | while read -r file; do
+        if [ -f "$file" ] && grep -q "\.create(this)" "$file"; then
+            sed -i.bak 's/\.create(this)/.create()/g' "$file"
+        fi
+    done
+
+    echo "AppGraph.kt context parameter cleanup complete"
 fi
 
 # Step 8: Clean up backup files
