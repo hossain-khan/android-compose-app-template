@@ -34,7 +34,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -64,37 +66,40 @@ import kotlinx.parcelize.Parcelize
 // See https://slackhq.github.io/circuit/screen/
 @Parcelize
 data object InboxScreen : Screen {
-    sealed class State : CircuitUiState {
-        data object Loading : State()
+    // See https://slackhq.github.io/circuit/states-and-events/
+    @Stable
+    sealed interface State : CircuitUiState {
+        data object Loading : State
 
         data class Success(
             val emails: List<Email>,
             val showAppInfo: Boolean = false,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
 
         data class Error(
             val message: String,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
     }
 
-    sealed class Event : CircuitUiEvent {
+    @Immutable
+    sealed interface Event : CircuitUiEvent {
         data class EmailClicked(
             val emailId: String,
-        ) : Event()
+        ) : Event
 
-        data object InfoClicked : Event()
+        data object InfoClicked : Event
 
-        data object InfoDismissed : Event()
+        data object InfoDismissed : Event
 
-        data object Retry : Event()
+        data object Retry : Event
 
-        data object OnNewEmail : Event()
+        data object OnNewEmail : Event
 
-        data object OnViewDrafts : Event()
+        data object OnViewDrafts : Event
 
-        data object OnViewSent : Event()
+        data object OnViewSent : Event
     }
 }
 

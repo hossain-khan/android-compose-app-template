@@ -89,12 +89,21 @@ android {
         // than the Android system's default no-arg constructor mechanism.
         disable += "Instantiatable"
     }
+
+    testOptions {
+        // Required for circuit-test when running presenter unit tests on the JVM.
+        // See https://slackhq.github.io/circuit/testing/#installation
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 kotlin {
     // See https://kotlinlang.org/docs/gradle-compiler-options.html
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        // Treat all warnings as errors to catch issues like Compose UI usage in presenters.
+        // See https://slackhq.github.io/circuit/presenter/#no-compose-ui
+        allWarningsAsErrors.set(true)
     }
 }
 
@@ -136,6 +145,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.junit)
+    // Circuit test utilities: presenterTestOf(), Presenter.test(), FakeNavigator, TestEventSink
+    // See https://slackhq.github.io/circuit/testing/
+    testImplementation(libs.circuit.test)
 }
 
 metro {

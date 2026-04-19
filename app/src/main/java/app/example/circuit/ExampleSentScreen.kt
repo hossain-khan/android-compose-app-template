@@ -19,7 +19,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -44,24 +46,27 @@ import kotlinx.parcelize.Parcelize
 /** Screen that lists all sent emails (read-only). */
 @Parcelize
 data object SentScreen : Screen {
-    sealed class State : CircuitUiState {
-        data object Loading : State()
+    // See https://slackhq.github.io/circuit/states-and-events/
+    @Stable
+    sealed interface State : CircuitUiState {
+        data object Loading : State
 
         data class Success(
             val emails: List<Email>,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
 
         data class Error(
             val message: String,
             val eventSink: (Event) -> Unit,
-        ) : State()
+        ) : State
     }
 
-    sealed class Event : CircuitUiEvent {
-        data object OnRetry : Event()
+    @Immutable
+    sealed interface Event : CircuitUiEvent {
+        data object OnRetry : Event
 
-        data object OnBack : Event()
+        data object OnBack : Event
     }
 }
 
