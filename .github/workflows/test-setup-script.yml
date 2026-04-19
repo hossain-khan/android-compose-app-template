@@ -35,7 +35,9 @@ jobs:
       matrix:
         test-case: [
           { name: "without-any-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory" },
-          { name: "with-workmanager-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory --remove-workmanager" }
+          { name: "with-workmanager-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory --remove-workmanager" },
+          { name: "with-remove-examples-flag", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory --remove-examples" },
+          { name: "with-both-remove-flags", cmd: "./setup-project.sh dev.hossain.locationhistory LocationHistory --remove-examples --remove-workmanager" }
         ]
 
     steps:
@@ -138,6 +140,32 @@ jobs:
           grep -r "androidx.work" app/build.gradle.kts || (echo "❌ WorkManager dependency was incorrectly removed from build.gradle.kts" && exit 1)
           
           echo "✅ WorkManager preservation validation passed"
+
+      # Test example removal scenario - validates that Example files and data layer are completely removed
+      - name: Validate examples removal (for remove-examples test)
+        if: matrix.test-case.name == 'with-remove-examples-flag' || matrix.test-case.name == 'with-both-remove-flags'
+        run: |
+          cd /tmp/test-workspace/original-template
+          
+          # Check that Example* Kotlin files are removed
+          ! find . -name "Example*.kt" -type f | grep -q . || (echo "❌ Example Kotlin files still exist" && exit 1)
+          
+          # Check that the circuit/overlay directory is removed
+          ! find . -type d -name "overlay" -path "*/circuit/overlay" | grep -q . || (echo "❌ circuit/overlay directory still exists" && exit 1)
+          
+          # Check that example data layer directories are removed
+          ! find . -type d -name "model" -path "*/data/model" | grep -q . || (echo "❌ data/model directory still exists" && exit 1)
+          ! find . -type d -name "network" -path "*/data/network" | grep -q . || (echo "❌ data/network directory still exists" && exit 1)
+          ! find . -type d -name "repository" -path "*/data/repository" | grep -q . || (echo "❌ data/repository directory still exists" && exit 1)
+          
+          # Check that example-only drawables are removed
+          ! test -f "app/src/main/res/drawable/baseline_info_24.xml" || (echo "❌ baseline_info_24.xml still exists" && exit 1)
+          ! test -f "app/src/main/res/drawable/baseline_person_24.xml" || (echo "❌ baseline_person_24.xml still exists" && exit 1)
+          
+          # Check that HomeScreen (non-example starter) is preserved
+          find . -name "HomeScreen.kt" -type f | grep -q . || (echo "❌ HomeScreen.kt was incorrectly removed" && exit 1)
+          
+          echo "✅ Examples removal validation passed"
 
       - name: Test project compilation
         timeout-minutes: 10

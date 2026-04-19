@@ -56,6 +56,9 @@ Run the setup script to automatically handle most of the configuration:
 # Remove WorkManager if you don't need background tasks
 ./setup-project.sh com.mycompany.appname MyAppName --remove-workmanager
 
+# Remove example screens and data layer for a clean starting point
+./setup-project.sh com.mycompany.appname MyAppName --remove-examples
+
 # Keep the script for debugging (useful during development)
 ./setup-project.sh com.mycompany.appname MyAppName --keep-script
 ```
@@ -66,6 +69,7 @@ Run the setup script to automatically handle most of the configuration:
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
 - Keeps WorkManager files by default (use `--remove-workmanager` to exclude)
+- Keeps example screens by default (use `--remove-examples` to exclude)
 - Creates a fresh git repository with descriptive initial commit
 - Removes template-specific files
 
