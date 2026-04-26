@@ -162,6 +162,9 @@ jobs:
           ! test -f "app/src/main/res/drawable/baseline_info_24.xml" || (echo "❌ baseline_info_24.xml still exists" && exit 1)
           ! test -f "app/src/main/res/drawable/baseline_person_24.xml" || (echo "❌ baseline_person_24.xml still exists" && exit 1)
           
+          # Check that example circuit presenter tests are removed
+          ! find . -type d -name "circuit" -path "*/test/*" | grep -q . || (echo "❌ circuit test directory still exists" && exit 1)
+          
           # Check that HomeScreen (non-example starter) is preserved
           find . -name "HomeScreen.kt" -type f | grep -q . || (echo "❌ HomeScreen.kt was incorrectly removed" && exit 1)
           

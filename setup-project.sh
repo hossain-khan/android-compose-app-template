@@ -198,6 +198,11 @@ if [ "$REMOVE_EXAMPLES" = true ]; then
         [ -n "$DIR" ] && rm -rf "$DIR" && echo "Removed: $DIR"
     done
     # Remove top-level data directory if it becomes empty
+
+    # Remove example-specific presenter tests (they test the Example screens which were just deleted)
+    echo "🗑️  Removing example circuit presenter tests..."
+    CIRCUIT_TEST_DIR=$(find ./ -type d -name "circuit" -path "*/test/*" 2>/dev/null | head -1)
+    [ -n "$CIRCUIT_TEST_DIR" ] && rm -rf "$CIRCUIT_TEST_DIR" && echo "Removed: $CIRCUIT_TEST_DIR"
     DATA_DIR=$(find ./ -type d -name "data" -empty 2>/dev/null | head -1)
     [ -n "$DATA_DIR" ] && rm -rf "$DATA_DIR" && echo "Removed empty data dir: $DATA_DIR"
 
