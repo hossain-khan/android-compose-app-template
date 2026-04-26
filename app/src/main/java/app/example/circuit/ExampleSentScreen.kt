@@ -133,16 +133,36 @@ fun SentContent(
         }
 
         is SentScreen.State.Error -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = state.message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(16.dp),
+            Scaffold(
+                modifier = modifier,
+                topBar = {
+                    TopAppBar(
+                        title = { Text("Sent") },
+                        navigationIcon = {
+                            IconButton(onClick = { state.eventSink(SentScreen.Event.OnBack) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow_back_24dp),
+                                    contentDescription = "Back",
+                                )
+                            }
+                        },
                     )
-                    Button(onClick = { state.eventSink(SentScreen.Event.OnRetry) }) {
-                        Text("Retry")
+                },
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = state.message,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp),
+                        )
+                        Button(onClick = { state.eventSink(SentScreen.Event.OnRetry) }) {
+                            Text("Retry")
+                        }
                     }
                 }
             }

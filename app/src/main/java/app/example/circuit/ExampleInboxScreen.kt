@@ -41,7 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import app.example.R
 import app.example.circuit.overlay.AppInfoOverlay
-import app.example.data.ExampleAppVersionService
+import app.example.data.AppVersionService
 import app.example.data.model.Email
 import app.example.data.repository.EmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -104,7 +104,7 @@ class InboxPresenter
     constructor(
         @Assisted private val navigator: Navigator,
         private val emailRepository: EmailRepository,
-        private val appVersionService: ExampleAppVersionService,
+        private val appVersionService: AppVersionService,
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {

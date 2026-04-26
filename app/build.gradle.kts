@@ -147,6 +147,8 @@ dependencies {
     // Circuit test utilities: presenterTestOf(), Presenter.test(), FakeNavigator, TestEventSink
     // See https://slackhq.github.io/circuit/testing/
     testImplementation(libs.circuit.test)
+    // Required for runTest in presenter unit tests
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 metro {
