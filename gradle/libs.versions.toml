@@ -12,6 +12,8 @@ agp = "9.2.0"
 circuit = "0.33.1"
 composeBom = "2026.04.01"
 coreKtx = "1.18.0"
+# https://github.com/Kotlin/kotlinx.coroutines/releases
+kotlinxCoroutines = "1.10.2"
 espressoCore = "3.7.0"
 googleFonts = "1.11.0"
 junit = "4.13.2"
@@ -56,6 +58,8 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+# https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 
 # Circuit - ⚡️A Compose-driven architecture for Kotlin and Android applications.
 # https://github.com/slackhq/circuit/releases

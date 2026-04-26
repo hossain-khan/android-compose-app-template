@@ -20,13 +20,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -148,6 +154,7 @@ class DetailPresenter
     }
 
 @CircuitInject(DetailScreen::class, AppScope::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailDetailContent(
     state: DetailScreen.State,
@@ -161,16 +168,36 @@ fun EmailDetailContent(
         }
 
         is DetailScreen.State.Error -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = state.message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(16.dp),
+            Scaffold(
+                modifier = modifier,
+                topBar = {
+                    TopAppBar(
+                        title = { Text("Email") },
+                        navigationIcon = {
+                            IconButton(onClick = { state.eventSink(DetailScreen.Event.BackClicked) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow_back_24dp),
+                                    contentDescription = "Back",
+                                )
+                            }
+                        },
                     )
-                    Button(onClick = { state.eventSink(DetailScreen.Event.Retry) }) {
-                        Text("Retry")
+                },
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = state.message,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp),
+                        )
+                        Button(onClick = { state.eventSink(DetailScreen.Event.Retry) }) {
+                            Text("Retry")
+                        }
                     }
                 }
             }
@@ -178,8 +205,28 @@ fun EmailDetailContent(
 
         is DetailScreen.State.Success -> {
             val email = state.email
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                Column(modifier.padding(innerPadding).padding(16.dp)) {
+            Scaffold(
+                modifier = modifier,
+                topBar = {
+                    TopAppBar(
+                        title = { Text(email.subject, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                        navigationIcon = {
+                            IconButton(onClick = { state.eventSink(DetailScreen.Event.BackClicked) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow_back_24dp),
+                                    contentDescription = "Back",
+                                )
+                            }
+                        },
+                    )
+                },
+            ) { innerPadding ->
+                Column(
+                    modifier
+                        .padding(innerPadding)
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState()),
+                ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_person_24),
@@ -223,13 +270,6 @@ fun EmailDetailContent(
                     }
                     HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                     Text(text = email.body, style = MaterialTheme.typography.bodyMedium)
-
-                    Button(
-                        onClick = { state.eventSink(DetailScreen.Event.BackClicked) },
-                        modifier = Modifier.padding(top = 16.dp).align(Alignment.End),
-                    ) {
-                        Text("Go Back")
-                    }
                 }
             }
         }

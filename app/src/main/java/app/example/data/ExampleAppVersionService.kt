@@ -3,18 +3,15 @@ package app.example.data
 import android.content.Context
 import app.example.di.ApplicationContext
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 
 /**
  * Example service class that demonstrates Metro constructor injection with scoping.
  *
- * The [@Inject][Inject] annotation marks this class for constructor injection, and
- * [@SingleIn][SingleIn] ensures only one instance exists per [AppScope].
- *
- * Note: [@Inject][Inject] is implicit when using [@ContributesBinding][dev.zacsweers.metro.ContributesBinding]
- * or [@ContributesIntoMap][dev.zacsweers.metro.ContributesIntoMap] as of Metro 0.10.0,
- * but is explicitly used here for standard classes.
+ * Implements [AppVersionService] and is bound in the DI graph via
+ * [@ContributesBinding][ContributesBinding], which also makes [@Inject][dev.zacsweers.metro.Inject]
+ * implicit (Metro 0.10.0+).
  *
  * This service retrieves the application version at initialization time and caches it.
  *
@@ -22,12 +19,12 @@ import dev.zacsweers.metro.SingleIn
  * See https://zacsweers.github.io/metro/latest/scopes/
  */
 @SingleIn(AppScope::class)
-@Inject
+@ContributesBinding(AppScope::class)
 class ExampleAppVersionService
     constructor(
         @ApplicationContext context: Context,
-    ) {
+    ) : AppVersionService {
         private val versionName: String = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "Unknown"
 
-        fun getApplicationVersion(): String = versionName
+        override fun getApplicationVersion(): String = versionName
     }

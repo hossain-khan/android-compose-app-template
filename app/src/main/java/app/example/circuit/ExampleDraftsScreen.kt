@@ -1,5 +1,6 @@
 package app.example.circuit
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +46,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -104,7 +103,9 @@ class DraftsPresenter
             var drafts by rememberRetained { mutableStateOf<List<Email>?>(null) }
             var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
             var retryTrigger by rememberRetained { mutableStateOf(0) }
-            val scope = rememberCoroutineScope()
+            // Retained so pending delete survives configuration changes.
+            // See https://slackhq.github.io/circuit/presenter/#retention
+            var pendingDeleteId by rememberRetained { mutableStateOf<String?>(null) }
 
             LaunchedEffect(retryTrigger) {
                 drafts = null
@@ -116,6 +117,24 @@ class DraftsPresenter
                 }
             }
 
+            // Drive the delete operation from state rather than an ad-hoc coroutine scope.
+            // Using rememberRetained + LaunchedEffect ensures the delete survives configuration
+            // changes and back-stack navigation, preventing silent data loss on rotation.
+            LaunchedEffect(pendingDeleteId) {
+                val id = pendingDeleteId ?: return@LaunchedEffect
+                try {
+                    emailRepository.deleteDraft(id)
+                } catch (e: Exception) {
+                    // Log the failure for debugging. We don't surface an error to the user
+                    // because the optimistic UI update has already removed the draft from the list.
+                    // Triggering a refresh restores the draft if the server delete failed.
+                    Log.w("DraftsPresenter", "Failed to delete draft $id, refreshing list", e)
+                    retryTrigger++
+                } finally {
+                    pendingDeleteId = null
+                }
+            }
+
             val eventSink: (DraftsScreen.Event) -> Unit = { event ->
                 when (event) {
                     is DraftsScreen.Event.OnDraftClicked -> {
@@ -123,16 +142,9 @@ class DraftsPresenter
                     }
 
                     is DraftsScreen.Event.OnDeleteDraft -> {
-                        // Optimistically remove from local list while the API call runs
+                        // Optimistically remove from local list while the API call runs in LaunchedEffect
                         drafts = drafts?.filter { it.id != event.draftId }
-                        scope.launch {
-                            try {
-                                emailRepository.deleteDraft(event.draftId)
-                            } catch (_: Exception) {
-                                // Refresh the list to restore the draft if deletion failed
-                                retryTrigger++
-                            }
-                        }
+                        pendingDeleteId = event.draftId
                     }
 
                     DraftsScreen.Event.OnNewEmail -> {
@@ -178,16 +190,36 @@ fun DraftsContent(
         }
 
         is DraftsScreen.State.Error -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = state.message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(16.dp),
+            Scaffold(
+                modifier = modifier,
+                topBar = {
+                    TopAppBar(
+                        title = { Text("Drafts") },
+                        navigationIcon = {
+                            IconButton(onClick = { state.eventSink(DraftsScreen.Event.OnBack) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow_back_24dp),
+                                    contentDescription = "Back",
+                                )
+                            }
+                        },
                     )
-                    Button(onClick = { state.eventSink(DraftsScreen.Event.OnRetry) }) {
-                        Text("Retry")
+                },
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = state.message,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp),
+                        )
+                        Button(onClick = { state.eventSink(DraftsScreen.Event.OnRetry) }) {
+                            Text("Retry")
+                        }
                     }
                 }
             }
