@@ -1,5 +1,6 @@
 package app.example.circuit
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -123,8 +124,11 @@ class DraftsPresenter
                 val id = pendingDeleteId ?: return@LaunchedEffect
                 try {
                     emailRepository.deleteDraft(id)
-                } catch (_: Exception) {
-                    // Refresh the list to restore the draft if deletion failed on the server
+                } catch (e: Exception) {
+                    // Log the failure for debugging. We don't surface an error to the user
+                    // because the optimistic UI update has already removed the draft from the list.
+                    // Triggering a refresh restores the draft if the server delete failed.
+                    Log.w("DraftsPresenter", "Failed to delete draft $id, refreshing list", e)
                     retryTrigger++
                 } finally {
                     pendingDeleteId = null
