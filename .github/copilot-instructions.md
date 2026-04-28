@@ -181,7 +181,7 @@ All dependency versions are centralized in `gradle/libs.versions.toml`:
 - Kotlin: 2.3.10 (latest stable)
 - KSP: 2.3.6
 - Circuit: 0.33.1
-- Metro: 0.11.2 (latest)
+- Metro: 1.0.0 (latest)
 - Compose BOM: 2026.03.00
 - WorkManager: 2.11.1
 - Gradle: 9.4.0 (minimum required: 9.3.1)

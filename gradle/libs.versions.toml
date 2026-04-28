@@ -40,7 +40,7 @@ retrofitKotlinxSerializationConverter = "1.0.0"
 # https://github.com/pinterest/ktlint
 kotlinter = "5.4.2"
 lifecycleRuntimeKtx = "2.10.0"
-metro = "0.13.2"
+metro = "1.0.0"
 androidxWork = "2.11.2"
 
 [libraries]
