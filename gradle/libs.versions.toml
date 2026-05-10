@@ -13,7 +13,7 @@ circuit = "0.33.1"
 composeBom = "2026.05.00"
 coreKtx = "1.18.0"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
-kotlinxCoroutines = "1.10.2"
+kotlinxCoroutines = "1.11.0"
 espressoCore = "3.7.0"
 googleFonts = "1.11.1"
 junit = "4.13.2"
