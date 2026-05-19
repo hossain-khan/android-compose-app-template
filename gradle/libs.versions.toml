@@ -10,7 +10,7 @@ activityCompose = "1.13.0"
 # AGP 9.1 requires Gradle 9.3.1 or higher
 agp = "9.2.1"
 circuit = "0.33.1"
-composeBom = "2026.05.00"
+composeBom = "2026.05.01"
 coreKtx = "1.18.0"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinxCoroutines = "1.11.0"
