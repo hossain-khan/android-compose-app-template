@@ -165,4 +165,5 @@ Here are some apps that has been created using the template.
 | <img alt="google-play" src="https://github.com/user-attachments/assets/18725aa7-ea0b-4d6d-962a-e0358703041c" height="14"> TRMNL Buddy | https://github.com/hossain-khan/trmnl-android-buddy | 
 | <img alt="google-play" src="https://github.com/user-attachments/assets/18725aa7-ea0b-4d6d-962a-e0358703041c" height="14"> Math Pup Tutor | https://github.com/hossain-khan/kids-math-tutor | 
 | 🧪 Syntax Highlighter | https://github.com/hossain-khan/android-syntax-highlighter-compose |
+| 🤖 Code with AI | https://github.com/hossain-khan/android-code-with-ai |
 
