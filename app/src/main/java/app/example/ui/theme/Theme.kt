@@ -1,5 +1,8 @@
 package app.example.ui.theme
+import android.annotation.SuppressLint
 import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -32,7 +35,8 @@ fun CircuitAppTheme(
 ) {
     val colorScheme =
         when {
-            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            @SuppressLint("NewApi") // The `VERSION_CODES.S` check already in place
+            dynamicColor && VERSION.SDK_INT >= VERSION_CODES.S -> {
                 val context = LocalContext.current
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             }
