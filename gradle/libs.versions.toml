@@ -15,7 +15,7 @@ coreKtx = "1.19.0"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinxCoroutines = "1.11.0"
 espressoCore = "3.7.0"
-googleFonts = "1.11.3"
+googleFonts = "1.11.4"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 
