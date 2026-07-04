@@ -12,7 +12,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check file changes
+        uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'app/**'
+              - 'gradle/**'
+              - 'build.gradle.kts'
+              - 'settings.gradle.kts'
+              - 'gradle.properties'
+              - 'keystore/**'
+              - 'setup-project.sh'
+              - 'setup-android-env.sh'
+              - '.github/workflows/android.yml'
+              - '.github/workflows/android-lint.yml'
+
       - name: set up JDK
+        if: steps.filter.outputs.src == 'true'
         uses: actions/setup-java@v5
         with:
           java-version: '22'
@@ -22,10 +43,13 @@ jobs:
       # Automatic gradle caching using `actions/cache@v4`
       # https://github.com/gradle/actions/tree/main/setup-gradle
       - name: Setup Gradle
+        if: steps.filter.outputs.src == 'true'
         uses: gradle/actions/setup-gradle@v6
 
       - name: Run Linter
+        if: steps.filter.outputs.src == 'true'
         run: ./gradlew lint
 
       - name: Build with Gradle
+        if: steps.filter.outputs.src == 'true'
         run: ./gradlew build
