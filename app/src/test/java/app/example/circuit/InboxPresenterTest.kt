@@ -107,11 +107,10 @@ class InboxPresenterTest {
                 // Select DRAFTS tab
                 successState.eventSink(InboxScreen.Event.TabSelected(ScreenTab.DRAFTS))
 
-                // Emits Success tab change with old inbox emails first
-                val firstEmit = awaitItem() as InboxScreen.State.Success
-                assertEquals(ScreenTab.DRAFTS, firstEmit.selectedTab)
+                // Emits Loading immediately as emails list is cleared synchronously
+                assertEquals(InboxScreen.State.Loading, awaitItem())
 
-                // Emits Success with drafts (loading is skipped synchronously in tests)
+                // Emits Success with drafts
                 val draftsState = awaitItem() as InboxScreen.State.Success
                 assertEquals(ScreenTab.DRAFTS, draftsState.selectedTab)
                 assertEquals("draft-1", draftsState.emails.first().id)

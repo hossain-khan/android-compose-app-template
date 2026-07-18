@@ -72,6 +72,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -145,6 +146,14 @@ class InboxPresenter
             var retryTrigger by rememberRetained { mutableStateOf(0) }
             var pendingDeleteId by rememberRetained { mutableStateOf<String?>(null) }
 
+            var lastSelectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
+            var lastRetryTrigger by rememberRetained { mutableStateOf(0) }
+            if (selectedTab != lastSelectedTab || retryTrigger != lastRetryTrigger) {
+                emails = null
+                lastSelectedTab = selectedTab
+                lastRetryTrigger = retryTrigger
+            }
+
             LaunchedEffect(selectedTab, retryTrigger) {
                 emails = null
                 errorMessage = null
@@ -157,6 +166,12 @@ class InboxPresenter
                         }
                 } catch (e: Exception) {
                     errorMessage = e.message ?: "Unknown error"
+                }
+            }
+
+            LaunchedEffect(emailRepository) {
+                emailRepository.updates.collect {
+                    retryTrigger++
                 }
             }
 

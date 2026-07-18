@@ -14,4 +14,5 @@ data class SendEmailRequest(
     val sender: String,
     val senderEmail: String,
     val recipients: List<String>,
+    val draftId: String? = null,
 )

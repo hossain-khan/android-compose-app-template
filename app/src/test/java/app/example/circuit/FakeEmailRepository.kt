@@ -2,6 +2,8 @@ package app.example.circuit
 
 import app.example.data.model.Email
 import app.example.data.repository.EmailRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 /**
  * A test-only fake implementation of [EmailRepository].
@@ -19,6 +21,8 @@ class FakeEmailRepository(
     private val getDraftsException: Exception? = null,
     private val getSentException: Exception? = null,
 ) : EmailRepository {
+    override val updates: Flow<Unit> = emptyFlow()
+
     override suspend fun getInboxEmails(): List<Email> {
         getInboxException?.let { throw it }
         return inboxEmails
@@ -43,6 +47,7 @@ class FakeEmailRepository(
         to: String,
         subject: String,
         body: String,
+        draftId: String?,
     ): Email = testEmail(id = "sent-1", subject = subject, body = body, status = "sent")
 
     override suspend fun saveDraft(

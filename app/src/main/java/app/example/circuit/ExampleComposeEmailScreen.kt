@@ -152,7 +152,7 @@ class ComposeEmailPresenter
                 try {
                     when (action) {
                         PendingAction.SAVE_DRAFT -> emailRepository.saveDraft(to, subject, body)
-                        PendingAction.SEND -> emailRepository.sendEmail(to, subject, body)
+                        PendingAction.SEND -> emailRepository.sendEmail(to, subject, body, screen.draftId)
                     }
                     navigator.pop()
                 } catch (e: HttpException) {
