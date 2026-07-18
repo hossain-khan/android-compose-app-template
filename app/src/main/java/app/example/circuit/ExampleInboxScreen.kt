@@ -1,7 +1,6 @@
 package app.example.circuit
 
 import android.util.Log
-import kotlinx.coroutines.launch
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -72,11 +71,14 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 /** Standalone enum defining tabs in the unified email navigation container. */
 enum class ScreenTab {
-    INBOX, DRAFTS, SENT
+    INBOX,
+    DRAFTS,
+    SENT,
 }
 
 @Parcelize
@@ -100,13 +102,28 @@ data object InboxScreen : Screen {
 
     @Immutable
     sealed interface Event : CircuitUiEvent {
-        data class EmailClicked(val emailId: String) : Event
-        data class DraftClicked(val draftId: String) : Event
-        data class DeleteDraft(val draftId: String) : Event
-        data class TabSelected(val tab: ScreenTab) : Event
+        data class EmailClicked(
+            val emailId: String,
+        ) : Event
+
+        data class DraftClicked(
+            val draftId: String,
+        ) : Event
+
+        data class DeleteDraft(
+            val draftId: String,
+        ) : Event
+
+        data class TabSelected(
+            val tab: ScreenTab,
+        ) : Event
+
         data object InfoClicked : Event
+
         data object InfoDismissed : Event
+
         data object Retry : Event
+
         data object OnNewEmail : Event
     }
 }
@@ -131,11 +148,12 @@ class InboxPresenter
                 emails = null
                 errorMessage = null
                 try {
-                    emails = when (selectedTab) {
-                        ScreenTab.INBOX -> emailRepository.getInboxEmails()
-                        ScreenTab.DRAFTS -> emailRepository.getDraftEmails()
-                        ScreenTab.SENT -> emailRepository.getSentEmails()
-                    }
+                    emails =
+                        when (selectedTab) {
+                            ScreenTab.INBOX -> emailRepository.getInboxEmails()
+                            ScreenTab.DRAFTS -> emailRepository.getDraftEmails()
+                            ScreenTab.SENT -> emailRepository.getSentEmails()
+                        }
                 } catch (e: Exception) {
                     errorMessage = e.message ?: "Unknown error"
                 }
@@ -157,19 +175,38 @@ class InboxPresenter
 
             val eventSink: (InboxScreen.Event) -> Unit = { event ->
                 when (event) {
-                    is InboxScreen.Event.EmailClicked -> navigator.goTo(DetailScreen(event.emailId))
-                    is InboxScreen.Event.DraftClicked -> navigator.goTo(ComposeEmailScreen(draftId = event.draftId))
+                    is InboxScreen.Event.EmailClicked -> {
+                        navigator.goTo(DetailScreen(event.emailId))
+                    }
+
+                    is InboxScreen.Event.DraftClicked -> {
+                        navigator.goTo(ComposeEmailScreen(draftId = event.draftId))
+                    }
+
                     is InboxScreen.Event.DeleteDraft -> {
                         emails = emails?.filter { it.id != event.draftId }
                         pendingDeleteId = event.draftId
                     }
+
                     is InboxScreen.Event.TabSelected -> {
                         selectedTab = event.tab
                     }
-                    InboxScreen.Event.InfoClicked -> showAppInfo = true
-                    InboxScreen.Event.InfoDismissed -> showAppInfo = false
-                    InboxScreen.Event.Retry -> retryTrigger++
-                    InboxScreen.Event.OnNewEmail -> navigator.goTo(ComposeEmailScreen())
+
+                    InboxScreen.Event.InfoClicked -> {
+                        showAppInfo = true
+                    }
+
+                    InboxScreen.Event.InfoDismissed -> {
+                        showAppInfo = false
+                    }
+
+                    InboxScreen.Event.Retry -> {
+                        retryTrigger++
+                    }
+
+                    InboxScreen.Event.OnNewEmail -> {
+                        navigator.goTo(ComposeEmailScreen())
+                    }
                 }
             }
 
@@ -265,7 +302,7 @@ fun Inbox(
                         },
                         label = { Text("Sent") },
                     )
-                }
+                },
             ) {
                 val windowAdaptiveInfo = currentWindowAdaptiveInfoV2()
                 val isWideScreen = windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(600)
@@ -284,7 +321,7 @@ fun Inbox(
                                     coroutineScope.launch {
                                         navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, emailId)
                                     }
-                                }
+                                },
                             )
                         },
                         detailPane = {
@@ -294,16 +331,16 @@ fun Inbox(
                             } else {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
+                                    contentAlignment = Alignment.Center,
                                 ) {
                                     Text(
                                         text = "Select an email to read",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                             }
-                        }
+                        },
                     )
                 } else {
                     Scaffold(
@@ -315,7 +352,7 @@ fun Inbox(
                                             ScreenTab.INBOX -> "Inbox"
                                             ScreenTab.DRAFTS -> "Drafts"
                                             ScreenTab.SENT -> "Sent"
-                                        }
+                                        },
                                     )
                                 },
                                 actions = {
@@ -355,7 +392,7 @@ fun Inbox(
                                         isWideScreen = false,
                                         onEmailClicked = { emailId ->
                                             state.eventSink(InboxScreen.Event.EmailClicked(emailId))
-                                        }
+                                        },
                                     )
                                 }
 
@@ -367,7 +404,7 @@ fun Inbox(
                                         },
                                         onDelete = { draftId ->
                                             state.eventSink(InboxScreen.Event.DeleteDraft(draftId))
-                                        }
+                                        },
                                     )
                                 }
 
@@ -389,23 +426,25 @@ fun ExpressiveLoadingIndicator(modifier: Modifier = Modifier) {
     val animatedProgress by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1500, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "progress"
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 1500, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart,
+            ),
+        label = "progress",
     )
 
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         LinearWavyProgressIndicator(
             progress = { animatedProgress },
-            modifier = Modifier
-                .fillMaxWidth(0.6f)
-                .height(10.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(10.dp),
         )
     }
 }
@@ -426,7 +465,7 @@ fun InboxListContent(
             items(state.emails) { email ->
                 ExpressiveEmailItem(
                     email = email,
-                    onClick = { onEmailClicked(email.id) }
+                    onClick = { onEmailClicked(email.id) },
                 )
             }
         }
@@ -450,7 +489,7 @@ fun DraftsListContent(
                 ExpressiveDraftItem(
                     draft = draft,
                     onClick = { onDraftClicked(draft.id) },
-                    onDelete = { onDelete(draft.id) }
+                    onDelete = { onDelete(draft.id) },
                 )
             }
         }
@@ -471,7 +510,7 @@ fun SentListContent(
             items(state.emails) { email ->
                 ExpressiveEmailItem(
                     email = email,
-                    onClick = {}
+                    onClick = {},
                 )
             }
         }
@@ -486,29 +525,32 @@ fun ExpressiveEmailItem(
 ) {
     androidx.compose.material3.Card(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp),
         shape = MaterialTheme.shapes.large,
-        colors = androidx.compose.material3.CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+        colors =
+            androidx.compose.material3.CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(androidx.compose.foundation.shape.CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clip(androidx.compose.foundation.shape.CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = email.sender.take(1).uppercase(),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
 
@@ -516,7 +558,7 @@ fun ExpressiveEmailItem(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = email.sender,
@@ -524,12 +566,12 @@ fun ExpressiveEmailItem(
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                         maxLines = 1,
                         overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     Text(
                         text = email.timestamp,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -538,7 +580,7 @@ fun ExpressiveEmailItem(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
                     maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -546,7 +588,7 @@ fun ExpressiveEmailItem(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 )
             }
         }
@@ -562,18 +604,20 @@ fun ExpressiveDraftItem(
 ) {
     androidx.compose.material3.Card(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp),
         shape = MaterialTheme.shapes.large,
-        colors = androidx.compose.material3.CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+        colors =
+            androidx.compose.material3.CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -588,21 +632,21 @@ fun ExpressiveDraftItem(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
                         maxLines = 1,
-                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = draft.timestamp,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 )
             }
             IconButton(onClick = onDelete) {
                 Icon(
                     painter = painterResource(id = R.drawable.delete_24dp),
                     contentDescription = "Delete draft",
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
