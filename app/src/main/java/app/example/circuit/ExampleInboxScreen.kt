@@ -146,6 +146,14 @@ class InboxPresenter
             var retryTrigger by rememberRetained { mutableStateOf(0) }
             var pendingDeleteId by rememberRetained { mutableStateOf<String?>(null) }
 
+            var lastSelectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
+            var lastRetryTrigger by rememberRetained { mutableStateOf(0) }
+            if (selectedTab != lastSelectedTab || retryTrigger != lastRetryTrigger) {
+                emails = null
+                lastSelectedTab = selectedTab
+                lastRetryTrigger = retryTrigger
+            }
+
             LaunchedEffect(selectedTab, retryTrigger) {
                 emails = null
                 errorMessage = null
