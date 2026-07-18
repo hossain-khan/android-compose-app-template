@@ -66,6 +66,7 @@ import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -82,7 +83,7 @@ enum class ScreenTab {
 }
 
 @Parcelize
-data object InboxScreen : Screen {
+data object InboxScreen : ParcelableScreen {
     @Stable
     sealed interface State : CircuitUiState {
         data object Loading : State

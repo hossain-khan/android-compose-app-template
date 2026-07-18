@@ -59,6 +59,7 @@ import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -70,7 +71,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DetailScreen(
     val emailId: String,
-) : Screen {
+) : ParcelableScreen {
     // See https://slackhq.github.io/circuit/states-and-events/
     @Stable
     sealed interface State : CircuitUiState {
