@@ -163,7 +163,13 @@ fun EmailDetailContent(
 ) {
     when (state) {
         is DetailScreen.State.Loading -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(
+                modifier =
+                    modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center,
+            ) {
                 CircularProgressIndicator()
             }
         }
