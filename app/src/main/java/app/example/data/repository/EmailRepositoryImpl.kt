@@ -8,6 +8,9 @@ import app.example.data.network.dto.toDomain
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * Production implementation of [EmailRepository] that fetches emails from the
@@ -25,6 +28,9 @@ class EmailRepositoryImpl
     constructor(
         private val apiService: EmailApiService,
     ) : EmailRepository {
+        private val _updates = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        override val updates: Flow<Unit> = _updates.asSharedFlow()
+
         /** In-memory cache populated on the first successful inbox fetch. */
         private var cachedEmails: List<Email>? = null
 
@@ -75,6 +81,7 @@ class EmailRepositoryImpl
             to: String,
             subject: String,
             body: String,
+            draftId: String?,
         ): Email {
             val recipients = to.split(",").map { it.trim() }.filter { it.isNotEmpty() }
             val request =
@@ -84,11 +91,14 @@ class EmailRepositoryImpl
                     sender = "Me",
                     senderEmail = "me@example.com",
                     recipients = recipients,
+                    draftId = draftId,
                 )
             val result = apiService.sendEmail(request).data.toDomain()
-            // Invalidate inbox and sent caches so sent email appears on next loads
+            // Invalidate inbox, sent, and drafts caches so sent/draft emails update on next loads
             cachedEmails = null
             cachedSentEmails = null
+            cachedDraftEmails = null
+            _updates.tryEmit(Unit)
             return result
         }
 
@@ -113,6 +123,7 @@ class EmailRepositoryImpl
             val result = apiService.createDraft(request).data.toDomain()
             // Invalidate draft cache so it is refreshed on next load
             cachedDraftEmails = null
+            _updates.tryEmit(Unit)
             return result
         }
 
@@ -124,6 +135,7 @@ class EmailRepositoryImpl
             val response = apiService.deleteEmail(draftId)
             if (response.success) {
                 cachedDraftEmails = cachedDraftEmails?.filter { it.id != draftId }
+                _updates.tryEmit(Unit)
             }
             return response.success
         }

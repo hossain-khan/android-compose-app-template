@@ -72,6 +72,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -157,6 +158,12 @@ class InboxPresenter
                         }
                 } catch (e: Exception) {
                     errorMessage = e.message ?: "Unknown error"
+                }
+            }
+
+            LaunchedEffect(emailRepository) {
+                emailRepository.updates.collect {
+                    retryTrigger++
                 }
             }
 

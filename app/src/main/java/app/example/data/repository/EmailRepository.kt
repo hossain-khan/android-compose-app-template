@@ -1,6 +1,7 @@
 package app.example.data.repository
 
 import app.example.data.model.Email
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository interface for email operations.
@@ -10,6 +11,9 @@ import app.example.data.model.Email
  * mapping API responses to domain [Email] models.
  */
 interface EmailRepository {
+    /** Flow emitting updates whenever the cache or repository data is mutated. */
+    val updates: Flow<Unit>
+
     /**
      * Returns all emails in the inbox.
      *
@@ -55,6 +59,7 @@ interface EmailRepository {
         to: String,
         subject: String,
         body: String,
+        draftId: String? = null,
     ): Email
 
     /**
