@@ -1,6 +1,7 @@
 package app.example.circuit
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +50,8 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.parcelize.Parcelize
+import org.json.JSONObject
+import retrofit2.HttpException
 
 /** Screen for composing a new email or editing an existing draft. */
 @Parcelize
@@ -65,6 +68,7 @@ data class ComposeEmailScreen(
             val subject: String,
             val body: String,
             val isSaving: Boolean,
+            val errorMessage: String? = null,
             val eventSink: (Event) -> Unit,
         ) : State
 
@@ -113,7 +117,8 @@ class ComposeEmailPresenter
             var body by rememberRetained { mutableStateOf("") }
             var isSaving by rememberRetained { mutableStateOf(false) }
             var isLoading by rememberRetained { mutableStateOf(screen.draftId != null) }
-            var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
+            var loadError by rememberRetained { mutableStateOf<String?>(null) }
+            var actionError by rememberRetained { mutableStateOf<String?>(null) }
             var loadedDraft by rememberRetained { mutableStateOf<Email?>(null) }
             var pendingAction by rememberRetained { mutableStateOf<PendingAction?>(null) }
 
@@ -121,7 +126,7 @@ class ComposeEmailPresenter
             LaunchedEffect(screen.draftId) {
                 if (screen.draftId != null && loadedDraft == null) {
                     isLoading = true
-                    errorMessage = null
+                    loadError = null
                     try {
                         val drafts = emailRepository.getDraftEmails()
                         val draft = drafts.find { it.id == screen.draftId }
@@ -131,10 +136,10 @@ class ComposeEmailPresenter
                             body = draft.body
                             loadedDraft = draft
                         } else {
-                            errorMessage = "Draft not found"
+                            loadError = "Draft not found"
                         }
                     } catch (e: Exception) {
-                        errorMessage = e.message ?: "Failed to load draft"
+                        loadError = e.message ?: "Failed to load draft"
                     } finally {
                         isLoading = false
                     }
@@ -150,8 +155,22 @@ class ComposeEmailPresenter
                         PendingAction.SEND -> emailRepository.sendEmail(to, subject, body)
                     }
                     navigator.pop()
+                } catch (e: HttpException) {
+                    val errorBody = e.response()?.errorBody()?.string()
+                    val parsedError =
+                        try {
+                            if (!errorBody.isNullOrBlank()) {
+                                val json = JSONObject(errorBody)
+                                if (json.has("error")) json.getString("error") else null
+                            } else {
+                                null
+                            }
+                        } catch (jsonEx: Exception) {
+                            null
+                        }
+                    actionError = parsedError ?: e.message() ?: "Operation failed"
                 } catch (e: Exception) {
-                    errorMessage = e.message ?: "Operation failed"
+                    actionError = e.message ?: "Operation failed"
                 } finally {
                     isSaving = false
                     pendingAction = null
@@ -162,14 +181,17 @@ class ComposeEmailPresenter
                 when (event) {
                     is ComposeEmailScreen.Event.OnToChanged -> {
                         to = event.to
+                        actionError = null
                     }
 
                     is ComposeEmailScreen.Event.OnSubjectChanged -> {
                         subject = event.subject
+                        actionError = null
                     }
 
                     is ComposeEmailScreen.Event.OnBodyChanged -> {
                         body = event.body
+                        actionError = null
                     }
 
                     ComposeEmailScreen.Event.OnBack -> {
@@ -193,9 +215,9 @@ class ComposeEmailPresenter
                     ComposeEmailScreen.State.Loading
                 }
 
-                errorMessage != null -> {
+                loadError != null -> {
                     ComposeEmailScreen.State.Error(
-                        message = errorMessage!!,
+                        message = loadError!!,
                         eventSink = eventSink,
                     )
                 }
@@ -206,6 +228,7 @@ class ComposeEmailPresenter
                         subject = subject,
                         body = body,
                         isSaving = isSaving,
+                        errorMessage = actionError,
                         eventSink = eventSink,
                     )
                 }
@@ -319,6 +342,14 @@ fun ComposeEmailContent(
                             maxLines = 10,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+                        if (state.errorMessage != null) {
+                            Text(
+                                text = state.errorMessage,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 16.dp),
+                            )
+                        }
                         Row(modifier = Modifier.fillMaxWidth()) {
                             OutlinedButton(
                                 onClick = { state.eventSink(ComposeEmailScreen.Event.OnSaveDraft) },
