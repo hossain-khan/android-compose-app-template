@@ -151,7 +151,8 @@ Here is a demo of the template app containing screens shown in the 📖 [circuit
 
 The demo showcases the basic Circuit architecture pattern with screen navigation and state management.
 
-https://github.com/user-attachments/assets/56d6f28b-5b46-4aac-a30e-80116986589e
+<img width="350" alt="compose-template-demo" src="https://github.com/user-attachments/assets/6a1bf5a4-8f1b-4085-9a1b-41fc9d136bdc" />
+
 
 
 ### Templated Apps
