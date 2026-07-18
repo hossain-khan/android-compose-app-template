@@ -35,6 +35,10 @@ interface EmailApiService {
     @GET("api/emails/drafts")
     suspend fun getDraftEmails(): EmailListResponse
 
+    /** Fetch all sent emails. */
+    @GET("api/emails/sent")
+    suspend fun getSentEmails(): EmailListResponse
+
     /**
      * Send an email (moves it from draft to inbox on the server).
      *
