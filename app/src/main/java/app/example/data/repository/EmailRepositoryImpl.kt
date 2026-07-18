@@ -31,6 +31,9 @@ class EmailRepositoryImpl
         /** In-memory cache populated on the first successful drafts fetch. */
         private var cachedDraftEmails: List<Email>? = null
 
+        /** In-memory cache populated on the first successful sent fetch. */
+        private var cachedSentEmails: List<Email>? = null
+
         override suspend fun getInboxEmails(): List<Email> =
             apiService
                 .getInboxEmails()
@@ -55,9 +58,14 @@ class EmailRepositoryImpl
                 .also { cachedDraftEmails = it }
 
         /**
-         * Implementation that filters the inbox for emails with "sent" status.
+         * Implementation that fetches sent emails from the live sent API.
          */
-        override suspend fun getSentEmails(): List<Email> = getInboxEmails().filter { it.status == "sent" }
+        override suspend fun getSentEmails(): List<Email> =
+            apiService
+                .getSentEmails()
+                .data
+                .map { it.toDomain() }
+                .also { cachedSentEmails = it }
 
         /**
          * Sends an email and invalidates the [cachedEmails] to ensure the
@@ -78,8 +86,9 @@ class EmailRepositoryImpl
                     recipients = recipients,
                 )
             val result = apiService.sendEmail(request).data.toDomain()
-            // Invalidate inbox cache so sent email appears on next inbox load
+            // Invalidate inbox and sent caches so sent email appears on next loads
             cachedEmails = null
+            cachedSentEmails = null
             return result
         }
 
