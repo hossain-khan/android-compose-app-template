@@ -38,6 +38,7 @@ class InboxPresenterTest {
 
                 val successState = awaitItem() as InboxScreen.State.Success
                 assertEquals(emails, successState.emails)
+                assertEquals(ScreenTab.INBOX, successState.selectedTab)
                 assertFalse(successState.showAppInfo)
             }
         }
@@ -85,43 +86,70 @@ class InboxPresenterTest {
         }
 
     @Test
-    fun `present - OnViewDrafts event navigates to DraftsScreen`() =
+    fun `present - TabSelected event updates selected tab`() =
         runTest {
             val presenter =
                 InboxPresenter(
                     navigator = fakeNavigator,
-                    emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail())),
+                    emailRepository =
+                        FakeEmailRepository(
+                            inboxEmails = listOf(testEmail()),
+                            draftEmails = listOf(testEmail(id = "draft-1")),
+                        ),
                     appVersionService = fakeVersionService,
                 )
 
             presenter.test {
                 assertEquals(InboxScreen.State.Loading, awaitItem())
                 val successState = awaitItem() as InboxScreen.State.Success
+                assertEquals(ScreenTab.INBOX, successState.selectedTab)
 
-                successState.eventSink(InboxScreen.Event.OnViewDrafts)
+                // Select DRAFTS tab
+                successState.eventSink(InboxScreen.Event.TabSelected(ScreenTab.DRAFTS))
+
+                // Emits Success tab change with old inbox emails first
+                val firstEmit = awaitItem() as InboxScreen.State.Success
+                assertEquals(ScreenTab.DRAFTS, firstEmit.selectedTab)
+
+                // Emits Success with drafts (loading is skipped synchronously in tests)
+                val draftsState = awaitItem() as InboxScreen.State.Success
+                assertEquals(ScreenTab.DRAFTS, draftsState.selectedTab)
+                assertEquals("draft-1", draftsState.emails.first().id)
             }
-
-            assertEquals(DraftsScreen, fakeNavigator.awaitNextScreen())
         }
 
     @Test
-    fun `present - OnViewSent event navigates to SentScreen`() =
+    fun `present - DeleteDraft event optimistically filters list`() =
         runTest {
+            val drafts = listOf(testEmail(id = "draft-1"), testEmail(id = "draft-2"))
             val presenter =
                 InboxPresenter(
                     navigator = fakeNavigator,
-                    emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail())),
+                    emailRepository = FakeEmailRepository(draftEmails = drafts),
                     appVersionService = fakeVersionService,
                 )
 
             presenter.test {
                 assertEquals(InboxScreen.State.Loading, awaitItem())
-                val successState = awaitItem() as InboxScreen.State.Success
+                val initialSuccess = awaitItem() as InboxScreen.State.Success
 
-                successState.eventSink(InboxScreen.Event.OnViewSent)
+                // Select DRAFTS tab first
+                initialSuccess.eventSink(InboxScreen.Event.TabSelected(ScreenTab.DRAFTS))
+
+                // Consume tab change emissions
+                awaitItem() // Success tab change (old inbox emails)
+                val draftsSuccess = awaitItem() as InboxScreen.State.Success // Success drafts
+                assertEquals(2, draftsSuccess.emails.size)
+
+                // Trigger delete
+                draftsSuccess.eventSink(InboxScreen.Event.DeleteDraft("draft-1"))
+
+                // Expect optimistic UI update (removal of draft-1)
+                val updatedSuccess = awaitItem() as InboxScreen.State.Success
+                assertEquals(1, updatedSuccess.emails.size)
+                assertEquals("draft-2", updatedSuccess.emails.first().id)
+                cancelAndIgnoreRemainingEvents()
             }
-
-            assertEquals(SentScreen, fakeNavigator.awaitNextScreen())
         }
 
     @Test
