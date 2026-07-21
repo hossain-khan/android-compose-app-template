@@ -24,6 +24,7 @@ interface EmailRepository {
     /**
      * Returns the email with the given [emailId], or `null` if not found.
      *
+     * @param emailId The UUID of the email to retrieve.
      * @throws Exception if the network request fails.
      */
     suspend fun getEmail(emailId: String): Email?
@@ -52,6 +53,7 @@ interface EmailRepository {
      * @param to Comma-separated recipient addresses.
      * @param subject Email subject line.
      * @param body Email body text.
+     * @param draftId Optional ID of a draft to send.
      * @return The sent [Email] domain model.
      * @throws Exception if the network request fails.
      */
@@ -82,6 +84,7 @@ interface EmailRepository {
     /**
      * Deletes the draft with the given [draftId].
      *
+     * @param draftId The UUID of the draft to delete.
      * @return `true` if the deletion succeeded.
      * @throws Exception if the network request fails.
      */
