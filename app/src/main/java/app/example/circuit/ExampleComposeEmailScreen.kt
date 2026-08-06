@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,7 +34,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.example.R
 import app.example.data.model.Email
@@ -308,6 +315,8 @@ fun ComposeEmailContent(
                     )
                 },
             ) { innerPadding ->
+                val focusManager = LocalFocusManager.current
+
                 Box(modifier = Modifier.padding(innerPadding)) {
                     Column(
                         modifier =
@@ -320,6 +329,21 @@ fun ComposeEmailContent(
                             value = state.to,
                             onValueChange = { state.eventSink(ComposeEmailScreen.Event.OnToChanged(it)) },
                             label = { Text("To") },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.baseline_person_24),
+                                    contentDescription = null,
+                                )
+                            },
+                            keyboardOptions =
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Email,
+                                    imeAction = ImeAction.Next,
+                                ),
+                            keyboardActions =
+                                KeyboardActions(
+                                    onNext = { focusManager.moveFocus(FocusDirection.Down) },
+                                ),
                             modifier = Modifier.fillMaxWidth(),
                             enabled = !state.isSaving,
                             singleLine = true,
@@ -329,6 +353,22 @@ fun ComposeEmailContent(
                             value = state.subject,
                             onValueChange = { state.eventSink(ComposeEmailScreen.Event.OnSubjectChanged(it)) },
                             label = { Text("Subject") },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.edit_24dp),
+                                    contentDescription = null,
+                                )
+                            },
+                            keyboardOptions =
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Sentences,
+                                    imeAction = ImeAction.Next,
+                                ),
+                            keyboardActions =
+                                KeyboardActions(
+                                    onNext = { focusManager.moveFocus(FocusDirection.Down) },
+                                ),
                             modifier = Modifier.fillMaxWidth(),
                             enabled = !state.isSaving,
                             singleLine = true,
@@ -338,6 +378,11 @@ fun ComposeEmailContent(
                             value = state.body,
                             onValueChange = { state.eventSink(ComposeEmailScreen.Event.OnBodyChanged(it)) },
                             label = { Text("Body") },
+                            keyboardOptions =
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Sentences,
+                                ),
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
