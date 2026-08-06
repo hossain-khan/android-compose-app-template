@@ -34,20 +34,12 @@ fun CircuitAppTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme =
-        when {
-            @SuppressLint("NewApi") // The `VERSION_CODES.S` check already in place
-            dynamicColor && VERSION.SDK_INT >= VERSION_CODES.S -> {
-                val context = LocalContext.current
-                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            }
-
-            darkTheme -> {
-                DarkColorScheme
-            }
-
-            else -> {
-                LightColorScheme
-            }
+        if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            dynamicColorScheme(darkTheme, LocalContext.current)
+        } else if (darkTheme) {
+            DarkColorScheme
+        } else {
+            LightColorScheme
         }
 
     MaterialTheme(
@@ -56,3 +48,10 @@ fun CircuitAppTheme(
         content = content,
     )
 }
+
+@Composable
+@SuppressLint("NewApi")
+private fun dynamicColorScheme(
+    darkTheme: Boolean,
+    context: android.content.Context,
+): androidx.compose.material3.ColorScheme = if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
