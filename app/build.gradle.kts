@@ -122,8 +122,10 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.ui.tooling.preview)
 
+    implementation(libs.circuit.codegen.annotations)
     implementation(libs.circuit.foundation)
     implementation(libs.circuit.overlay)
+    implementation(libs.circuit.serialization)
     implementation(libs.circuitx.android)
     implementation(libs.circuitx.effects)
     implementation(libs.circuitx.gestureNav)
