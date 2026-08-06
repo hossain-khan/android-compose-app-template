@@ -53,6 +53,22 @@ fun EmailDto.toDomain(): Email =
         sender = sender,
         senderEmail = senderEmail,
         recipients = recipients,
-        timestamp = timestamp,
+        timestamp = formatTimestamp(timestamp),
         status = status,
     )
+
+/** Formats ISO 8601 timestamps (e.g. 2026-07-18T21:33:17.000Z) into readable dates (e.g. Jul 18). */
+private fun formatTimestamp(rawTimestamp: String): String {
+    if (rawTimestamp.isBlank()) return rawTimestamp
+    return try {
+        val instant = java.time.Instant.parse(rawTimestamp)
+        val zoneId = java.time.ZoneId.systemDefault()
+        val localDateTime = instant.atZone(zoneId)
+        val formatter =
+            java.time.format.DateTimeFormatter
+                .ofPattern("MMM d", java.util.Locale.getDefault())
+        localDateTime.format(formatter)
+    } catch (e: Exception) {
+        rawTimestamp
+    }
+}
