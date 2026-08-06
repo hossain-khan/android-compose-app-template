@@ -3,6 +3,8 @@ package app.example.di
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.ui.Ui
+import com.slack.circuit.serialization.CircuitSerializerRegistration
+import com.slack.circuit.serialization.SerializableCircuitSaver
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Multibinds
@@ -48,6 +50,14 @@ interface CircuitProviders {
     @Multibinds fun uiFactories(): Set<Ui.Factory>
 
     /**
+     * Metro multi-binding method that provides a set of CircuitSerializerRegistration instances.
+     *
+     * Circuit codegen generates registrations for types annotated with @CircuitSerializable.
+     */
+    @Multibinds(allowEmpty = true)
+    fun serializerRegistrations(): Set<CircuitSerializerRegistration>
+
+    /**
      * Provides a singleton instance of Circuit with presenter and UI factories configured.
      *
      * The @JvmSuppressWildcards annotation is needed to prevent Kotlin from using
@@ -61,10 +71,12 @@ interface CircuitProviders {
     fun provideCircuit(
         presenterFactories: @JvmSuppressWildcards Set<Presenter.Factory>,
         uiFactories: @JvmSuppressWildcards Set<Ui.Factory>,
+        serializerRegistrations: @JvmSuppressWildcards Set<CircuitSerializerRegistration>,
     ): Circuit =
         Circuit
             .Builder()
             .addPresenterFactories(presenterFactories)
             .addUiFactories(uiFactories)
+            .setCircuitSaver(SerializableCircuitSaver(serializerRegistrations))
             .build()
 }

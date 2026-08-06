@@ -9,7 +9,7 @@ activityCompose = "1.13.0"
 # https://developer.android.com/build/releases/gradle-plugin
 # AGP 9.1 requires Gradle 9.3.1 or higher
 agp = "9.3.1"
-circuit = "0.35.1"
+circuit = "0.36.0"
 composeBom = "2026.06.01"
 material3 = "1.5.0-alpha24"
 material3Adaptive = "1.3.0-rc01"
@@ -71,8 +71,10 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 # https://github.com/slackhq/circuit/releases
 # Note: circuit-codegen KSP processor is no longer needed; Metro provides built-in Circuit codegen
 # via enableCircuitCodegen. The circuit-codegen-annotations artifact is also added automatically.
+circuit-codegen-annotations = { group = "com.slack.circuit", name = "circuit-codegen-annotations", version.ref = "circuit" }
 circuit-foundation = { group = "com.slack.circuit", name = "circuit-foundation", version.ref = "circuit" }
 circuit-overlay = { group = "com.slack.circuit", name = "circuit-overlay", version.ref = "circuit" }
+circuit-serialization = { group = "com.slack.circuit", name = "circuit-serialization", version.ref = "circuit" }
 circuit-test = { group = "com.slack.circuit", name = "circuit-test", version.ref = "circuit" }
 circuitx-android = { group = "com.slack.circuit", name = "circuitx-android", version.ref = "circuit" }
 circuitx-effects = { group = "com.slack.circuit", name = "circuitx-effects", version.ref = "circuit" }
