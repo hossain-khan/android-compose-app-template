@@ -15,10 +15,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -55,52 +55,46 @@ private fun AppInfoContent(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
+    Column(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .navigationBarsPadding()
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_info_24),
-                    contentDescription = "App Info",
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "App Information",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_info_24),
+                contentDescription = "App Info",
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "App Information",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+            )
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            InfoRow(label = "App Name", value = "Circuit App Template")
-            InfoRow(label = "Version", value = BuildConfig.VERSION_NAME)
-            InfoRow(label = "Package", value = BuildConfig.APPLICATION_ID)
-            InfoRow(label = "Built Type", value = BuildConfig.BUILD_TYPE)
-            InfoRow(label = "Framework", value = "Circuit + Compose + Metro")
+        InfoRow(label = "App Name", value = "Circuit App Template")
+        InfoRow(label = "Version", value = BuildConfig.VERSION_NAME)
+        InfoRow(label = "Package", value = BuildConfig.APPLICATION_ID)
+        InfoRow(label = "Built Type", value = BuildConfig.BUILD_TYPE)
+        InfoRow(label = "Framework", value = "Circuit + Compose + Metro")
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
-                onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text("Close")
-            }
+        Button(
+            onClick = onDismiss,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("Close")
         }
     }
 }
