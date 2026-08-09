@@ -65,6 +65,7 @@ import app.example.circuit.overlay.AppInfoOverlay
 import app.example.data.AppVersionService
 import app.example.data.model.Email
 import app.example.data.network.NetworkMonitor
+import app.example.data.preferences.ThemeMode
 import app.example.data.preferences.UserPreferencesRepository
 import app.example.data.repository.EmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -108,6 +109,7 @@ data object InboxScreen : ParcelableScreen {
             val isRefreshing: Boolean = false,
             val searchQuery: String = "",
             val showUnreadOnly: Boolean = false,
+            val themeMode: ThemeMode = ThemeMode.SYSTEM,
             val isOnline: Boolean = true,
             val eventSink: (Event) -> Unit,
         ) : State
@@ -153,6 +155,10 @@ data object InboxScreen : ParcelableScreen {
         data class OnToggleUnreadFilter(
             val unreadOnly: Boolean,
         ) : Event
+
+        data class OnSetThemeMode(
+            val themeMode: ThemeMode,
+        ) : Event
     }
 }
 
@@ -178,6 +184,7 @@ class InboxPresenter
 
             val isOnline by networkMonitor.isOnline.collectAsState(initial = true)
             val showUnreadOnly by userPreferencesRepository.showUnreadOnly.collectAsState(initial = false)
+            val themeMode by userPreferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
             val scope = rememberCoroutineScope()
 
             var lastSelectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
@@ -275,6 +282,12 @@ class InboxPresenter
                             userPreferencesRepository.setShowUnreadOnly(event.unreadOnly)
                         }
                     }
+
+                    is InboxScreen.Event.OnSetThemeMode -> {
+                        scope.launch {
+                            userPreferencesRepository.setThemeMode(event.themeMode)
+                        }
+                    }
                 }
             }
 
@@ -303,6 +316,7 @@ class InboxPresenter
                         isRefreshing = isRefreshing,
                         searchQuery = searchQuery,
                         showUnreadOnly = showUnreadOnly,
+                        themeMode = themeMode,
                         isOnline = isOnline,
                         eventSink = eventSink,
                     )
@@ -368,7 +382,14 @@ fun Inbox(
         is InboxScreen.State.Success -> {
             if (state.showAppInfo) {
                 OverlayEffect {
-                    show(AppInfoOverlay())
+                    show(
+                        AppInfoOverlay(
+                            currentThemeMode = state.themeMode,
+                            onThemeModeSelected = { themeMode ->
+                                state.eventSink(InboxScreen.Event.OnSetThemeMode(themeMode))
+                            },
+                        ),
+                    )
                     state.eventSink(InboxScreen.Event.InfoDismissed)
                 }
             }
