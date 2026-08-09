@@ -234,6 +234,27 @@ class InboxPresenterTest {
                 assertFalse(dismissedState.showAppInfo)
             }
         }
+
+    @Test
+    fun `present - OnToggleReadStatus event triggers repository update`() =
+        runTest {
+            val presenter =
+                InboxPresenter(
+                    navigator = fakeNavigator,
+                    emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail(id = "1", isRead = false))),
+                    appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
+                )
+
+            presenter.test {
+                assertEquals(InboxScreen.State.Loading, awaitItem())
+                val successState = awaitItem() as InboxScreen.State.Success
+
+                successState.eventSink(InboxScreen.Event.OnToggleReadStatus("1", isRead = true))
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 }
 
 class FakeNetworkMonitor(

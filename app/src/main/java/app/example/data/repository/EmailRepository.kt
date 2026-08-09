@@ -89,4 +89,17 @@ interface EmailRepository {
      * @throws Exception if the network request fails.
      */
     suspend fun deleteDraft(draftId: String): Boolean
+
+    /**
+     * Toggles or sets the read status of an email.
+     *
+     * @param emailId The UUID of the email.
+     * @param isRead Optional explicit read state. Inverts state if null.
+     * @return The updated [Email] domain model.
+     * @throws Exception if the network request fails.
+     */
+    suspend fun updateEmailReadStatus(
+        emailId: String,
+        isRead: Boolean? = null,
+    ): Email
 }

@@ -119,9 +119,15 @@ class DetailPresenter
                 email = null
                 errorMessage = null
                 try {
-                    email = emailRepository.getEmail(screen.emailId)
-                    if (email == null) {
+                    val loadedEmail = emailRepository.getEmail(screen.emailId)
+                    email = loadedEmail
+                    if (loadedEmail == null) {
                         errorMessage = "Email not found"
+                    } else if (!loadedEmail.isRead) {
+                        try {
+                            email = emailRepository.updateEmailReadStatus(screen.emailId, isRead = true)
+                        } catch (_: Exception) {
+                        }
                     }
                 } catch (e: Exception) {
                     errorMessage = e.message ?: "Unknown error"

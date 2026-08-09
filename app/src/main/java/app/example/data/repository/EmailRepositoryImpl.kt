@@ -139,4 +139,26 @@ class EmailRepositoryImpl
             }
             return response.success
         }
+
+        /**
+         * Toggles or sets the read status of an email via the API and updates the local cache.
+         */
+        override suspend fun updateEmailReadStatus(
+            emailId: String,
+            isRead: Boolean?,
+        ): Email {
+            val response =
+                apiService.updateEmailReadStatus(
+                    emailId = emailId,
+                    request =
+                        app.example.data.network.dto
+                            .UpdateReadStatusRequest(isRead),
+                )
+            val updatedEmail = response.data.toDomain()
+            cachedEmails = cachedEmails?.map { if (it.id == emailId) updatedEmail else it }
+            cachedDraftEmails = cachedDraftEmails?.map { if (it.id == emailId) updatedEmail else it }
+            cachedSentEmails = cachedSentEmails?.map { if (it.id == emailId) updatedEmail else it }
+            _updates.tryEmit(Unit)
+            return updatedEmail
+        }
     }
