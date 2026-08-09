@@ -102,4 +102,12 @@ interface EmailRepository {
         emailId: String,
         isRead: Boolean? = null,
     ): Email
+
+    /**
+     * Resets system demo data on the server to default seeded emails.
+     *
+     * @return `true` if the reset succeeded.
+     * @throws Exception if the network request fails.
+     */
+    suspend fun resetDemoData(): Boolean
 }
