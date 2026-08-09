@@ -164,6 +164,8 @@ data object InboxScreen : ParcelableScreen {
             val emailId: String,
             val isRead: Boolean? = null,
         ) : Event
+
+        data object OnResetDemoData : Event
     }
 }
 
@@ -308,6 +310,15 @@ class InboxPresenter
                             }
                         }
                     }
+
+                    InboxScreen.Event.OnResetDemoData -> {
+                        scope.launch {
+                            try {
+                                emailRepository.resetDemoData()
+                            } catch (_: Exception) {
+                            }
+                        }
+                    }
                 }
             }
 
@@ -407,6 +418,9 @@ fun Inbox(
                             currentThemeMode = state.themeMode,
                             onThemeModeSelected = { themeMode ->
                                 state.eventSink(InboxScreen.Event.OnSetThemeMode(themeMode))
+                            },
+                            onResetDemoData = {
+                                state.eventSink(InboxScreen.Event.OnResetDemoData)
                             },
                         ),
                     )

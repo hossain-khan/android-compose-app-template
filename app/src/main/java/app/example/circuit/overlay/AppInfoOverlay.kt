@@ -43,6 +43,7 @@ import com.slack.circuitx.overlays.BottomSheetOverlay
 fun AppInfoOverlay(
     currentThemeMode: ThemeMode = ThemeMode.SYSTEM,
     onThemeModeSelected: (ThemeMode) -> Unit = {},
+    onResetDemoData: () -> Unit = {},
     onDismiss: () -> Unit = {},
 ): BottomSheetOverlay<Unit, Unit> =
     BottomSheetOverlay(
@@ -54,6 +55,7 @@ fun AppInfoOverlay(
         AppInfoContent(
             currentThemeMode = currentThemeMode,
             onThemeModeSelected = onThemeModeSelected,
+            onResetDemoData = onResetDemoData,
             onDismiss = { overlayNavigator.finish(Unit) },
         )
     }
@@ -62,6 +64,7 @@ fun AppInfoOverlay(
 private fun AppInfoContent(
     currentThemeMode: ThemeMode,
     onThemeModeSelected: (ThemeMode) -> Unit,
+    onResetDemoData: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -124,7 +127,19 @@ private fun AppInfoContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        androidx.compose.material3.OutlinedButton(
+            onClick = {
+                onResetDemoData()
+                onDismiss()
+            },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("Reset Demo Emails")
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         Button(
             onClick = onDismiss,

@@ -5,6 +5,7 @@ import app.example.data.network.dto.DeleteEmailResponse
 import app.example.data.network.dto.EmailListResponse
 import app.example.data.network.dto.SendEmailRequest
 import app.example.data.network.dto.SingleEmailResponse
+import app.example.data.network.dto.SystemResetResponse
 import app.example.data.network.dto.UpdateReadStatusRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -88,4 +89,10 @@ interface EmailApiService {
         @Path("emailId") emailId: String,
         @Body request: UpdateReadStatusRequest? = null,
     ): SingleEmailResponse
+
+    /**
+     * Manually trigger a data reset and re-seed the backend with demo data.
+     */
+    @POST("api/system/reset")
+    suspend fun resetSystemData(): SystemResetResponse
 }

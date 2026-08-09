@@ -160,4 +160,18 @@ class EmailRepositoryImpl
             _updates.tryEmit(Unit)
             return updatedEmail
         }
+
+        /**
+         * Triggers a system data reset on the server and clears local caches.
+         */
+        override suspend fun resetDemoData(): Boolean {
+            val response = apiService.resetSystemData()
+            if (response.success) {
+                cachedEmails = null
+                cachedDraftEmails = null
+                cachedSentEmails = null
+                _updates.tryEmit(Unit)
+            }
+            return response.success
+        }
     }

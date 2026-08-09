@@ -70,6 +70,8 @@ class FakeEmailRepository(
         val newReadState = isRead ?: !target.isRead
         return target.copy(isRead = newReadState)
     }
+
+    override suspend fun resetDemoData(): Boolean = true
 }
 
 /** Convenience factory for creating [Email] instances in tests. */

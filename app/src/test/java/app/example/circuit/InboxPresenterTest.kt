@@ -255,6 +255,27 @@ class InboxPresenterTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `present - OnResetDemoData event triggers repository system reset`() =
+        runTest {
+            val presenter =
+                InboxPresenter(
+                    navigator = fakeNavigator,
+                    emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail())),
+                    appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
+                )
+
+            presenter.test {
+                assertEquals(InboxScreen.State.Loading, awaitItem())
+                val successState = awaitItem() as InboxScreen.State.Success
+
+                successState.eventSink(InboxScreen.Event.OnResetDemoData)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 }
 
 class FakeNetworkMonitor(
