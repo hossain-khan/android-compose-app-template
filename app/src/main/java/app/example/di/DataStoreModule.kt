@@ -20,5 +20,7 @@ private val Context.userPreferencesDataStore: DataStore<Preferences> by preferen
 interface DataStoreModule {
     @Provides
     @SingleIn(AppScope::class)
-    fun provideDataStore(context: Context): DataStore<Preferences> = context.userPreferencesDataStore
+    fun provideDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> = context.userPreferencesDataStore
 }
