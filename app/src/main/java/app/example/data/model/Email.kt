@@ -24,4 +24,5 @@ data class Email(
     val recipients: List<String>,
     val timestamp: String,
     val status: String,
+    val isRead: Boolean = false,
 )

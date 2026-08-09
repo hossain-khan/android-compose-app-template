@@ -19,6 +19,13 @@ data class EmailDto(
     val recipients: List<String>,
     val timestamp: String,
     val status: String,
+    val isRead: Boolean? = false,
+)
+
+/** Request payload for toggling or setting email read status. */
+@Serializable
+data class UpdateReadStatusRequest(
+    val isRead: Boolean? = null,
 )
 
 /** API response wrapper for a list of emails (used for inbox and drafts). */
@@ -55,6 +62,7 @@ fun EmailDto.toDomain(): Email =
         recipients = recipients,
         timestamp = formatTimestamp(timestamp),
         status = status,
+        isRead = isRead ?: false,
     )
 
 /** Formats ISO 8601 timestamps (e.g. 2026-07-18T21:33:17.000Z) into readable dates (e.g. Jul 18). */

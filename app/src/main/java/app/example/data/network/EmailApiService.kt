@@ -5,9 +5,11 @@ import app.example.data.network.dto.DeleteEmailResponse
 import app.example.data.network.dto.EmailListResponse
 import app.example.data.network.dto.SendEmailRequest
 import app.example.data.network.dto.SingleEmailResponse
+import app.example.data.network.dto.UpdateReadStatusRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -74,4 +76,16 @@ interface EmailApiService {
     suspend fun deleteEmail(
         @Path("emailId") emailId: String,
     ): DeleteEmailResponse
+
+    /**
+     * Toggle or explicitly set email read status.
+     *
+     * @param emailId The UUID of the email.
+     * @param request Optional request body containing explicit read state. Inverts state if null.
+     */
+    @PATCH("api/emails/{emailId}/read")
+    suspend fun updateEmailReadStatus(
+        @Path("emailId") emailId: String,
+        @Body request: UpdateReadStatusRequest? = null,
+    ): SingleEmailResponse
 }

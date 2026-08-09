@@ -24,7 +24,7 @@ class DetailPresenterTest {
     @Test
     fun `present - emits Loading then Success when email is found`() =
         runTest {
-            val email = testEmail(id = "email-1", subject = "Hello World")
+            val email = testEmail(id = "email-1", subject = "Hello World", isRead = true)
             val presenter =
                 DetailPresenter(
                     navigator = fakeNavigator,
@@ -85,7 +85,7 @@ class DetailPresenterTest {
     @Test
     fun `present - BackClicked event pops the back stack`() =
         runTest {
-            val email = testEmail(id = "email-1")
+            val email = testEmail(id = "email-1", isRead = true)
             val presenter =
                 DetailPresenter(
                     navigator = fakeNavigator,

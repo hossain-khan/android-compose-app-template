@@ -4,6 +4,7 @@ import app.example.data.model.Email
 import app.example.data.network.EmailApiService
 import app.example.data.network.dto.CreateDraftRequest
 import app.example.data.network.dto.SendEmailRequest
+import app.example.data.network.dto.UpdateReadStatusRequest
 import app.example.data.network.dto.toDomain
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -138,5 +139,25 @@ class EmailRepositoryImpl
                 _updates.tryEmit(Unit)
             }
             return response.success
+        }
+
+        /**
+         * Toggles or sets the read status of an email via the API and updates the local cache.
+         */
+        override suspend fun updateEmailReadStatus(
+            emailId: String,
+            isRead: Boolean?,
+        ): Email {
+            val response =
+                apiService.updateEmailReadStatus(
+                    emailId = emailId,
+                    request = UpdateReadStatusRequest(isRead),
+                )
+            val updatedEmail = response.data.toDomain()
+            cachedEmails = cachedEmails?.map { if (it.id == emailId) updatedEmail else it }
+            cachedDraftEmails = cachedDraftEmails?.map { if (it.id == emailId) updatedEmail else it }
+            cachedSentEmails = cachedSentEmails?.map { if (it.id == emailId) updatedEmail else it }
+            _updates.tryEmit(Unit)
+            return updatedEmail
         }
     }

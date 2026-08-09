@@ -159,6 +159,11 @@ data object InboxScreen : ParcelableScreen {
         data class OnSetThemeMode(
             val themeMode: ThemeMode,
         ) : Event
+
+        data class OnToggleReadStatus(
+            val emailId: String,
+            val isRead: Boolean? = null,
+        ) : Event
     }
 }
 
@@ -236,6 +241,12 @@ class InboxPresenter
             val eventSink: (InboxScreen.Event) -> Unit = { event ->
                 when (event) {
                     is InboxScreen.Event.EmailClicked -> {
+                        scope.launch {
+                            try {
+                                emailRepository.updateEmailReadStatus(event.emailId, isRead = true)
+                            } catch (_: Exception) {
+                            }
+                        }
                         navigator.goTo(DetailScreen(event.emailId))
                     }
 
@@ -286,6 +297,15 @@ class InboxPresenter
                     is InboxScreen.Event.OnSetThemeMode -> {
                         scope.launch {
                             userPreferencesRepository.setThemeMode(event.themeMode)
+                        }
+                    }
+
+                    is InboxScreen.Event.OnToggleReadStatus -> {
+                        scope.launch {
+                            try {
+                                emailRepository.updateEmailReadStatus(event.emailId, event.isRead)
+                            } catch (_: Exception) {
+                            }
                         }
                     }
                 }
@@ -765,13 +785,24 @@ fun ExpressiveEmailItem(
                     Modifier
                         .size(40.dp)
                         .clip(androidx.compose.foundation.shape.CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(
+                            if (!email.isRead) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.primaryContainer
+                            },
+                        ),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = email.sender.take(1).uppercase(),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color =
+                        if (!email.isRead) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        },
                 )
             }
 
@@ -781,14 +812,33 @@ fun ExpressiveEmailItem(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = email.sender,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    Row(
                         modifier = Modifier.weight(1f),
-                    )
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        if (!email.isRead) {
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .size(8.dp)
+                                        .clip(androidx.compose.foundation.shape.CircleShape)
+                                        .background(MaterialTheme.colorScheme.primary),
+                            )
+                        }
+                        Text(
+                            text = email.sender,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight =
+                                if (!email.isRead) {
+                                    androidx.compose.ui.text.font.FontWeight.Bold
+                                } else {
+                                    androidx.compose.ui.text.font.FontWeight.Medium
+                                },
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                        )
+                    }
                     Text(
                         text = email.timestamp,
                         style = MaterialTheme.typography.bodySmall,
@@ -799,7 +849,12 @@ fun ExpressiveEmailItem(
                 Text(
                     text = email.subject,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                    fontWeight =
+                        if (!email.isRead) {
+                            androidx.compose.ui.text.font.FontWeight.Bold
+                        } else {
+                            androidx.compose.ui.text.font.FontWeight.Normal
+                        },
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 )

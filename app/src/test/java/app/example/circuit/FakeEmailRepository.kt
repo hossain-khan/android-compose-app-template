@@ -57,6 +57,19 @@ class FakeEmailRepository(
     ): Email = testEmail(id = "draft-1", subject = subject, body = body, status = "draft")
 
     override suspend fun deleteDraft(draftId: String): Boolean = true
+
+    override suspend fun updateEmailReadStatus(
+        emailId: String,
+        isRead: Boolean?,
+    ): Email {
+        val target =
+            inboxEmails.find { it.id == emailId }
+                ?: draftEmails.find { it.id == emailId }
+                ?: sentEmails.find { it.id == emailId }
+                ?: testEmail(id = emailId)
+        val newReadState = isRead ?: !target.isRead
+        return target.copy(isRead = newReadState)
+    }
 }
 
 /** Convenience factory for creating [Email] instances in tests. */
@@ -69,6 +82,7 @@ fun testEmail(
     recipients: List<String> = listOf("recipient@example.com"),
     timestamp: String = "12:00 PM",
     status: String = "inbox",
+    isRead: Boolean = false,
 ): Email =
     Email(
         id = id,
@@ -79,4 +93,5 @@ fun testEmail(
         recipients = recipients,
         timestamp = timestamp,
         status = status,
+        isRead = isRead,
     )
