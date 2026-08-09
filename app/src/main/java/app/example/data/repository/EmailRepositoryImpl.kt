@@ -4,6 +4,7 @@ import app.example.data.model.Email
 import app.example.data.network.EmailApiService
 import app.example.data.network.dto.CreateDraftRequest
 import app.example.data.network.dto.SendEmailRequest
+import app.example.data.network.dto.UpdateReadStatusRequest
 import app.example.data.network.dto.toDomain
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -150,9 +151,7 @@ class EmailRepositoryImpl
             val response =
                 apiService.updateEmailReadStatus(
                     emailId = emailId,
-                    request =
-                        app.example.data.network.dto
-                            .UpdateReadStatusRequest(isRead),
+                    request = UpdateReadStatusRequest(isRead),
                 )
             val updatedEmail = response.data.toDomain()
             cachedEmails = cachedEmails?.map { if (it.id == emailId) updatedEmail else it }
