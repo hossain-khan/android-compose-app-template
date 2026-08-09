@@ -439,66 +439,6 @@ else
     echo "⚙️  Step 7: Keeping WorkManager files..."
 fi
 
-# Post-cleanup: Handle AppGraph.kt context parameter when both examples and WorkManager are removed
-# When both are removed, the @ApplicationContext @Provides context: Context in AppGraph.Factory
-# becomes unused (no @Provides function or contributed binding requires it), causing a Metro warning
-# that is treated as an error due to -Werror. Remove the unused context parameter in that case.
-if [ "$REMOVE_WORKMANAGER" = true ] && [ "$REMOVE_EXAMPLES" = true ]; then
-    echo "🔧 Post-cleanup: Removing unused context parameter from AppGraph.Factory..."
-    find ./ -name "AppGraph.kt" -type f | while read -r file; do
-        if [ -f "$file" ] && grep -q "ApplicationContext" "$file"; then
-            cat > /tmp/cleanup_appgraph_context.py << 'EOF'
-import sys
-import re
-
-def clean_unused_context_from_appgraph(content):
-    # Normalize line endings to LF for consistent processing
-    content = content.replace('\r\n', '\n').replace('\r', '\n')
-
-    # Remove @ApplicationContext and Context imports (no longer needed).
-    # Match the full import line regardless of what comes before the package segment.
-    content = re.sub(r'^import\s+\S+\.di\.ApplicationContext[ \t]*\n', '', content, flags=re.MULTILINE)
-    content = re.sub(r'^import\s+android\.content\.Context[ \t]*\n', '', content, flags=re.MULTILINE)
-
-    # Remove the @ApplicationContext @Provides context: Context parameter from Factory.create().
-    # The parameter may span multiple lines (annotation on one line, param on the next).
-    # This parameter becomes unused when both WorkManager and examples are removed.
-    content = re.sub(
-        r'(fun create\()\s*@ApplicationContext\s+@Provides\s+context:\s+Context,?\s*(\))',
-        r'\1\2',
-        content,
-        flags=re.DOTALL
-    )
-
-    # Clean up consecutive blank lines left behind
-    content = re.sub(r'\n{3,}', '\n\n', content)
-
-    return content
-
-if __name__ == "__main__":
-    file_path = sys.argv[1]
-    with open(file_path, 'r') as f:
-        content = f.read()
-
-    cleaned_content = clean_unused_context_from_appgraph(content)
-
-    with open(file_path, 'w') as f:
-        f.write(cleaned_content)
-EOF
-            python3 /tmp/cleanup_appgraph_context.py "$file"
-            rm -f /tmp/cleanup_appgraph_context.py
-        fi
-    done
-
-    # Update Application class to call create() without context argument
-    find ./ -name "*App.kt" -type f | while read -r file; do
-        if [ -f "$file" ] && grep -q "\.create(this)" "$file"; then
-            sed -i.bak 's/\.create(this)/.create()/g' "$file"
-        fi
-    done
-
-    echo "AppGraph.kt context parameter cleanup complete"
-fi
 
 # Step 8: Clean up backup files
 echo "🧹 Step 8: Cleaning up backup files..."

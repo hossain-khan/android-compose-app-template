@@ -6,8 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.example.circuit.InboxScreen
+import app.example.data.preferences.ThemeMode
+import app.example.data.preferences.UserPreferencesRepository
 import app.example.di.ActivityKey
 import app.example.ui.theme.CircuitAppTheme
 import com.slack.circuit.foundation.Circuit
@@ -51,6 +56,7 @@ import dev.zacsweers.metro.binding
 class MainActivity
     constructor(
         private val circuit: Circuit,
+        private val userPreferencesRepository: UserPreferencesRepository,
     ) : ComponentActivity() {
         @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalCircuitRetainedApi::class)
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +65,15 @@ class MainActivity
             super.onCreate(savedInstanceState)
 
             setContent {
-                CircuitAppTheme {
+                val themeMode by userPreferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
+                val darkTheme =
+                    when (themeMode) {
+                        ThemeMode.LIGHT -> false
+                        ThemeMode.DARK -> true
+                        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                    }
+
+                CircuitAppTheme(darkTheme = darkTheme) {
                     // See https://slackhq.github.io/circuit/navigation/
                     val navStack = rememberSaveableNavStack(root = InboxScreen)
                     val navigator = rememberCircuitNavigator(navStack)

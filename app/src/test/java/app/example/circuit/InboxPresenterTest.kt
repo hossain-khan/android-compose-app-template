@@ -1,8 +1,14 @@
 package app.example.circuit
 
 import app.example.data.AppVersionService
+import app.example.data.network.NetworkMonitor
+import app.example.data.preferences.ThemeMode
+import app.example.data.preferences.UserPreferencesRepository
 import com.slack.circuit.test.FakeNavigator
 import com.slack.circuit.test.test
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -11,16 +17,12 @@ import org.junit.Test
 
 /**
  * Unit tests for [InboxPresenter] using Circuit's [Presenter.test] helper and [FakeNavigator].
- *
- * Tests verify the UDF state machine: initial loading, success with data, error handling,
- * and navigation events. Circuit's test utilities allow direct interaction with the presenter
- * without mocking Compose internals.
- *
- * See https://slackhq.github.io/circuit/testing/#presenter-unit-tests
  */
 class InboxPresenterTest {
     private val fakeNavigator = FakeNavigator(InboxScreen)
     private val fakeVersionService = AppVersionService { "1.0.0-test" }
+    private val fakeNetworkMonitor = FakeNetworkMonitor()
+    private val fakeUserPreferencesRepository = FakeUserPreferencesRepository()
 
     @Test
     fun `present - emits Loading then Success when repository returns emails`() =
@@ -31,6 +33,8 @@ class InboxPresenterTest {
                     navigator = fakeNavigator,
                     emailRepository = FakeEmailRepository(inboxEmails = emails),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -54,6 +58,8 @@ class InboxPresenterTest {
                             getInboxException = Exception("Network error"),
                         ),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -73,6 +79,8 @@ class InboxPresenterTest {
                     navigator = fakeNavigator,
                     emailRepository = FakeEmailRepository(inboxEmails = listOf(email)),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -97,6 +105,8 @@ class InboxPresenterTest {
                             draftEmails = listOf(testEmail(id = "draft-1")),
                         ),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -126,6 +136,8 @@ class InboxPresenterTest {
                     navigator = fakeNavigator,
                     emailRepository = FakeEmailRepository(draftEmails = drafts),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -159,6 +171,8 @@ class InboxPresenterTest {
                     navigator = fakeNavigator,
                     emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail())),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -179,6 +193,8 @@ class InboxPresenterTest {
                     navigator = fakeNavigator,
                     emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail())),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -201,6 +217,8 @@ class InboxPresenterTest {
                     navigator = fakeNavigator,
                     emailRepository = FakeEmailRepository(inboxEmails = listOf(testEmail())),
                     appVersionService = fakeVersionService,
+                    networkMonitor = fakeNetworkMonitor,
+                    userPreferencesRepository = fakeUserPreferencesRepository,
                 )
 
             presenter.test {
@@ -216,4 +234,30 @@ class InboxPresenterTest {
                 assertFalse(dismissedState.showAppInfo)
             }
         }
+}
+
+class FakeNetworkMonitor(
+    initialOnline: Boolean = true,
+) : NetworkMonitor {
+    private val _isOnline = MutableStateFlow(initialOnline)
+    override val isOnline: Flow<Boolean> = _isOnline.asStateFlow()
+}
+
+class FakeUserPreferencesRepository(
+    initialThemeMode: ThemeMode = ThemeMode.SYSTEM,
+    initialShowUnreadOnly: Boolean = false,
+) : UserPreferencesRepository {
+    private val _themeMode = MutableStateFlow(initialThemeMode)
+    private val _showUnreadOnly = MutableStateFlow(initialShowUnreadOnly)
+
+    override val themeMode: Flow<ThemeMode> = _themeMode.asStateFlow()
+    override val showUnreadOnly: Flow<Boolean> = _showUnreadOnly.asStateFlow()
+
+    override suspend fun setThemeMode(mode: ThemeMode) {
+        _themeMode.value = mode
+    }
+
+    override suspend fun setShowUnreadOnly(unreadOnly: Boolean) {
+        _showUnreadOnly.value = unreadOnly
+    }
 }

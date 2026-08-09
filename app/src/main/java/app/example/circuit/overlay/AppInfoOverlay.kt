@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.example.BuildConfig
 import app.example.R
+import app.example.data.preferences.ThemeMode
 import com.slack.circuitx.overlays.BottomSheetOverlay
 
 /**
@@ -38,7 +40,11 @@ import com.slack.circuitx.overlays.BottomSheetOverlay
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("FunctionName")
-fun AppInfoOverlay(onDismiss: () -> Unit = {}): BottomSheetOverlay<Unit, Unit> =
+fun AppInfoOverlay(
+    currentThemeMode: ThemeMode = ThemeMode.SYSTEM,
+    onThemeModeSelected: (ThemeMode) -> Unit = {},
+    onDismiss: () -> Unit = {},
+): BottomSheetOverlay<Unit, Unit> =
     BottomSheetOverlay(
         model = Unit,
         onDismiss = {
@@ -46,12 +52,16 @@ fun AppInfoOverlay(onDismiss: () -> Unit = {}): BottomSheetOverlay<Unit, Unit> =
         },
     ) { _, overlayNavigator ->
         AppInfoContent(
+            currentThemeMode = currentThemeMode,
+            onThemeModeSelected = onThemeModeSelected,
             onDismiss = { overlayNavigator.finish(Unit) },
         )
     }
 
 @Composable
 private fun AppInfoContent(
+    currentThemeMode: ThemeMode,
+    onThemeModeSelected: (ThemeMode) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -87,6 +97,32 @@ private fun AppInfoContent(
         InfoRow(label = "Package", value = BuildConfig.APPLICATION_ID)
         InfoRow(label = "Built Type", value = BuildConfig.BUILD_TYPE)
         InfoRow(label = "Framework", value = "Circuit + Compose + Metro")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Theme Preference (DataStore)",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(
+                selected = currentThemeMode == ThemeMode.SYSTEM,
+                onClick = { onThemeModeSelected(ThemeMode.SYSTEM) },
+                label = { Text("System") },
+            )
+            FilterChip(
+                selected = currentThemeMode == ThemeMode.LIGHT,
+                onClick = { onThemeModeSelected(ThemeMode.LIGHT) },
+                label = { Text("Light") },
+            )
+            FilterChip(
+                selected = currentThemeMode == ThemeMode.DARK,
+                onClick = { onThemeModeSelected(ThemeMode.DARK) },
+                label = { Text("Dark") },
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
