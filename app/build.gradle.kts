@@ -133,6 +133,7 @@ dependencies {
 
     implementation(libs.javax.inject)
 
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.work)
 
     // Networking

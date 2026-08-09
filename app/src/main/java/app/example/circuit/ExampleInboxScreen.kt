@@ -1,6 +1,6 @@
 package app.example.circuit
 
-import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -19,19 +19,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -40,12 +44,15 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +64,8 @@ import app.example.R
 import app.example.circuit.overlay.AppInfoOverlay
 import app.example.data.AppVersionService
 import app.example.data.model.Email
+import app.example.data.network.NetworkMonitor
+import app.example.data.preferences.UserPreferencesRepository
 import app.example.data.repository.EmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.foundation.CircuitContent
@@ -73,7 +82,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -97,6 +105,10 @@ data object InboxScreen : ParcelableScreen {
             val emails: List<Email>,
             val selectedTab: ScreenTab,
             val showAppInfo: Boolean = false,
+            val isRefreshing: Boolean = false,
+            val searchQuery: String = "",
+            val showUnreadOnly: Boolean = false,
+            val isOnline: Boolean = true,
             val eventSink: (Event) -> Unit,
         ) : State
 
@@ -131,6 +143,16 @@ data object InboxScreen : ParcelableScreen {
         data object Retry : Event
 
         data object OnNewEmail : Event
+
+        data object OnRefresh : Event
+
+        data class OnSearchQueryChanged(
+            val query: String,
+        ) : Event
+
+        data class OnToggleUnreadFilter(
+            val unreadOnly: Boolean,
+        ) : Event
     }
 }
 
@@ -140,6 +162,8 @@ class InboxPresenter
         @Assisted private val navigator: Navigator,
         private val emailRepository: EmailRepository,
         private val appVersionService: AppVersionService,
+        private val networkMonitor: NetworkMonitor,
+        private val userPreferencesRepository: UserPreferencesRepository,
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {
@@ -147,19 +171,29 @@ class InboxPresenter
             var selectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
             var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
             var showAppInfo by rememberRetained { mutableStateOf(false) }
+            var isRefreshing by rememberRetained { mutableStateOf(false) }
+            var searchQuery by rememberRetained { mutableStateOf("") }
             var retryTrigger by rememberRetained { mutableStateOf(0) }
             var pendingDeleteId by rememberRetained { mutableStateOf<String?>(null) }
+
+            val isOnline by networkMonitor.isOnline.collectAsState(initial = true)
+            val showUnreadOnly by userPreferencesRepository.showUnreadOnly.collectAsState(initial = false)
+            val scope = rememberCoroutineScope()
 
             var lastSelectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
             var lastRetryTrigger by rememberRetained { mutableStateOf(0) }
             if (selectedTab != lastSelectedTab || retryTrigger != lastRetryTrigger) {
-                emails = null
+                if (!isRefreshing) {
+                    emails = null
+                }
                 lastSelectedTab = selectedTab
                 lastRetryTrigger = retryTrigger
             }
 
             LaunchedEffect(selectedTab, retryTrigger) {
-                emails = null
+                if (!isRefreshing) {
+                    emails = null
+                }
                 errorMessage = null
                 try {
                     emails =
@@ -170,6 +204,8 @@ class InboxPresenter
                         }
                 } catch (e: Exception) {
                     errorMessage = e.message ?: "Unknown error"
+                } finally {
+                    isRefreshing = false
                 }
             }
 
@@ -184,14 +220,11 @@ class InboxPresenter
                 try {
                     emailRepository.deleteDraft(id)
                 } catch (e: Exception) {
-                    Log.w("InboxPresenter", "Failed to delete draft $id, refreshing list", e)
                     retryTrigger++
                 } finally {
                     pendingDeleteId = null
                 }
             }
-
-            Log.d("InboxPresenter", "Application version: ${appVersionService.getApplicationVersion()}")
 
             val eventSink: (InboxScreen.Event) -> Unit = { event ->
                 when (event) {
@@ -227,13 +260,57 @@ class InboxPresenter
                     InboxScreen.Event.OnNewEmail -> {
                         navigator.goTo(ComposeEmailScreen())
                     }
+
+                    InboxScreen.Event.OnRefresh -> {
+                        isRefreshing = true
+                        retryTrigger++
+                    }
+
+                    is InboxScreen.Event.OnSearchQueryChanged -> {
+                        searchQuery = event.query
+                    }
+
+                    is InboxScreen.Event.OnToggleUnreadFilter -> {
+                        scope.launch {
+                            userPreferencesRepository.setShowUnreadOnly(event.unreadOnly)
+                        }
+                    }
                 }
             }
 
+            val filteredEmails =
+                emails?.filter { email ->
+                    val matchesSearch =
+                        searchQuery.isBlank() ||
+                            email.subject.contains(searchQuery, ignoreCase = true) ||
+                            email.sender.contains(searchQuery, ignoreCase = true) ||
+                            email.body.contains(searchQuery, ignoreCase = true)
+                    val matchesUnread =
+                        !showUnreadOnly || email.status.equals("unread", ignoreCase = true)
+                    matchesSearch && matchesUnread
+                }
+
             return when {
-                errorMessage != null -> InboxScreen.State.Error(errorMessage!!, eventSink)
-                emails != null -> InboxScreen.State.Success(emails!!, selectedTab, showAppInfo, eventSink)
-                else -> InboxScreen.State.Loading
+                errorMessage != null -> {
+                    InboxScreen.State.Error(errorMessage!!, eventSink)
+                }
+
+                filteredEmails != null -> {
+                    InboxScreen.State.Success(
+                        emails = filteredEmails,
+                        selectedTab = selectedTab,
+                        showAppInfo = showAppInfo,
+                        isRefreshing = isRefreshing,
+                        searchQuery = searchQuery,
+                        showUnreadOnly = showUnreadOnly,
+                        isOnline = isOnline,
+                        eventSink = eventSink,
+                    )
+                }
+
+                else -> {
+                    InboxScreen.State.Loading
+                }
             }
         }
 
@@ -482,23 +559,114 @@ fun ExpressiveLoadingIndicator(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun OfflineBanner(
+    isOnline: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    AnimatedVisibility(visible = !isOnline) {
+        Surface(
+            color = MaterialTheme.colorScheme.errorContainer,
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_info_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onErrorContainer,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "You are currently offline",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchAndFilterHeader(
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
+    showUnreadOnly: Boolean,
+    onToggleUnreadFilter: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = onSearchQueryChanged,
+            placeholder = { Text("Search emails...") },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.search_24dp),
+                    contentDescription = "Search",
+                )
+            },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onSearchQueryChanged("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close_24dp),
+                            contentDescription = "Clear",
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(
+                selected = showUnreadOnly,
+                onClick = { onToggleUnreadFilter(!showUnreadOnly) },
+                label = { Text("Unread only") },
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun InboxListContent(
     state: InboxScreen.State.Success,
     isWideScreen: Boolean,
     onEmailClicked: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.emails.isEmpty()) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No emails", style = MaterialTheme.typography.bodyMedium)
-        }
-    } else {
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(state.emails) { email ->
-                ExpressiveEmailItem(
-                    email = email,
-                    onClick = { onEmailClicked(email.id) },
-                )
+    Column(modifier = modifier.fillMaxSize()) {
+        OfflineBanner(isOnline = state.isOnline)
+        SearchAndFilterHeader(
+            searchQuery = state.searchQuery,
+            onSearchQueryChanged = { state.eventSink(InboxScreen.Event.OnSearchQueryChanged(it)) },
+            showUnreadOnly = state.showUnreadOnly,
+            onToggleUnreadFilter = { state.eventSink(InboxScreen.Event.OnToggleUnreadFilter(it)) },
+        )
+
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { state.eventSink(InboxScreen.Event.OnRefresh) },
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            if (state.emails.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No matching emails", style = MaterialTheme.typography.bodyMedium)
+                }
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(state.emails) { email ->
+                        ExpressiveEmailItem(
+                            email = email,
+                            onClick = { onEmailClicked(email.id) },
+                        )
+                    }
+                }
             }
         }
     }
