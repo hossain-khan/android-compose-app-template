@@ -18,8 +18,8 @@ android {
         applicationId = "app.example"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 7
-        versionName = "1.5.0"
+        versionCode = 8
+        versionName = "1.5.1"
 
         // Read key or other properties from local.properties
         val localProperties =
