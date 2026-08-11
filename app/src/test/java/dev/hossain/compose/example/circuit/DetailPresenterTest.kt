@@ -1,8 +1,8 @@
 package dev.hossain.compose.example.circuit
 
-import dev.hossain.compose.example.data.ExampleEmailValidator
 import com.slack.circuit.test.FakeNavigator
 import com.slack.circuit.test.test
+import dev.hossain.compose.example.data.ExampleEmailValidator
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

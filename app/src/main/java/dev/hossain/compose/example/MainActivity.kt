@@ -10,11 +10,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import dev.hossain.compose.example.circuit.InboxScreen
-import dev.hossain.compose.example.data.preferences.ThemeMode
-import dev.hossain.compose.example.data.preferences.UserPreferencesRepository
-import dev.hossain.compose.example.di.ActivityKey
-import dev.hossain.compose.example.ui.theme.CircuitAppTheme
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
@@ -25,6 +20,11 @@ import com.slack.circuit.retained.CircuitRetainedSettings
 import com.slack.circuit.retained.ExperimentalCircuitRetainedApi
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
+import dev.hossain.compose.example.circuit.InboxScreen
+import dev.hossain.compose.example.data.preferences.ThemeMode
+import dev.hossain.compose.example.data.preferences.UserPreferencesRepository
+import dev.hossain.compose.example.di.ActivityKey
+import dev.hossain.compose.example.ui.theme.CircuitAppTheme
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

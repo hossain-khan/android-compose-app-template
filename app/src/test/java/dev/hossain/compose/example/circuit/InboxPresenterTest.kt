@@ -1,11 +1,11 @@
 package dev.hossain.compose.example.circuit
 
+import com.slack.circuit.test.FakeNavigator
+import com.slack.circuit.test.test
 import dev.hossain.compose.example.data.AppVersionService
 import dev.hossain.compose.example.data.network.NetworkMonitor
 import dev.hossain.compose.example.data.preferences.ThemeMode
 import dev.hossain.compose.example.data.preferences.UserPreferencesRepository
-import com.slack.circuit.test.FakeNavigator
-import com.slack.circuit.test.test
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -49,10 +49,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.hossain.compose.example.R
-import dev.hossain.compose.example.data.ExampleEmailValidator
-import dev.hossain.compose.example.data.model.Email
-import dev.hossain.compose.example.data.repository.EmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -62,6 +58,10 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.ParcelableScreen
 import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.serialization.CircuitSerializable
+import dev.hossain.compose.example.R
+import dev.hossain.compose.example.data.ExampleEmailValidator
+import dev.hossain.compose.example.data.model.Email
+import dev.hossain.compose.example.data.repository.EmailRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
