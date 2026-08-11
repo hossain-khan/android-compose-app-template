@@ -12,7 +12,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [OkHttp](https://square.github.io/okhttp/) & [Retrofit](https://square.github.io/retrofit/) networking with [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) and sample API implementation
 * ✔️ GitHub Actions for CI and automated release builds
 * ✔️ Automated APK/AAB builds with keystore signing (see [RELEASE.md](RELEASE.md))
-* ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
+* ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/dev/hossain/compose/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
 * ✔️ `BuildConfig` turned on with example of reading config from `local.properties` file.
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
@@ -101,7 +101,7 @@ These still need to be done manually after using the script:
 * [ ] Generate your app icon (_use [Icon Kitchen](https://icon.kitchen/)_)
 * [ ] Update/remove repository license
 * [ ] Configure [renovate](https://github.com/apps/renovate) for dependency management or remove [`renovate.json`](https://github.com/hossain-khan/android-compose-app-template/blob/main/renovate.json) file
-* [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/app/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
+* [ ] Choose [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/dev/hossain/compose/example/ui/theme/Type.kt#L16-L30) for your app, or remove it.
 * [ ] Verify Android Gradle Plugin (AGP) version compatibility with your development environment in `gradle/libs.versions.toml`
 * [ ] **(Optional)** Set up production keystore for release builds - see [RELEASE.md](RELEASE.md) for automated APK signing
 

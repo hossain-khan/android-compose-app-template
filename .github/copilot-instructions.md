@@ -10,7 +10,7 @@ The template is pre-configured with Circuit, a Compose-driven architecture for K
 android-compose-app-template/
 ├── app/
 │   └── src/
-│       └── main/java/app/example/
+│       └── main/java/dev/hossain/compose/example/
 │           ├── CircuitApp.kt           # Main Application class
 │           ├── MainActivity.kt         # Main Activity with Circuit
 │           ├── circuit/                # Circuit screens and presenters
