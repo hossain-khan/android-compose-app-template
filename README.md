@@ -64,7 +64,7 @@ Run the setup script to automatically handle most of the configuration:
 ```
 
 **What the script does automatically:**
-- Renames package from `app.example` to your preferred package name
+- Renames package from `dev.hossain.compose.example` to your preferred package name
 - Preserves subdirectory structure (`ui/theme/`, `di/`, `circuit/`, `work/`, `data/`)
 - Updates app name and package ID in XML and Gradle files
 - Renames `CircuitApp` to `YourAppNameApp`
@@ -81,7 +81,7 @@ Run the setup script to automatically handle most of the configuration:
 #### Option 2: Manual Customization 🔧
 If you prefer manual control, complete these tasks:
 
-* [ ] Rename the package from **`app.example`** to your preferred app package name.
+* [ ] Rename the package from **`dev.hossain.compose.example`** to your preferred app package name.
 * [ ] Update directory structure based on package name update
 * [ ] Update app name and package id in XML and Gradle
 * [ ] Rename `CircuitApp***` to preferred file names
