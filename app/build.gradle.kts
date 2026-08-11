@@ -18,8 +18,8 @@ android {
         applicationId = "dev.hossain.compose.example"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 8
-        versionName = "1.6.0"
+        versionCode = 9
+        versionName = "1.7.0"
 
         // Read key or other properties from local.properties
         val localProperties =
