@@ -1,0 +1,98 @@
+package dev.hossain.compose.example.data.network
+
+import dev.hossain.compose.example.data.network.dto.CreateDraftRequest
+import dev.hossain.compose.example.data.network.dto.DeleteEmailResponse
+import dev.hossain.compose.example.data.network.dto.EmailListResponse
+import dev.hossain.compose.example.data.network.dto.SendEmailRequest
+import dev.hossain.compose.example.data.network.dto.SingleEmailResponse
+import dev.hossain.compose.example.data.network.dto.SystemResetResponse
+import dev.hossain.compose.example.data.network.dto.UpdateReadStatusRequest
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
+
+/**
+ * Retrofit API contract for the email demo service.
+ *
+ * Base URL: https://email-demo.gohk.xyz/
+ * Full API spec: https://email-demo.gohk.xyz/openapi.json
+ */
+interface EmailApiService {
+    /**
+     * Fetch inbox emails with optional pagination.
+     *
+     * @param limit  Maximum number of emails to return (default: 50, max: 500).
+     * @param offset Pagination offset (default: 0).
+     */
+    @GET("api/emails/inbox")
+    suspend fun getInboxEmails(
+        @Query("limit") limit: Int = 50,
+        @Query("offset") offset: Int = 0,
+    ): EmailListResponse
+
+    /** Fetch all draft emails. */
+    @GET("api/emails/drafts")
+    suspend fun getDraftEmails(): EmailListResponse
+
+    /** Fetch all sent emails. */
+    @GET("api/emails/sent")
+    suspend fun getSentEmails(): EmailListResponse
+
+    /**
+     * Send an email (moves it from draft to inbox on the server).
+     *
+     * Note: Calling this operation may require invalidating local caches
+     * in the repository to reflect changes in the inbox.
+     *
+     * @param request The email content to send.
+     */
+    @POST("api/emails/send")
+    suspend fun sendEmail(
+        @Body request: SendEmailRequest,
+    ): SingleEmailResponse
+
+    /**
+     * Create or update a draft email.
+     *
+     * Note: Calling this operation may require invalidating local draft
+     * caches in the repository to reflect the new or updated draft.
+     *
+     * @param request The draft email content.
+     */
+    @POST("api/emails/drafts")
+    suspend fun createDraft(
+        @Body request: CreateDraftRequest,
+    ): SingleEmailResponse
+
+    /**
+     * Delete an email from inbox or drafts.
+     *
+     * @param emailId The UUID of the email to delete.
+     */
+    @DELETE("api/emails/{emailId}")
+    suspend fun deleteEmail(
+        @Path("emailId") emailId: String,
+    ): DeleteEmailResponse
+
+    /**
+     * Toggle or explicitly set email read status.
+     *
+     * @param emailId The UUID of the email.
+     * @param request Optional request body containing explicit read state. Inverts state if null.
+     */
+    @PATCH("api/emails/{emailId}/read")
+    suspend fun updateEmailReadStatus(
+        @Path("emailId") emailId: String,
+        @Body request: UpdateReadStatusRequest? = null,
+    ): SingleEmailResponse
+
+    /**
+     * Manually trigger a data reset and re-seed the backend with demo data.
+     */
+    @POST("api/system/reset")
+    suspend fun resetSystemData(): SystemResetResponse
+}

@@ -129,38 +129,40 @@ echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
 echo "📜 Keep script: $KEEP_SCRIPT"
 echo ""
 
-# Step 1: Move package structure from app.example to new package
+# Step 1: Move package structure from dev.hossain.compose.example to new package
 echo "📁 Step 1: Restructuring package directories..."
 for n in $(find . -type d \( -path '*/src/androidTest' -or -path '*/src/main' -or -path '*/src/test' \) )
 do
-  if [ -d "$n/java/app/example" ]; then
+  if [ -d "$n/java/dev/hossain/compose/example" ]; then
     echo "Creating $n/java/$SUBDIR"
     mkdir -p $n/java/$SUBDIR
-    echo "Moving directory structure from $n/java/app/example to $n/java/$SUBDIR"
+    echo "Moving directory structure from $n/java/dev/hossain/compose/example to $n/java/$SUBDIR"
     # Use cp to preserve directory structure, then remove source
-    if [ "$(find $n/java/app/example -type f | wc -l)" -gt 0 ]; then
+    if [ "$(find $n/java/dev/hossain/compose/example -type f | wc -l)" -gt 0 ]; then
       # Copy all contents preserving directory structure
-      cp -r $n/java/app/example/* $n/java/$SUBDIR/ 2>/dev/null || true
+      cp -r $n/java/dev/hossain/compose/example/* $n/java/$SUBDIR/ 2>/dev/null || true
       # Also handle the case where there are hidden files
-      cp -r $n/java/app/example/.[^.]* $n/java/$SUBDIR/ 2>/dev/null || true
+      cp -r $n/java/dev/hossain/compose/example/.[^.]* $n/java/$SUBDIR/ 2>/dev/null || true
       echo "Successfully copied $(find $n/java/$SUBDIR -type f | wc -l | tr -d ' ') files"
     else
-      echo "No files found in $n/java/app/example to move."
+      echo "No files found in $n/java/dev/hossain/compose/example to move."
     fi
-    echo "Removing old $n/java/app"
-    rm -rf $n/java/app
+    echo "Removing old $n/java/dev/hossain/compose/example"
+    rm -rf $n/java/dev/hossain/compose/example
+    # Remove empty parent dirs if they exist and are empty
+    rmdir -p $n/java/dev/hossain/compose 2>/dev/null || true
   fi
 done
 
 # Step 2: Update package declarations and imports
 echo "📝 Step 2: Updating package declarations and imports..."
-find ./ -type f -name "*.kt" -exec sed -i.bak "s/package app\.example/package $PACKAGE/g" {} \;
-find ./ -type f -name "*.kt" -exec sed -i.bak "s/import app\.example/import $PACKAGE/g" {} \;
+find ./ -type f -name "*.kt" -exec sed -i.bak "s/package dev\.hossain\.compose\.example/package $PACKAGE/g" {} \;
+find ./ -type f -name "*.kt" -exec sed -i.bak "s/import dev\.hossain\.compose\.example/import $PACKAGE/g" {} \;
 
 # Step 3: Update Gradle files and XML
 echo "🔧 Step 3: Updating Gradle and XML files..."
-find ./ -type f -name "*.kts" -exec sed -i.bak "s/app\.example/$PACKAGE/g" {} \;
-find ./ -type f -name "*.xml" -exec sed -i.bak "s/app\.example/$PACKAGE/g" {} \;
+find ./ -type f -name "*.kts" -exec sed -i.bak "s/dev\.hossain\.compose\.example/$PACKAGE/g" {} \;
+find ./ -type f -name "*.xml" -exec sed -i.bak "s/dev\.hossain\.compose\.example/$PACKAGE/g" {} \;
 
 # Step 4: Rename CircuitApp to {AppName}App
 echo "⚡ Step 4: Renaming CircuitApp to ${APPNAME}App..."
@@ -291,7 +293,7 @@ HOMESCREEN_EOF
             # Replace the InboxScreen import line with HomeScreen import
             sed -i.bak "s|import ${BASE_PACKAGE}\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
             # Replace any wildcard circuit import that would have covered InboxScreen
-            sed -i.bak "s|import app\.example\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
+            sed -i.bak "s|import dev\.hossain\.compose\.example\.circuit\.InboxScreen|import ${BASE_PACKAGE}.circuit.HomeScreen|" "$file"
             # Replace the root screen in the nav stack
             sed -i.bak 's/root = InboxScreen/root = HomeScreen/' "$file"
             echo "Updated MainActivity.kt to use HomeScreen"

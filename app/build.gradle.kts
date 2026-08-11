@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "app.example"
+    namespace = "dev.hossain.compose.example"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "app.example"
+        applicationId = "dev.hossain.compose.example"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 8
