@@ -29,7 +29,7 @@ ksp = "2.3.11"
 
 # Networking
 # https://square.github.io/okhttp/
-okhttp = "5.4.0"
+okhttp = "5.5.0"
 # https://square.github.io/retrofit/
 retrofit = "3.0.0"
 # https://github.com/Kotlin/kotlinx.serialization
