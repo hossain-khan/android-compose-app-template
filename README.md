@@ -1,3 +1,5 @@
+[![Android CI](https://github.com/hossain-khan/android-compose-app-template/actions/workflows/android.yml/badge.svg)](https://github.com/hossain-khan/android-compose-app-template/actions/workflows/android.yml) [![Android Release Build](https://github.com/hossain-khan/android-compose-app-template/actions/workflows/android-release.yml/badge.svg)](https://github.com/hossain-khan/android-compose-app-template/actions/workflows/android-release.yml) [![codecov](https://codecov.io/gh/hossain-khan/android-compose-app-template/graph/badge.svg?token=9H1JX2TFSR)](https://codecov.io/gh/hossain-khan/android-compose-app-template)
+
 # Android - Circuit App Template
 An Android App template that is preconfigured with ⚡️ Circuit UDF architecture.
 
