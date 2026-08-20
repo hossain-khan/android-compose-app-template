@@ -31,6 +31,7 @@ jobs:
               - 'setup-android-env.sh'
               - '.github/workflows/android.yml'
               - '.github/workflows/android-lint.yml'
+              - '.github/workflows/kover.yml'
 
       - name: set up JDK
         if: steps.filter.outputs.src == 'true'

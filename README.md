@@ -15,6 +15,7 @@ An Android App template that is preconfigured with ⚡️ Circuit UDF architectu
 * ✔️ [Google font](https://github.com/hossain-khan/android-compose-app-template/blob/main/app/src/main/java/dev/hossain/compose/example/ui/theme/Type.kt#L9-L14) for choosing different app font.
 * ✔️ `BuildConfig` turned on with example of reading config from `local.properties` file.
 * ✔️ [Kotlin formatter](https://github.com/jeremymailen/kotlinter-gradle) plugin for code formatting and linting
+* ✔️ [Kover](https://github.com/Kotlin/kotlinx-kover) Kotlin code coverage with GitHub Actions and Codecov integration
 * ✔️ [Work Manager](https://developer.android.com/develop/background-work/background-tasks/persistent) for scheduling background tasks
 * ✔️ [Dev Container](.devcontainer) for a ready-to-use Android development environment in VS Code or GitHub Codespaces
 
