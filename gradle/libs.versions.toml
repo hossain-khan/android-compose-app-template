@@ -46,6 +46,11 @@ metro = "1.4.2"
 androidxWork = "2.11.2"
 datastore = "1.2.1"
 
+# Kover - Kotlin code coverage
+# https://github.com/Kotlin/kotlinx-kover
+koverPlugin = "0.9.9"
+
+
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -125,4 +130,9 @@ kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 
 # https://kotlinlang.org/docs/serialization.html
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+# Kover is a set of solutions for collecting test coverage of Kotlin code compiled for JVM and Android platforms.
+# https://github.com/Kotlin/kotlinx-kover?tab=readme-ov-file#kover-gradle-plugin
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "koverPlugin" }
+
 

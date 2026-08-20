@@ -29,4 +29,8 @@ plugins {
     // Applies the Kotlinter plugin for Kotlin code formatting and linting.
     // Project: https://github.com/jeremymailen/kotlinter-gradle
     alias(libs.plugins.kotlinter) apply false
+
+    // Applies the Kotlin Code Coverage (Kover) plugin.
+    // Project: https://github.com/Kotlin/kotlinx-kover
+    alias(libs.plugins.kotlinx.kover) apply false
 }
