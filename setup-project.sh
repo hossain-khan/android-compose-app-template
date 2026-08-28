@@ -190,23 +190,19 @@ if [ "$REMOVE_EXAMPLES" = true ]; then
 
     # Remove circuit overlay directory (AppInfoOverlay.kt references example-only icons)
     echo "🗑️  Removing circuit/overlay directory..."
-    OVERLAY_DIR=$(find ./ -type d -name "overlay" -path "*/circuit/overlay" 2>/dev/null | head -1)
-    [ -n "$OVERLAY_DIR" ] && rm -rf "$OVERLAY_DIR" && echo "Removed: $OVERLAY_DIR"
+    find ./ -path "*/src/*" -type d -name "overlay" -exec rm -rf {} + 2>/dev/null || true
 
     # Remove example-only data layer files (model, network, repository)
     echo "🗑️  Removing example data layer (model, network, repository)..."
     for DATA_SUBDIR in model network repository; do
-        DIR=$(find ./ -type d -name "$DATA_SUBDIR" -path "*/data/$DATA_SUBDIR" 2>/dev/null | head -1)
-        [ -n "$DIR" ] && rm -rf "$DIR" && echo "Removed: $DIR"
+        find ./ -path "*/src/*" -path "*/data/$DATA_SUBDIR" -type d -exec rm -rf {} + 2>/dev/null || true
     done
     # Remove top-level data directory if it becomes empty
+    find ./ -path "*/src/*" -type d -name "data" -empty -delete 2>/dev/null || true
 
     # Remove example-specific presenter tests (they test the Example screens which were just deleted)
     echo "🗑️  Removing example circuit presenter tests..."
-    CIRCUIT_TEST_DIR=$(find ./ -type d -name "circuit" -path "*/test/*" 2>/dev/null | head -1)
-    [ -n "$CIRCUIT_TEST_DIR" ] && rm -rf "$CIRCUIT_TEST_DIR" && echo "Removed: $CIRCUIT_TEST_DIR"
-    DATA_DIR=$(find ./ -type d -name "data" -empty 2>/dev/null | head -1)
-    [ -n "$DATA_DIR" ] && rm -rf "$DATA_DIR" && echo "Removed empty data dir: $DATA_DIR"
+    find ./ -path "*/test/*" -type d -name "circuit" -exec rm -rf {} + 2>/dev/null || true
 
     # Remove example-only vector drawable icons
     echo "🗑️  Removing example-only vector drawable icons..."
@@ -242,9 +238,10 @@ import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.serialization.CircuitSerializable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Home screen - the app's starting point.
@@ -252,7 +249,8 @@ import kotlinx.parcelize.Parcelize
  * Replace this with your own initial screen.
  * See https://slackhq.github.io/circuit/ for Circuit architecture guidance.
  */
-@Parcelize
+@Serializable
+@CircuitSerializable(AppScope::class)
 data object HomeScreen : Screen {
     data object State : CircuitUiState
 }
