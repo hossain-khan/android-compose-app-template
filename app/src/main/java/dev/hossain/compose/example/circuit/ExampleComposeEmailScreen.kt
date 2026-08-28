@@ -47,7 +47,6 @@ import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
-import com.slack.circuit.runtime.screen.ParcelableScreen
 import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.serialization.CircuitSerializable
 import dev.hossain.compose.example.R
@@ -57,18 +56,16 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import retrofit2.HttpException
 
 /** Screen for composing a new email or editing an existing draft. */
-@Parcelize
 @Serializable
 @CircuitSerializable(AppScope::class)
 data class ComposeEmailScreen(
     val draftId: String? = null,
-) : ParcelableScreen {
+) : Screen {
     // See https://slackhq.github.io/circuit/states-and-events/
     @Stable
     sealed interface State : CircuitUiState {

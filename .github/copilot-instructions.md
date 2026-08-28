@@ -178,11 +178,11 @@ All dependency versions are centralized in `gradle/libs.versions.toml`:
 
 **Major Dependencies**:
 - Android Gradle Plugin (AGP): 9.1.0 (supports built-in Kotlin)
-- Kotlin: 2.3.10 (latest stable)
-- KSP: 2.3.6
-- Circuit: 0.33.1
-- Metro: 1.0.0 (latest)
-- Compose BOM: 2026.03.00
+- Kotlin: 2.4.10 (latest stable)
+- KSP: 2.3.11
+- Circuit: 0.38.0
+- Metro: 1.4.2
+- Compose BOM: 2026.08.00
 - WorkManager: 2.11.1
 - Gradle: 9.4.0 (minimum required: 9.3.1)
 

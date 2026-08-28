@@ -68,7 +68,6 @@ import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
-import com.slack.circuit.runtime.screen.ParcelableScreen
 import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.serialization.CircuitSerializable
 import dev.hossain.compose.example.R
@@ -84,7 +83,6 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 /** Standalone enum defining tabs in the unified email navigation container. */
@@ -94,10 +92,9 @@ enum class ScreenTab {
     SENT,
 }
 
-@Parcelize
 @Serializable
 @CircuitSerializable(AppScope::class)
-data object InboxScreen : ParcelableScreen {
+data object InboxScreen : Screen {
     @Stable
     sealed interface State : CircuitUiState {
         data object Loading : State
