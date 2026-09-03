@@ -186,7 +186,7 @@ Add these three secrets (one at a time):
 
 The `android-release.yml` workflow automatically runs on:
 
-- **Every push to main branch**: Creates a snapshot build (artifact available for 30 days)
+- **Every push to main branch**: Creates a snapshot build (artifact available for 90 days)
 - **Manual trigger**: Run the workflow manually from the Actions tab
 - **GitHub release**: Publishes APK and AAB and attaches them to the release
 

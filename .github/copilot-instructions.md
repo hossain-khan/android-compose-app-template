@@ -177,14 +177,14 @@ Card(colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
 All dependency versions are centralized in `gradle/libs.versions.toml`:
 
 **Major Dependencies**:
-- Android Gradle Plugin (AGP): 9.1.0 (supports built-in Kotlin)
+- Android Gradle Plugin (AGP): 9.4.0 (supports built-in Kotlin)
 - Kotlin: 2.4.10 (latest stable)
 - KSP: 2.3.11
 - Circuit: 0.38.0
 - Metro: 1.4.2
 - Compose BOM: 2026.08.00
-- WorkManager: 2.11.1
-- Gradle: 9.4.0 (minimum required: 9.3.1)
+- WorkManager: 2.11.2
+- Gradle: 9.7.1 (minimum required: 9.3.1)
 
 ## Common Patterns
 
@@ -231,9 +231,9 @@ If you run `gh` commands (such as creating a pull request) within the agent sand
    zsh -f -c 'gh pr create --repo hossain-khan/android-compose-app-template ...'
    ```
 
-## AGP 9.1.0 - Built-in Kotlin Support
+## AGP 9.1+ (Built-in Kotlin Support)
 
-This project has been migrated to AGP 9.1.0 with **built-in Kotlin support**. Key points:
+This project has been migrated to AGP 9.1+ (currently AGP 9.4.0) with **built-in Kotlin support**. Key points:
 
 1. **No `kotlin-android` plugin needed** — AGP 9.1+ includes native Kotlin compilation support
 2. **KAPT is incompatible** — Built-in Kotlin doesn't support `kotlin-kapt`. This project uses Metro with KSP instead
