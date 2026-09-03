@@ -85,9 +85,8 @@ yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/
 print_status "Installing required Android SDK packages..."
 "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
     "platform-tools" \
-    "build-tools;35.0.0" \
-    "platforms;android-35" \
-    "platforms;android-36" > /dev/null 2>&1
+    "build-tools;37.0.0" \
+    "platforms;android-37" > /dev/null 2>&1
 
 # Create or update local.properties file
 print_status "Creating local.properties file..."

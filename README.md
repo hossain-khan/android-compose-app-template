@@ -4,7 +4,7 @@
 An Android App template that is preconfigured with ⚡️ Circuit UDF architecture.
 
 > [!CAUTION]
-> Since [`1.0.0`](https://github.com/hossain-khan/android-compose-app-template/releases/tag/1.0.0) release this this template has extended it's feature set
+> Since [`1.0.0`](https://github.com/hossain-khan/android-compose-app-template/releases/tag/1.0.0) release, this template has extended its feature set
 > and does not adhere to templating realm any more. If you plan to use latest version, you may have to spend extra time deleting features that you don't want.
 > Browse the 🏷️ [1.0](https://github.com/hossain-khan/android-compose-app-template/tree/1.0.0) tagged release to read original instructions.
 
@@ -119,7 +119,7 @@ This template includes a [Dev Container](.devcontainer) configuration for a read
 
 ### Features
 - **Base Image**: Java 21 (Bookworm)
-- **Android SDK**: Automatically installed via post-create script (API 36, Build Tools 36.0.0)
+- **Android SDK**: Automatically installed via post-create script (API 37, Build Tools 37.0.0)
 - **VS Code Extensions**: Kotlin, Gradle, Java, and GitHub Copilot support
 - **ADB Access**: Configured with `--privileged` mode to allow connecting physical Android devices
 
