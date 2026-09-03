@@ -31,6 +31,9 @@ jobs:
               - 'build.gradle.kts'
               - 'settings.gradle.kts'
               - 'gradle.properties'
+              - 'gradlew'
+              - 'gradlew.bat'
+              - 'keystore/**'
               - '.github/workflows/kover.yml'
 
       - name: Set up JDK
@@ -39,7 +42,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: gradle
 
       - name: Setup Gradle
         if: steps.filter.outputs.src == 'true' || github.event_name == 'push'

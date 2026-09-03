@@ -33,6 +33,8 @@ jobs:
               - 'build.gradle.kts'
               - 'settings.gradle.kts'
               - 'gradle.properties'
+              - 'gradlew'
+              - 'gradlew.bat'
               - 'keystore/**'
               - 'setup-project.sh'
               - 'setup-android-env.sh'
@@ -60,3 +62,7 @@ jobs:
       - name: Build with Gradle
         if: steps.filter.outputs.src == 'true'
         run: ./gradlew lintKotlin assembleDebug --parallel --daemon
+
+      - if: steps.filter.outputs.src != 'true'
+        name: Skip build
+        run: echo "No app-related changes detected — Android CI build skipped."
