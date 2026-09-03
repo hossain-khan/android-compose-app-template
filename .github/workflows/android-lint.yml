@@ -26,6 +26,8 @@ jobs:
               - 'build.gradle.kts'
               - 'settings.gradle.kts'
               - 'gradle.properties'
+              - 'gradlew'
+              - 'gradlew.bat'
               - 'keystore/**'
               - 'setup-project.sh'
               - 'setup-android-env.sh'
@@ -39,7 +41,6 @@ jobs:
         with:
           java-version: '22'
           distribution: 'temurin'
-          cache: gradle
 
       # Automatic gradle caching using `actions/cache@v4`
       # https://github.com/gradle/actions/tree/main/setup-gradle
@@ -54,3 +55,7 @@ jobs:
       - name: Build with Gradle
         if: steps.filter.outputs.src == 'true'
         run: ./gradlew build
+
+      - if: steps.filter.outputs.src != 'true'
+        name: Skip post-merge check
+        run: echo "No app-related changes detected — post-merge check skipped."
