@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -17,7 +18,8 @@ private val Context.userPreferencesDataStore: DataStore<Preferences> by preferen
  * Metro binding module that provides [DataStore] instance for user preferences.
  */
 @ContributesTo(AppScope::class)
-interface DataStoreModule {
+@BindingContainer
+object DataStoreModule {
     @Provides
     @SingleIn(AppScope::class)
     fun provideDataStore(
