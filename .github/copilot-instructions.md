@@ -56,6 +56,7 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 3. **Scopes**: `@ApplicationContext`, `@ActivityKey`, `@WorkerKey`
 4. **Multibindings**: Use for activity and worker factories
 5. **`@Inject` is implicit** on `@ContributesBinding`, `@ContributesIntoMap`, and `@ContributesIntoSet` (since Metro 0.10.0)
+6. **Use `@BindingContainer` with `@ContributesTo`** for binding modules (use `object` for concrete `@Provides`, or `interface` with `companion object` when combining with `@Multibinds`)
 
 Example:
 ```kotlin
@@ -181,7 +182,7 @@ All dependency versions are centralized in `gradle/libs.versions.toml`:
 - Kotlin: 2.4.10 (latest stable)
 - KSP: 2.3.11
 - Circuit: 0.38.0
-- Metro: 1.4.2
+- Metro: 1.4.3
 - Compose BOM: 2026.08.00
 - WorkManager: 2.11.2
 - Gradle: 9.7.1 (minimum required: 9.3.1)

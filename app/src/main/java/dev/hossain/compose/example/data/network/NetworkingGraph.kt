@@ -2,6 +2,7 @@ package dev.hossain.compose.example.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -22,7 +23,8 @@ import java.util.concurrent.TimeUnit
  * See https://zacsweers.github.io/metro/latest/aggregation/ for more on aggregation.
  */
 @ContributesTo(AppScope::class)
-interface NetworkingGraph {
+@BindingContainer
+object NetworkingGraph {
     /**
      * Provides a configured [OkHttpClient] with:
      * - HTTP request/response logging (body level)
