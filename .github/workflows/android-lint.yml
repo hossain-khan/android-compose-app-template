@@ -39,7 +39,7 @@ jobs:
         if: steps.filter.outputs.src == 'true'
         uses: actions/setup-java@v6
         with:
-          java-version: '22'
+          java-version: '25.0.4+101.0.LTS'
           distribution: 'temurin'
 
       # Automatic gradle caching using `actions/cache@v4`
