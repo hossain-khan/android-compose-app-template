@@ -48,7 +48,7 @@ datastore = "1.2.1"
 
 # Kover - Kotlin code coverage
 # https://github.com/Kotlin/kotlinx-kover
-koverPlugin = "0.9.10"
+koverPlugin = "0.9.11"
 
 
 [libraries]
