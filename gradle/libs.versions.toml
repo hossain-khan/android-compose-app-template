@@ -28,9 +28,9 @@ kotlin = "2.4.21"
 ksp = "2.3.12"
 
 # Networking
-# https://square.github.io/okhttp/
+# https://github.com/lysine-dev/okhttp
 okhttp = "5.5.0"
-# https://square.github.io/retrofit/
+# https://github.com/lysine-dev/retrofit
 retrofit = "3.0.0"
 # https://github.com/Kotlin/kotlinx.serialization
 kotlinxSerializationJson = "1.11.0"
@@ -91,10 +91,10 @@ circuitx-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", v
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
 
 # Networking
-# https://square.github.io/okhttp/
+# https://github.com/lysine-dev/okhttp
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-# https://square.github.io/retrofit/
+# https://github.com/lysine-dev/retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
