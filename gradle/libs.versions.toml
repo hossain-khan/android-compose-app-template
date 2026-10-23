@@ -29,7 +29,7 @@ ksp = "2.3.12"
 
 # Networking
 # https://github.com/lysine-dev/okhttp
-okhttp = "5.5.0"
+okhttp = "5.5.1"
 # https://github.com/lysine-dev/retrofit
 retrofit = "3.0.0"
 # https://github.com/Kotlin/kotlinx.serialization
