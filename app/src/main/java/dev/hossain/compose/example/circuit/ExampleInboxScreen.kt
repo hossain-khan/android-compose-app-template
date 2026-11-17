@@ -53,6 +53,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +64,6 @@ import androidx.window.core.layout.WindowSizeClass
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.foundation.CircuitContent
 import com.slack.circuit.overlay.OverlayEffect
-import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
@@ -177,22 +177,22 @@ class InboxPresenter
     ) : Presenter<InboxScreen.State> {
         @Composable
         override fun present(): InboxScreen.State {
-            var emails by rememberRetained { mutableStateOf<List<Email>?>(null) }
-            var selectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
-            var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
-            var showAppInfo by rememberRetained { mutableStateOf(false) }
-            var isRefreshing by rememberRetained { mutableStateOf(false) }
-            var searchQuery by rememberRetained { mutableStateOf("") }
-            var retryTrigger by rememberRetained { mutableStateOf(0) }
-            var pendingDeleteId by rememberRetained { mutableStateOf<String?>(null) }
+            var emails by retain { mutableStateOf<List<Email>?>(null) }
+            var selectedTab by retain { mutableStateOf(ScreenTab.INBOX) }
+            var errorMessage by retain { mutableStateOf<String?>(null) }
+            var showAppInfo by retain { mutableStateOf(false) }
+            var isRefreshing by retain { mutableStateOf(false) }
+            var searchQuery by retain { mutableStateOf("") }
+            var retryTrigger by retain { mutableStateOf(0) }
+            var pendingDeleteId by retain { mutableStateOf<String?>(null) }
 
             val isOnline by networkMonitor.isOnline.collectAsState(initial = true)
             val showUnreadOnly by userPreferencesRepository.showUnreadOnly.collectAsState(initial = false)
             val themeMode by userPreferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
             val scope = rememberCoroutineScope()
 
-            var lastSelectedTab by rememberRetained { mutableStateOf(ScreenTab.INBOX) }
-            var lastRetryTrigger by rememberRetained { mutableStateOf(0) }
+            var lastSelectedTab by retain { mutableStateOf(ScreenTab.INBOX) }
+            var lastRetryTrigger by retain { mutableStateOf(0) }
             if (selectedTab != lastSelectedTab || retryTrigger != lastRetryTrigger) {
                 if (!isRefreshing) {
                     emails = null

@@ -39,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
@@ -108,9 +108,9 @@ class DetailPresenter
     ) : Presenter<DetailScreen.State> {
         @Composable
         override fun present(): DetailScreen.State {
-            var email by rememberRetained { mutableStateOf<Email?>(null) }
-            var errorMessage by rememberRetained { mutableStateOf<String?>(null) }
-            var retryTrigger by rememberRetained { mutableStateOf(0) }
+            var email by retain { mutableStateOf<Email?>(null) }
+            var errorMessage by retain { mutableStateOf<String?>(null) }
+            var retryTrigger by retain { mutableStateOf(0) }
 
             LaunchedEffect(retryTrigger) {
                 email = null

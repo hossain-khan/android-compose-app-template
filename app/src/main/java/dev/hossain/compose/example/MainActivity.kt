@@ -16,8 +16,6 @@ import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.navstack.rememberSaveableNavStack
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
-import com.slack.circuit.retained.CircuitRetainedSettings
-import com.slack.circuit.retained.ExperimentalCircuitRetainedApi
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dev.hossain.compose.example.circuit.InboxScreen
@@ -58,9 +56,8 @@ class MainActivity(
     private val circuit: Circuit,
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : ComponentActivity() {
-    @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalCircuitRetainedApi::class)
+    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        CircuitRetainedSettings.useFirstParty = true
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
