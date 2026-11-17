@@ -23,9 +23,6 @@ junitVersion = "1.3.0"
 
 # https://kotlinlang.org/docs/releases.html
 kotlin = "2.4.21"
-# The KSP (Kotlin Symbol Processing) plugin version is managed separately in this template.
-# When upgrading Kotlin or KSP, verify that the selected KSP release is compatible with the configured Kotlin version.
-ksp = "2.3.14"
 
 # Networking
 # https://github.com/lysine-dev/okhttp
@@ -88,7 +85,8 @@ circuitx-effects = { group = "com.slack.circuit", name = "circuitx-effects", ver
 circuitx-gestureNav = { group = "com.slack.circuit", name = "circuitx-gesture-navigation", version.ref = "circuit" }
 circuitx-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", version.ref = "circuit" }
 
-javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
+# MetroX Android - https://zacsweers.github.io/metro/latest/
+metrox-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
 
 # Networking
 # https://github.com/lysine-dev/okhttp
@@ -114,12 +112,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
-# Kotlin Symbol Processing API
-# https://kotlinlang.org/docs/ksp-overview.html
-# https://github.com/google/ksp/releases
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
-
-# Metro KSP plugin
+# Metro compiler plugin
 # https://zacsweers.github.io/metro/
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 

@@ -52,7 +52,7 @@ import kotlin.reflect.KClass
  * as of Metro 0.10.0 with `contributesAsInject` enabled by default.
  */
 @ContributesBinding(AppScope::class)
-class AppWorkerFactory(
+internal class AppWorkerFactory(
     private val workerProviders: Map<KClass<out ListenableWorker>, WorkerInstanceFactory<*>>,
 ) : WorkerFactory() {
     override fun createWorker(

@@ -32,7 +32,7 @@ interface UserPreferencesRepository {
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class UserPreferencesRepositoryImpl(
+internal class UserPreferencesRepositoryImpl(
     private val dataStore: DataStore<Preferences>,
 ) : UserPreferencesRepository {
     private object Keys {

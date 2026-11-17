@@ -53,10 +53,12 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 
 1. **Use `@ContributesBinding`** for interface implementations (no need for `@Inject` since Metro 0.10.0)
 2. **Use `@Inject` constructor injection** only for non-contributing classes
-3. **Scopes**: `@ApplicationContext`, `@ActivityKey`, `@WorkerKey`
-4. **Multibindings**: Use for activity and worker factories
-5. **`@Inject` is implicit** on `@ContributesBinding`, `@ContributesIntoMap`, and `@ContributesIntoSet` (since Metro 0.10.0)
-6. **Use `@BindingContainer` with `@ContributesTo`** for binding modules (use `object` for concrete `@Provides`, or `interface` with `companion object` when combining with `@Multibinds`)
+3. **Qualifiers & Map Keys**: `@ApplicationContext` (using `dev.zacsweers.metro.Qualifier`), `@ActivityKey` (from `metrox-android`, supports implicit class key), `@WorkerKey`
+4. **`metrox-android`**: `AppGraph` extends `MetroAppComponentProviders` and `CircuitApp` implements `MetroApplication` so `MetroAppComponentFactory` constructor-injects Activities
+5. **Multibindings**: Use for worker factories and Circuit factories
+6. **`@Inject` is implicit** on `@ContributesBinding`, `@ContributesIntoMap`, and `@ContributesIntoSet` (since Metro 0.10.0)
+7. **`generateContributionProviders` enabled**: Contributed implementation classes can be `internal`
+8. **Use `@BindingContainer` with `@ContributesTo`** for binding modules (use `object` for concrete `@Provides`, or `interface` with `companion object` when combining with `@Multibinds`)
 
 Example:
 ```kotlin
@@ -65,17 +67,17 @@ interface EmailRepository {
     fun getEmails(): List<Email>
 }
 
-// Implementation with Metro DI (no @Inject needed!)
+// Implementation with Metro DI (no @Inject needed; can be internal!)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class EmailRepositoryImpl constructor() : EmailRepository {
+internal class EmailRepositoryImpl : EmailRepository {
     override fun getEmails() = listOf(/* emails */)
 }
 
 // For non-contributing classes, still use @Inject
 @SingleIn(AppScope::class)
 @Inject
-class SomeService constructor() {
+class SomeService {
     // ...
 }
 ```
@@ -178,14 +180,13 @@ Card(colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
 All dependency versions are centralized in `gradle/libs.versions.toml`:
 
 **Major Dependencies**:
-- Android Gradle Plugin (AGP): 9.4.0 (supports built-in Kotlin)
-- Kotlin: 2.4.10 (latest stable)
-- KSP: 2.3.11
-- Circuit: 0.38.0
-- Metro: 1.4.3
-- Compose BOM: 2026.08.00
-- WorkManager: 2.11.2
-- Gradle: 9.7.1 (minimum required: 9.3.1)
+- Android Gradle Plugin (AGP): 9.5.1 (supports built-in Kotlin)
+- Kotlin: 2.4.21 (latest stable)
+- Circuit: 0.39.0
+- Metro: 1.6.0 (compiler plugin + `metrox-android`)
+- Compose BOM: 2026.09.00
+- WorkManager: 2.12.0
+- Gradle: 9.9.1 (minimum required: 9.3.1)
 
 ## Common Patterns
 
@@ -234,10 +235,10 @@ If you run `gh` commands (such as creating a pull request) within the agent sand
 
 ## AGP 9.1+ (Built-in Kotlin Support)
 
-This project has been migrated to AGP 9.1+ (currently AGP 9.4.0) with **built-in Kotlin support**. Key points:
+This project has been migrated to AGP 9.1+ (currently AGP 9.5.1) with **built-in Kotlin support**. Key points:
 
 1. **No `kotlin-android` plugin needed** — AGP 9.1+ includes native Kotlin compilation support
-2. **KAPT is incompatible** — Built-in Kotlin doesn't support `kotlin-kapt`. This project uses Metro with KSP instead
+2. **KAPT is incompatible** — Built-in Kotlin doesn't support `kotlin-kapt`. This project uses Metro's Kotlin compiler plugin instead (no KAPT or KSP needed)
 3. **Gradle 9.3.1+ required** — Ensure your Gradle version is 9.3.1 or higher
 4. **kotlin.compilerOptions{} DSL** — Use for Kotlin compiler options (not `android.kotlinOptions{}`)
 5. **android.sourceSets.kotlin{}** — The only supported way to add custom Kotlin source directories

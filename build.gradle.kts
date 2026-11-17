@@ -15,10 +15,6 @@ plugins {
     // Project: https://developer.android.com/kotlin/parcelize
     alias(libs.plugins.kotlin.parcelize) apply false
 
-    // Applies the Kotlin Symbol Processing (KSP) plugin.
-    // Project: https://github.com/google/ksp
-    alias(libs.plugins.ksp) apply false
-
     // Applies the Metro plugin for dependency injection.
     // Metro is a multiplatform Kotlin dependency injection framework with familiar semantics,
     // compile-time validation, and excellent performance. It combines the best features of

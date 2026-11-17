@@ -153,7 +153,7 @@ class DetailPresenter
 
         @CircuitInject(DetailScreen::class, AppScope::class)
         @AssistedFactory
-        interface Factory {
+        fun interface Factory {
             fun create(
                 navigator: Navigator,
                 screen: DetailScreen,

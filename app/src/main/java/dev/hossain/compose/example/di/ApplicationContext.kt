@@ -1,6 +1,6 @@
 package dev.hossain.compose.example.di
 
-import javax.inject.Qualifier
+import dev.zacsweers.metro.Qualifier
 
 /**
  * Qualifier annotation to denote a `Context` that is specifically an Application context.
