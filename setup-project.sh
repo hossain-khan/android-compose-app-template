@@ -350,7 +350,7 @@ def clean_workmanager_from_app(content):
     content = re.sub(r'Configuration\.Provider,\s*', '', content)
     
     # Remove workManagerConfiguration property (multi-line, more precise)
-    content = re.sub(r'\s*override val workManagerConfiguration:.*?\.build\(\)\s*\n', '', content, flags=re.DOTALL)
+    content = re.sub(r'\n[ \t]*override val workManagerConfiguration:.*?\.build\(\)[ \t]*\n', '\n', content, flags=re.DOTALL)
     
     # Remove scheduleBackgroundWork method call from onCreate
     content = re.sub(r'\s*scheduleBackgroundWork\(\)\s*\n', '\n', content)
