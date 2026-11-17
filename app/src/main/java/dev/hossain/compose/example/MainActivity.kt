@@ -71,12 +71,12 @@ class MainActivity(
                 }
 
             CircuitAppTheme(darkTheme = darkTheme) {
-                // See https://slackhq.github.io/circuit/navigation/
-                val navStack = rememberSaveableNavStack(root = InboxScreen)
-                val navigator = rememberCircuitNavigator(navStack)
-
                 // See https://slackhq.github.io/circuit/circuit-content/
                 CircuitCompositionLocals(circuit) {
+                    // See https://slackhq.github.io/circuit/navigation/
+                    val navStack = rememberSaveableNavStack(root = InboxScreen)
+                    val navigator = rememberCircuitNavigator(navStack)
+
                     // See https://slackhq.github.io/circuit/shared-elements/
                     SharedElementTransitionLayout {
                         // See https://slackhq.github.io/circuit/overlays/
