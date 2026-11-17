@@ -317,11 +317,11 @@ if [ "$REMOVE_WORKMANAGER" = true ]; then
     echo "Cleaning WorkManager references from AppGraph.kt..."
     find ./ -name "AppGraph.kt" -type f | while read -r file; do
         if [ -f "$file" ]; then
-            # Remove WorkManager import
-            sed -i.bak '/import androidx\.work\.WorkManager/d' "$file"
+            # Remove WorkManager imports
+            sed -i.bak '/import androidx\.work\./d' "$file"
             # Remove workManager and workerFactory properties
             sed -i.bak '/val workManager: WorkManager/d' "$file"
-            sed -i.bak '/val workerFactory: AppWorkerFactory/d' "$file"
+            sed -i.bak '/val workerFactory: .*WorkerFactory/d' "$file"
             # Remove providesWorkManager function (multi-line removal using sed)
             sed -i.bak '/^[[:space:]]*@Provides$/,/^[[:space:]]*): WorkManager = WorkManager\.getInstance(context)$/d' "$file"
         fi
