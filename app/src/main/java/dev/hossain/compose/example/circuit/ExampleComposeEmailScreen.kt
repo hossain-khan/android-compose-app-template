@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +43,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
@@ -120,15 +120,15 @@ class ComposeEmailPresenter
     ) : Presenter<ComposeEmailScreen.State> {
         @Composable
         override fun present(): ComposeEmailScreen.State {
-            var to by rememberRetained { mutableStateOf("") }
-            var subject by rememberRetained { mutableStateOf("") }
-            var body by rememberRetained { mutableStateOf("") }
-            var isSaving by rememberRetained { mutableStateOf(false) }
-            var isLoading by rememberRetained { mutableStateOf(screen.draftId != null) }
-            var loadError by rememberRetained { mutableStateOf<String?>(null) }
-            var actionError by rememberRetained { mutableStateOf<String?>(null) }
-            var loadedDraft by rememberRetained { mutableStateOf<Email?>(null) }
-            var pendingAction by rememberRetained { mutableStateOf<PendingAction?>(null) }
+            var to by retain { mutableStateOf("") }
+            var subject by retain { mutableStateOf("") }
+            var body by retain { mutableStateOf("") }
+            var isSaving by retain { mutableStateOf(false) }
+            var isLoading by retain { mutableStateOf(screen.draftId != null) }
+            var loadError by retain { mutableStateOf<String?>(null) }
+            var actionError by retain { mutableStateOf<String?>(null) }
+            var loadedDraft by retain { mutableStateOf<Email?>(null) }
+            var pendingAction by retain { mutableStateOf<PendingAction?>(null) }
 
             // Load the draft if editing an existing one
             LaunchedEffect(screen.draftId) {
