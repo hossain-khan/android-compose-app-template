@@ -317,11 +317,11 @@ if [ "$REMOVE_WORKMANAGER" = true ]; then
     echo "Cleaning WorkManager references from AppGraph.kt..."
     find ./ -name "AppGraph.kt" -type f | while read -r file; do
         if [ -f "$file" ]; then
-            # Remove WorkManager import
-            sed -i.bak '/import androidx\.work\.WorkManager/d' "$file"
+            # Remove WorkManager imports
+            sed -i.bak '/import androidx\.work\./d' "$file"
             # Remove workManager and workerFactory properties
             sed -i.bak '/val workManager: WorkManager/d' "$file"
-            sed -i.bak '/val workerFactory: AppWorkerFactory/d' "$file"
+            sed -i.bak '/val workerFactory: .*WorkerFactory/d' "$file"
             # Remove providesWorkManager function (multi-line removal using sed)
             sed -i.bak '/^[[:space:]]*@Provides$/,/^[[:space:]]*): WorkManager = WorkManager\.getInstance(context)$/d' "$file"
         fi
@@ -350,7 +350,7 @@ def clean_workmanager_from_app(content):
     content = re.sub(r'Configuration\.Provider,\s*', '', content)
     
     # Remove workManagerConfiguration property (multi-line, more precise)
-    content = re.sub(r'\s*override val workManagerConfiguration:.*?\.build\(\)\s*\n', '', content, flags=re.DOTALL)
+    content = re.sub(r'\n[ \t]*override val workManagerConfiguration:.*?\.build\(\)[ \t]*\n', '\n', content, flags=re.DOTALL)
     
     # Remove scheduleBackgroundWork method call from onCreate
     content = re.sub(r'\s*scheduleBackgroundWork\(\)\s*\n', '\n', content)

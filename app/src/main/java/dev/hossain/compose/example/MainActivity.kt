@@ -23,22 +23,23 @@ import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dev.hossain.compose.example.circuit.InboxScreen
 import dev.hossain.compose.example.data.preferences.ThemeMode
 import dev.hossain.compose.example.data.preferences.UserPreferencesRepository
-import dev.hossain.compose.example.di.ActivityKey
 import dev.hossain.compose.example.ui.theme.CircuitAppTheme
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.android.ActivityKey
 
 /**
  * Main activity for the application, demonstrating Metro constructor injection for Activities.
  *
- * This Activity is injected via constructor using Metro DI, enabled by [ComposeAppComponentFactory].
+ * This Activity is injected via constructor using Metro DI, enabled by `metrox-android`'s
+ * `MetroAppComponentFactory`.
  *
  * Key Metro features demonstrated:
- * - [ActivityKey]: Map key annotation for multibinding
+ * - [ActivityKey]: Map key annotation with implicit class key for multibinding
  * - [ContributesIntoMap]: Contributes this Activity to the multibinding map
- * - [Inject]: Marks this class for constructor injection
+ * - [Inject]: Marks this class for constructor injection (implicit with `@ContributesIntoMap`)
  * - [binding]: Type-safe binding helper for specifying the bound type
  *
  * The Activity receives its dependencies ([Circuit]) through constructor injection,
@@ -51,51 +52,50 @@ import dev.zacsweers.metro.binding
  * Note: [@Inject][Inject] is now implicit when using [@ContributesIntoMap][ContributesIntoMap]
  * as of Metro 0.10.0 with `contributesAsInject` enabled by default.
  */
-@ActivityKey(MainActivity::class)
+@ActivityKey
 @ContributesIntoMap(AppScope::class, binding = binding<Activity>())
-class MainActivity
-    constructor(
-        private val circuit: Circuit,
-        private val userPreferencesRepository: UserPreferencesRepository,
-    ) : ComponentActivity() {
-        @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalCircuitRetainedApi::class)
-        override fun onCreate(savedInstanceState: Bundle?) {
-            CircuitRetainedSettings.useFirstParty = true
-            enableEdgeToEdge()
-            super.onCreate(savedInstanceState)
+class MainActivity(
+    private val circuit: Circuit,
+    private val userPreferencesRepository: UserPreferencesRepository,
+) : ComponentActivity() {
+    @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalCircuitRetainedApi::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        CircuitRetainedSettings.useFirstParty = true
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
 
-            setContent {
-                val themeMode by userPreferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
-                val darkTheme =
-                    when (themeMode) {
-                        ThemeMode.LIGHT -> false
-                        ThemeMode.DARK -> true
-                        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-                    }
+        setContent {
+            val themeMode by userPreferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
+            val darkTheme =
+                when (themeMode) {
+                    ThemeMode.LIGHT -> false
+                    ThemeMode.DARK -> true
+                    ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                }
 
-                CircuitAppTheme(darkTheme = darkTheme) {
-                    // See https://slackhq.github.io/circuit/navigation/
-                    val navStack = rememberSaveableNavStack(root = InboxScreen)
-                    val navigator = rememberCircuitNavigator(navStack)
+            CircuitAppTheme(darkTheme = darkTheme) {
+                // See https://slackhq.github.io/circuit/navigation/
+                val navStack = rememberSaveableNavStack(root = InboxScreen)
+                val navigator = rememberCircuitNavigator(navStack)
 
-                    // See https://slackhq.github.io/circuit/circuit-content/
-                    CircuitCompositionLocals(circuit) {
-                        // See https://slackhq.github.io/circuit/shared-elements/
-                        SharedElementTransitionLayout {
-                            // See https://slackhq.github.io/circuit/overlays/
-                            ContentWithOverlays {
-                                NavigableCircuitContent(
-                                    navigator = navigator,
-                                    navStack = navStack,
-                                    decoratorFactory =
-                                        remember {
-                                            GestureNavigationDecorationFactory()
-                                        },
-                                )
-                            }
+                // See https://slackhq.github.io/circuit/circuit-content/
+                CircuitCompositionLocals(circuit) {
+                    // See https://slackhq.github.io/circuit/shared-elements/
+                    SharedElementTransitionLayout {
+                        // See https://slackhq.github.io/circuit/overlays/
+                        ContentWithOverlays {
+                            NavigableCircuitContent(
+                                navigator = navigator,
+                                navStack = navStack,
+                                decoratorFactory =
+                                    remember {
+                                        GestureNavigationDecorationFactory()
+                                    },
+                            )
                         }
                     }
                 }
             }
         }
     }
+}

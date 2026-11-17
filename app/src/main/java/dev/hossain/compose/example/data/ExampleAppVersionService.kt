@@ -20,11 +20,10 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class ExampleAppVersionService
-    constructor(
-        @ApplicationContext context: Context,
-    ) : AppVersionService {
-        private val versionName: String = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "Unknown"
+internal class ExampleAppVersionService(
+    @ApplicationContext context: Context,
+) : AppVersionService {
+    private val versionName: String = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "Unknown"
 
-        override fun getApplicationVersion(): String = versionName
-    }
+    override fun getApplicationVersion(): String = versionName
+}

@@ -6,7 +6,6 @@
 
     <application
         android:name=".CircuitApp"
-        android:appComponentFactory=".di.ComposeAppComponentFactory"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,8 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         tools:targetApi="37"
-        android:enableOnBackInvokedCallback="true"
-        tools:replace="android:appComponentFactory">
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

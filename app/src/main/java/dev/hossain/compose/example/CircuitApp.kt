@@ -11,6 +11,8 @@ import androidx.work.workDataOf
 import dev.hossain.compose.example.di.AppGraph
 import dev.hossain.compose.example.work.SampleWorker
 import dev.zacsweers.metro.createGraphFactory
+import dev.zacsweers.metrox.android.MetroAppComponentProviders
+import dev.zacsweers.metrox.android.MetroApplication
 
 /**
  * Application class for the app with key initializations.
@@ -18,11 +20,13 @@ import dev.zacsweers.metro.createGraphFactory
  * This class demonstrates the following Metro features:
  * - Graph creation using [createGraphFactory]
  * - Lazy initialization of the dependency graph
+ * - [MetroApplication] integration for `metrox-android`'s `MetroAppComponentFactory`
  *
  * See https://zacsweers.github.io/metro/latest/dependency-graphs/ for more on creating graphs.
  */
 class CircuitApp :
     Application(),
+    MetroApplication,
     Configuration.Provider {
     /**
      * Lazily creates the Metro app graph using the factory pattern.
@@ -35,7 +39,8 @@ class CircuitApp :
      */
     val appGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
 
-    fun appGraph(): AppGraph = appGraph
+    override val appComponentProviders: MetroAppComponentProviders
+        get() = appGraph
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(appGraph.workerFactory).build()

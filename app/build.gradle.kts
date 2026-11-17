@@ -1,3 +1,5 @@
+import dev.zacsweers.metro.gradle.DelicateMetroGradleApi
+import dev.zacsweers.metro.gradle.ExperimentalMetroGradleApi
 import java.util.Properties
 
 plugins {
@@ -6,7 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlinx.kover)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.metro)
     alias(libs.plugins.kotlinter)
 }
@@ -84,10 +85,9 @@ android {
     }
 
     lint {
-        // Disable Instantiatable lint rule because we use a custom AppComponentFactory
-        // (ComposeAppComponentFactory) for dependency injection. Activities are injected
-        // via constructor parameters and instantiated by our DI framework (Metro) rather
-        // than the Android system's default no-arg constructor mechanism.
+        // Disable Instantiatable lint rule because we use metrox-android's MetroAppComponentFactory
+        // for dependency injection. Activities are injected via constructor parameters and
+        // instantiated by Metro rather than Android's default no-arg constructor mechanism.
         disable += "Instantiatable"
     }
 
@@ -190,7 +190,7 @@ dependencies {
     implementation(libs.circuitx.gestureNav)
     implementation(libs.circuitx.overlays)
 
-    implementation(libs.javax.inject)
+    implementation(libs.metrox.android)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.work)
@@ -217,15 +217,27 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
+val isReleaseBuild =
+    gradle.startParameter.taskNames.any {
+        it.contains("release", ignoreCase = true)
+    }
+
+@OptIn(DelicateMetroGradleApi::class, ExperimentalMetroGradleApi::class)
 metro {
-    // Enable Metro debug mode for better logging and debugging support
-    // When enabled, Metro will emit detailed debug information about the dependency graph
-    // See https://zacsweers.github.io/metro/latest/
-    debug.set(true)
+    // Enable Metro debug mode and graph reports/stats for debug (non-release) builds.
+    // Release builds skip this overhead.
+    // See https://zacsweers.github.io/metro/latest/debugging/ and https://zacsweers.github.io/metro/latest/graph-analysis/
+    debug.set(!isReleaseBuild)
+    if (!isReleaseBuild) {
+        reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
+    }
+
+    // Generate top-level @Provides contribution providers instead of nested @Binds interfaces,
+    // allowing contributed implementation classes to remain internal.
+    generateContributionProviders.set(true)
 
     // Enable Metro's built-in Circuit codegen support (introduced in Metro 0.13.0).
     // This replaces the circuit-codegen KSP processor and the circuit.codegen.mode=metro KSP arg.
     // See https://zacsweers.github.io/metro/latest/circuit/
-    @Suppress("DelicateApi")
     enableCircuitCodegen.set(true)
 }

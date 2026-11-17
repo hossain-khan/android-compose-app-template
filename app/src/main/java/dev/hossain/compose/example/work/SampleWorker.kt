@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dev.hossain.compose.example.di.AppWorkerFactory
 import dev.hossain.compose.example.di.AppWorkerFactory.WorkerInstanceFactory
+import dev.hossain.compose.example.di.ApplicationContext
 import dev.hossain.compose.example.di.WorkerKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -42,7 +43,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 @AssistedInject
 class SampleWorker(
-    context: Context,
+    @ApplicationContext context: Context,
     @Assisted params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
     companion object {
