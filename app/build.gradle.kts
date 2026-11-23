@@ -135,21 +135,25 @@ kover {
                     "*Serializer*",
                     // Circuit generated code
                     "*Circuit*",
-                    // Compose UI Composables, screens, themes, and views
+                    // Compose UI Composables, screens, overlays, themes, and views
                     "*.ui.theme.*",
                     "*ScreenKt*",
                     "*ViewKt*",
                     "*ContentKt*",
                     "*ComponentsKt*",
                     "*BottomSheetKt*",
+                    "*OverlayKt*",
                     "*PreviewKt*",
                     "*ComposableSingletons*",
-                    // Android UI entry points
+                    // DI wiring and Android UI entry points
+                    "*.di.*",
                     "*Activity*",
                     "*Application*",
                 )
+                // Ignore @Composable functions and previews that are not unit-testable
                 annotatedBy(
                     "androidx.compose.runtime.Composable",
+                    "androidx.compose.runtime.ComposableTarget",
                     "androidx.compose.ui.tooling.preview.Preview",
                     "*Composable",
                     "*Parcelize",
@@ -159,11 +163,10 @@ kover {
             }
         }
 
-        variant("release") {
-            // verification only for 'release' build variant
+        variant("debug") {
             verify {
                 rule {
-                    minBound(50)
+                    minBound(80)
                 }
             }
         }
