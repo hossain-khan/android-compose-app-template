@@ -210,10 +210,12 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.truth)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.junit)
+    testImplementation(libs.truth)
     // Circuit test utilities: presenterTestOf(), Presenter.test(), FakeNavigator, TestEventSink
     // See https://slackhq.github.io/circuit/testing/
     testImplementation(libs.circuit.test)
