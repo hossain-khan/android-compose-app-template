@@ -84,6 +84,8 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 ```
 
 - Write unit tests for repositories and business logic covering success, error, and edge cases.
+- Use **Google Truth** (`Truth.assertThat(...)`) for all test assertions (avoid `org.junit.Assert.*`).
+- **Prefer Fakes over Mocks**: create lightweight fake implementations (e.g., `FakeEmailRepository`, `FakeNavigator`) instead of using mocking frameworks.
 
 ## GitHub CLI (`gh`) Sandbox Workaround
 
