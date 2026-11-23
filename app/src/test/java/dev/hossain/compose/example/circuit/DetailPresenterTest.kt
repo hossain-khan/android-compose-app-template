@@ -1,11 +1,10 @@
 package dev.hossain.compose.example.circuit
 
+import com.google.common.truth.Truth.assertThat
 import com.slack.circuit.test.FakeNavigator
 import com.slack.circuit.test.test
 import dev.hossain.compose.example.data.ExampleEmailValidator
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 /**
@@ -34,10 +33,10 @@ class DetailPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(DetailScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(DetailScreen.State.Loading)
 
                 val successState = awaitItem() as DetailScreen.State.Success
-                assertEquals(email, successState.email)
+                assertThat(successState.email).isEqualTo(email)
             }
         }
 
@@ -53,10 +52,10 @@ class DetailPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(DetailScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(DetailScreen.State.Loading)
 
                 val errorState = awaitItem() as DetailScreen.State.Error
-                assertEquals("Email not found", errorState.message)
+                assertThat(errorState.message).isEqualTo("Email not found")
             }
         }
 
@@ -75,10 +74,10 @@ class DetailPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(DetailScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(DetailScreen.State.Loading)
 
                 val errorState = awaitItem() as DetailScreen.State.Error
-                assertEquals("Connection timeout", errorState.message)
+                assertThat(errorState.message).isEqualTo("Connection timeout")
             }
         }
 
@@ -95,13 +94,13 @@ class DetailPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(DetailScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(DetailScreen.State.Loading)
                 val successState = awaitItem() as DetailScreen.State.Success
 
                 successState.eventSink(DetailScreen.Event.BackClicked)
             }
 
-            assertNotNull(fakeNavigator.awaitPop())
+            assertThat(fakeNavigator.awaitPop()).isNotNull()
         }
 
     @Test
@@ -119,12 +118,12 @@ class DetailPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(DetailScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(DetailScreen.State.Loading)
                 val errorState = awaitItem() as DetailScreen.State.Error
 
                 errorState.eventSink(DetailScreen.Event.BackClicked)
             }
 
-            assertNotNull(fakeNavigator.awaitPop())
+            assertThat(fakeNavigator.awaitPop()).isNotNull()
         }
 }

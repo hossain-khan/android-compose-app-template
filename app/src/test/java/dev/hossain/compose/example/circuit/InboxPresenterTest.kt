@@ -1,5 +1,6 @@
 package dev.hossain.compose.example.circuit
 
+import com.google.common.truth.Truth.assertThat
 import com.slack.circuit.test.FakeNavigator
 import com.slack.circuit.test.test
 import dev.hossain.compose.example.data.AppVersionService
@@ -10,9 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
@@ -38,12 +36,12 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
 
                 val successState = awaitItem() as InboxScreen.State.Success
-                assertEquals(emails, successState.emails)
-                assertEquals(ScreenTab.INBOX, successState.selectedTab)
-                assertFalse(successState.showAppInfo)
+                assertThat(successState.emails).isEqualTo(emails)
+                assertThat(successState.selectedTab).isEqualTo(ScreenTab.INBOX)
+                assertThat(successState.showAppInfo).isFalse()
             }
         }
 
@@ -63,10 +61,10 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
 
                 val errorState = awaitItem() as InboxScreen.State.Error
-                assertEquals("Network error", errorState.message)
+                assertThat(errorState.message).isEqualTo("Network error")
             }
         }
 
@@ -84,13 +82,13 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
 
                 successState.eventSink(InboxScreen.Event.EmailClicked("email-123"))
             }
 
-            assertEquals(DetailScreen("email-123"), fakeNavigator.awaitNextScreen())
+            assertThat(fakeNavigator.awaitNextScreen()).isEqualTo(DetailScreen("email-123"))
         }
 
     @Test
@@ -110,20 +108,20 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
-                assertEquals(ScreenTab.INBOX, successState.selectedTab)
+                assertThat(successState.selectedTab).isEqualTo(ScreenTab.INBOX)
 
                 // Select DRAFTS tab
                 successState.eventSink(InboxScreen.Event.TabSelected(ScreenTab.DRAFTS))
 
                 // Emits Loading immediately as emails list is cleared synchronously
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
 
                 // Emits Success with drafts
                 val draftsState = awaitItem() as InboxScreen.State.Success
-                assertEquals(ScreenTab.DRAFTS, draftsState.selectedTab)
-                assertEquals("draft-1", draftsState.emails.first().id)
+                assertThat(draftsState.selectedTab).isEqualTo(ScreenTab.DRAFTS)
+                assertThat(draftsState.emails.first().id).isEqualTo("draft-1")
             }
         }
 
@@ -141,7 +139,7 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val initialSuccess = awaitItem() as InboxScreen.State.Success
 
                 // Select DRAFTS tab first
@@ -150,15 +148,15 @@ class InboxPresenterTest {
                 // Consume tab change emissions
                 awaitItem() // Success tab change (old inbox emails)
                 val draftsSuccess = awaitItem() as InboxScreen.State.Success // Success drafts
-                assertEquals(2, draftsSuccess.emails.size)
+                assertThat(draftsSuccess.emails).hasSize(2)
 
                 // Trigger delete
                 draftsSuccess.eventSink(InboxScreen.Event.DeleteDraft("draft-1"))
 
                 // Expect optimistic UI update (removal of draft-1)
                 val updatedSuccess = awaitItem() as InboxScreen.State.Success
-                assertEquals(1, updatedSuccess.emails.size)
-                assertEquals("draft-2", updatedSuccess.emails.first().id)
+                assertThat(updatedSuccess.emails).hasSize(1)
+                assertThat(updatedSuccess.emails.first().id).isEqualTo("draft-2")
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -176,13 +174,13 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
 
                 successState.eventSink(InboxScreen.Event.OnNewEmail)
             }
 
-            assertEquals(ComposeEmailScreen(), fakeNavigator.awaitNextScreen())
+            assertThat(fakeNavigator.awaitNextScreen()).isEqualTo(ComposeEmailScreen())
         }
 
     @Test
@@ -198,14 +196,14 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
-                assertFalse(successState.showAppInfo)
+                assertThat(successState.showAppInfo).isFalse()
 
                 successState.eventSink(InboxScreen.Event.InfoClicked)
 
                 val withInfoState = awaitItem() as InboxScreen.State.Success
-                assertTrue(withInfoState.showAppInfo)
+                assertThat(withInfoState.showAppInfo).isTrue()
             }
         }
 
@@ -222,16 +220,16 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
 
                 successState.eventSink(InboxScreen.Event.InfoClicked)
                 val withInfoState = awaitItem() as InboxScreen.State.Success
-                assertTrue(withInfoState.showAppInfo)
+                assertThat(withInfoState.showAppInfo).isTrue()
 
                 withInfoState.eventSink(InboxScreen.Event.InfoDismissed)
                 val dismissedState = awaitItem() as InboxScreen.State.Success
-                assertFalse(dismissedState.showAppInfo)
+                assertThat(dismissedState.showAppInfo).isFalse()
             }
         }
 
@@ -248,7 +246,7 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
 
                 successState.eventSink(InboxScreen.Event.OnToggleReadStatus("1", isRead = true))
@@ -269,7 +267,7 @@ class InboxPresenterTest {
                 )
 
             presenter.test {
-                assertEquals(InboxScreen.State.Loading, awaitItem())
+                assertThat(awaitItem()).isEqualTo(InboxScreen.State.Loading)
                 val successState = awaitItem() as InboxScreen.State.Success
 
                 successState.eventSink(InboxScreen.Event.OnResetDemoData)
