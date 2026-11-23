@@ -473,8 +473,67 @@ else
     echo "   Please run './gradlew formatKotlin' manually after setup completes"
 fi
 
-# Step 10: Update README and remove template-specific files
-echo "📄 Step 10: Cleaning up template files..."
+# Step 10: Update README, AGENTS.md, and remove template-specific files
+echo "📄 Step 10: Updating documentation and cleaning up template files..."
+if [ -f "AGENTS.md" ]; then
+    echo "🤖 Updating AGENTS.md for $APPNAME..."
+    REPO_SLUG="<owner>/<repo>"
+    if command -v git &> /dev/null && [ -d ".git" ]; then
+        ORIGIN_URL=$(git remote get-url origin 2>/dev/null || true)
+        DETECTED_SLUG=$(echo "$ORIGIN_URL" | sed -nE 's#.*github\.com[:/]([^/]+/[^/.]+)(\.git)?$#\1#p')
+        if [ -n "$DETECTED_SLUG" ] && [ "$DETECTED_SLUG" != "hossain-khan/android-compose-app-template" ]; then
+            REPO_SLUG="$DETECTED_SLUG"
+        fi
+    fi
+
+    python3 - "AGENTS.md" "$PACKAGE" "$SUBDIR" "$APPNAME" "$DISPLAY_NAME" "$REMOVE_EXAMPLES" "$REMOVE_WORKMANAGER" "$KEEP_SCRIPT" "$REPO_SLUG" << 'EOF'
+import re
+import sys
+
+path, package, subdir, app_name, display_name, remove_examples, remove_wm, keep_script, repo_slug = sys.argv[1:10]
+remove_examples = remove_examples == "true"
+remove_wm = remove_wm == "true"
+keep_script = keep_script == "true"
+
+with open(path, "r") as f:
+    content = f.read()
+
+content = content.replace("dev.hossain.compose.example", package)
+content = content.replace("dev/hossain/compose/example", subdir)
+content = content.replace("CircuitApp", f"{app_name}App")
+content = content.replace("android-compose-app-template/", f"{app_name}/")
+content = content.replace("Android app template using", f"{display_name} — Android app using")
+content = content.replace("hossain-khan/android-compose-app-template", repo_slug)
+
+if not keep_script:
+    content = content.replace(
+        "├── gradle/libs.versions.toml    # Centralized dependency & plugin versions\n"
+        "└── setup-project.sh             # Template customization script\n",
+        "└── gradle/libs.versions.toml    # Centralized dependency & plugin versions\n",
+    )
+
+if remove_examples:
+    content = re.sub(
+        r"(│   ├── circuit/)                 # Circuit screens, presenters, and overlays\n(?:│   │   [^\n]*\n)+",
+        r"\1                 # Circuit screens and presenters\n│   │   └── HomeScreen.kt\n",
+        content,
+    )
+    content = content.replace(
+        "# Models, network, preferences, repositories",
+        "# App services and user preferences",
+    )
+
+if remove_wm:
+    content = content.replace(", Metro DI, and optional WorkManager.", ", and Metro DI.")
+    content = content.replace(" (Metro graph + WorkManager config)", " (Metro graph)")
+    content = re.sub(r"│   ├── work/[^\n]*\n", "", content)
+    content = content.replace(", `@ActivityKey`, and `@WorkerKey`.", " and `@ActivityKey`.")
+    content = re.sub(r"\n### WorkManager Workers\n.*?(?=\n## UI & Code Style)", "", content, flags=re.DOTALL)
+
+with open(path, "w") as f:
+    f.write(content)
+EOF
+fi
 if [ -f "README.md" ]; then
     # Create a minimal README for the new project
     cat > README.md << EOF

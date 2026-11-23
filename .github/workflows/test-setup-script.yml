@@ -59,6 +59,7 @@ jobs:
               - 'gradle.properties'
               - 'gradlew'
               - 'gradlew.bat'
+              - 'AGENTS.md'
               - 'setup-project.sh'
               - 'setup-android-env.sh'
               - '.github/workflows/android-release.yml'
@@ -129,6 +130,11 @@ jobs:
           # Check that release workflow artifact prefix was updated (LocationHistory -> locationhistory)
           grep -q "APP_ARTIFACT_PREFIX: locationhistory" .github/workflows/android-release.yml || (echo "❌ Release artifact prefix not updated in android-release.yml" && exit 1)
           
+          # Check that AGENTS.md was updated for the new project
+          grep -q "dev/hossain/locationhistory" AGENTS.md || (echo "❌ Package path not updated in AGENTS.md" && exit 1)
+          grep -q "LocationHistoryApp.kt" AGENTS.md || (echo "❌ Application class not updated in AGENTS.md" && exit 1)
+          ! grep -q "hossain-khan/android-compose-app-template" AGENTS.md || (echo "❌ Template repo slug still in AGENTS.md" && exit 1)
+          
           echo "✅ Basic project structure validation passed"
 
       # Test WorkManager removal scenario - validates that WorkManager is completely removed
@@ -151,6 +157,9 @@ jobs:
           
           # Check that WorkManager provider is removed from AndroidManifest.xml
           ! grep -r "InitializationProvider" app/src/main/AndroidManifest.xml || (echo "❌ WorkManager provider still in AndroidManifest.xml" && exit 1)
+          
+          # Check that WorkManager references are removed from AGENTS.md
+          ! grep -q "WorkManager\|@WorkerKey" AGENTS.md || (echo "❌ WorkManager references still in AGENTS.md" && exit 1)
           
           echo "✅ WorkManager removal validation passed"
 
@@ -197,6 +206,10 @@ jobs:
           
           # Check that HomeScreen (non-example starter) is preserved
           find . -name "HomeScreen.kt" -type f | grep -q . || (echo "❌ HomeScreen.kt was incorrectly removed" && exit 1)
+          
+          # Check that AGENTS.md reflects HomeScreen and omits Example* screens
+          grep -q "HomeScreen.kt" AGENTS.md || (echo "❌ HomeScreen.kt missing from AGENTS.md" && exit 1)
+          ! grep -q "ExampleInboxScreen" AGENTS.md || (echo "❌ Example screens still referenced in AGENTS.md" && exit 1)
           
           echo "✅ Examples removal validation passed"
 
