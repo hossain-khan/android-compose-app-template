@@ -29,6 +29,7 @@
 #   - Updates class references: CircuitApp → {AppName}App in all .kt, .xml, .kts files
 #   - Sets app display name in strings.xml by splitting PascalCase: WeatherForecast → "Weather Forecast"
 #   - Sets project name in settings.gradle.kts by splitting PascalCase: PhotoGallery → "Photo Gallery"
+#   - Sets release APK/AAB filename prefix in .github/workflows/android-release.yml (lowercased AppName)
 #   - Used in git commit message as project identifier
 #   - Becomes the main Application class name for your project
 #
@@ -120,10 +121,18 @@ SUBDIR=${PACKAGE//.//} # Replaces . with /
 # e.g., "WeatherForecast" becomes "Weather Forecast"
 DISPLAY_NAME=$(echo "$APPNAME" | sed 's/\([A-Z]\)/ \1/g' | sed 's/^ //')
 
+# Create lowercase artifact prefix for release APK/AAB filenames
+# e.g., "CodeMateX" becomes "codematex"
+ARTIFACT_PREFIX=$(echo "$APPNAME" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9_-')
+if [ -z "$ARTIFACT_PREFIX" ]; then
+    ARTIFACT_PREFIX="app"
+fi
+
 echo "🚀 Starting Android Circuit App Template customization..."
 echo "📦 New package: $PACKAGE"
 echo "📱 App name: $APPNAME"
 echo "📱 Display name: $DISPLAY_NAME"
+echo "📦 Release artifact prefix: $ARTIFACT_PREFIX"
 KEEP_WORKMANAGER=$([ "$REMOVE_WORKMANAGER" = false ] && echo "true" || echo "false")
 echo "⚙️  Keep WorkManager: $KEEP_WORKMANAGER"
 echo "📜 Keep script: $KEEP_SCRIPT"
@@ -176,10 +185,13 @@ if [ -f "app/src/main/java/$SUBDIR/CircuitApp.kt" ]; then
     echo "Renamed CircuitApp.kt to ${APPNAME}App.kt"
 fi
 
-# Step 5: Update app name in strings.xml and settings.gradle.kts
-echo "🏷️  Step 5: Updating app name in resource and configuration files..."
+# Step 5: Update app name in strings.xml, settings.gradle.kts, and release workflow
+echo "🏷️  Step 5: Updating app name in resource, configuration, and workflow files..."
 find ./ -name "strings.xml" -exec sed -i.bak "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">$DISPLAY_NAME<\/string>/g" {} \;
 find ./ -name "settings.gradle.kts" -exec sed -i.bak "s/rootProject\.name = \".*\"/rootProject.name = \"$DISPLAY_NAME\"/g" {} \;
+if [ -f ".github/workflows/android-release.yml" ]; then
+    sed -i.bak "s/APP_ARTIFACT_PREFIX: .*/APP_ARTIFACT_PREFIX: $ARTIFACT_PREFIX/" ".github/workflows/android-release.yml"
+fi
 
 # Step 6: Handle Example files
 if [ "$REMOVE_EXAMPLES" = true ]; then

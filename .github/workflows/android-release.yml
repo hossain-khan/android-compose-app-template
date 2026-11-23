@@ -20,6 +20,11 @@ on:
   release:
     types: [published]
 
+env:
+  # Filename prefix for release APK and AAB assets (e.g., "<prefix>-v1.0.0.apk").
+  # Automatically updated by setup-project.sh using your configured AppName.
+  APP_ARTIFACT_PREFIX: app
+
 jobs:
   build-release:
     runs-on: ubuntu-latest
@@ -133,14 +138,14 @@ jobs:
       - name: Rename APK and AAB
         run: |
           mkdir -p artifact
-          cp app/build/outputs/apk/release/app-release.apk artifact/app-v${{ steps.version.outputs.VERSION }}.apk
-          cp app/build/outputs/bundle/release/app-release.aab artifact/app-v${{ steps.version.outputs.VERSION }}.aab
+          cp app/build/outputs/apk/release/app-release.apk artifact/${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.apk
+          cp app/build/outputs/bundle/release/app-release.aab artifact/${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.aab
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v7
         with:
           name: app-apk
-          path: artifact/app-v${{ steps.version.outputs.VERSION }}.apk
+          path: artifact/${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.apk
           # Use maximum allowed retention period
           # https://github.com/actions/upload-artifact?tab=readme-ov-file#retention-period
           retention-days: 90
@@ -149,7 +154,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: app-aab
-          path: artifact/app-v${{ steps.version.outputs.VERSION }}.aab
+          path: artifact/${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.aab
           retention-days: 90
 
       # If this is running due to a GitHub release, attach the APK and AAB to the release
@@ -173,8 +178,8 @@ jobs:
           echo "Found release ID: $RELEASE_ID"
           
           # Upload APK to the release
-          APK_FILE="artifact/app-v${{ steps.version.outputs.VERSION }}.apk"
-          APK_NAME="app-v${{ steps.version.outputs.VERSION }}.apk"
+          APK_FILE="artifact/${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.apk"
+          APK_NAME="${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.apk"
           
           echo "Uploading $APK_NAME to release..."
           
@@ -198,8 +203,8 @@ jobs:
           fi
           
           # Upload AAB to the release
-          AAB_FILE="artifact/app-v${{ steps.version.outputs.VERSION }}.aab"
-          AAB_NAME="app-v${{ steps.version.outputs.VERSION }}.aab"
+          AAB_FILE="artifact/${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.aab"
+          AAB_NAME="${{ env.APP_ARTIFACT_PREFIX }}-v${{ steps.version.outputs.VERSION }}.aab"
           
           echo "Uploading $AAB_NAME to release..."
           

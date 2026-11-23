@@ -61,6 +61,7 @@ jobs:
               - 'gradlew.bat'
               - 'setup-project.sh'
               - 'setup-android-env.sh'
+              - '.github/workflows/android-release.yml'
               - '.github/workflows/test-setup-script.yml'
 
       - name: Set up JDK
@@ -124,6 +125,9 @@ jobs:
           
           # Check that Application class was renamed
           test -f "app/src/main/java/dev/hossain/locationhistory/LocationHistoryApp.kt" || (echo "❌ Application class not renamed" && exit 1)
+          
+          # Check that release workflow artifact prefix was updated (LocationHistory -> locationhistory)
+          grep -q "APP_ARTIFACT_PREFIX: locationhistory" .github/workflows/android-release.yml || (echo "❌ Release artifact prefix not updated in android-release.yml" && exit 1)
           
           echo "✅ Basic project structure validation passed"
 
