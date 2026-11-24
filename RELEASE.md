@@ -3,7 +3,7 @@
 This guide walks you through setting up automated release builds and signing for your Android app template.
 
 > [!IMPORTANT]  
-> **Note:** The release workflow will work without secrets configured by using the debug keystore as a fallback. However, for production releases, you **must** configure the secrets to use a proper production keystore.
+> **Note:** For snapshot builds (pushes to `main` and manual `workflow_dispatch` runs), the release workflow falls back to the debug keystore if secrets are not configured. However, publishing a **GitHub Release** requires the production secrets to be configured (the workflow will fail if `KEYSTORE_BASE64` is missing).
 
 
 
@@ -65,7 +65,7 @@ The base64 string is now in your clipboard.
 
 **On Linux:**
 ```bash
-base64 -i app-release.keystore > keystore-base64.txt
+base64 -w 0 app-release.keystore > keystore-base64.txt
 cat keystore-base64.txt
 ```
 Copy the output (the entire base64 string).
